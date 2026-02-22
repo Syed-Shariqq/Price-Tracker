@@ -1,6 +1,5 @@
 package com.priceTracker.Controllers;
 
-import com.priceTracker.Entities.User;
 import com.priceTracker.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
