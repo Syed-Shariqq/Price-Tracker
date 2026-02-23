@@ -25,6 +25,7 @@ public class SecurityConfig {
                         sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 ).authorizeHttpRequests(auth ->
                 auth.requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/otp/**").permitAll()
                         .anyRequest().authenticated()).addFilterBefore(jwtAuthFilter,
                 UsernamePasswordAuthenticationFilter.class);
 

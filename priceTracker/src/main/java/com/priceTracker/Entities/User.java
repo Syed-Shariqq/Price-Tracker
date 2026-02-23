@@ -31,6 +31,12 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
 
+    @Column(name = "is_email_verified")
+    private boolean isEmailVerified = false;
+
+    @Column(name = "is_Acc_Non_Locked")
+    private boolean isAccountNonLocked = true;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -49,7 +55,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return this.isAccountNonLocked;
     }
 
     @Override
@@ -59,7 +65,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return this.isEmailVerified;
     }
 
 }

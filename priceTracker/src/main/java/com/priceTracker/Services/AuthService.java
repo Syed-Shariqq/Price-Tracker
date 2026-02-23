@@ -27,6 +27,9 @@ public class AuthService {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private OtpService otpService;
+
     public void userSignUp(SignUpDto signup){
 
         User user = new User();
@@ -35,6 +38,9 @@ public class AuthService {
         user.setUsername(signup.getUsername());
 
         userRepository.save(user);
+
+        otpService.sendOtp(user.getEmail());
+
     }
 
     public String userLogin(LoginRequest logInInfo){

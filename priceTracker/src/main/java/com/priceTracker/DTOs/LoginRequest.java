@@ -1,5 +1,6 @@
 package com.priceTracker.DTOs;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,14 +8,10 @@ import lombok.Setter;
 @Setter
 public class LoginRequest {
 
+    @NotBlank
     private String emailOrUsername;
+
+    @NotBlank
     private String password;
 
-    public String getEmailOrUsername() {
-        return emailOrUsername;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 }

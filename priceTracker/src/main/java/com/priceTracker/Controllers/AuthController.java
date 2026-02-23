@@ -4,6 +4,7 @@ package com.priceTracker.Controllers;
 import com.priceTracker.DTOs.LoginRequest;
 import com.priceTracker.DTOs.SignUpDto;
 import com.priceTracker.Services.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/signup")
-    public String signUp(@RequestBody SignUpDto signup){
+    public String signUp(@Valid @RequestBody SignUpDto signup){
 
         authService.userSignUp(signup);
         return "User Registered Successfully";
