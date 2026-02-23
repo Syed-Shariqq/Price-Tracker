@@ -11,4 +11,6 @@ public interface UserTrackedProductRepository extends JpaRepository<UserTrackedP
     Optional<UserTrackedProduct> findByUserIdAndProductId(Long userId, Long productId);
 
     List<UserTrackedProduct> findByUserId(Long userId);
+
+    List<UserTrackedProduct> findByProductId(Long productId);
 }

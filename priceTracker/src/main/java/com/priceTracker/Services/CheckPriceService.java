@@ -2,8 +2,10 @@ package com.priceTracker.Services;
 
 import com.priceTracker.Entities.Product;
 import com.priceTracker.Entities.ProductPriceHistory;
+import com.priceTracker.Entities.UserTrackedProduct;
 import com.priceTracker.Repositories.ProductHistoryRepository;
 import com.priceTracker.Repositories.ProductRepository;
+import com.priceTracker.Repositories.UserTrackedProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -26,6 +28,12 @@ public class CheckPriceService {
 
     @Autowired
     private final ProductHistoryRepository historyRepository;
+
+    @Autowired
+    private final UserTrackedProductRepository trackedProductRepository;
+
+    @Autowired
+    private final EmailService emailService;
 
     public void checkPrices() {
 
@@ -50,6 +58,31 @@ public class CheckPriceService {
                 history.setCheckedAt(LocalDateTime.now());
 
                 historyRepository.save(history);
+
+                //Notification part
+                List<UserTrackedProduct> trackedProducts =
+                            trackedProductRepository.findByProductId(product.getId());
+
+                for(UserTrackedProduct mapping : trackedProducts){
+
+                    BigDecimal targetPrice = mapping.getTargetPrice();
+
+                    if(newPrice.compareTo(targetPrice) <= 0 && !Boolean.TRUE.equals(mapping.getAlertSent())){
+
+                        //function call for email send
+                        emailService.priceAlert(mapping.getUser().getEmail()
+                                  ,mapping.getProduct().getProductName(), newPrice , targetPrice);
+
+                        mapping.setAlertSent(true);
+                        trackedProductRepository.save(mapping);
+                    }
+
+                    if(newPrice.compareTo(targetPrice) > 0 && Boolean.TRUE.equals(mapping.getAlertSent())){
+
+                        mapping.setAlertSent(false);
+                        trackedProductRepository.save(mapping);
+                    }
+                }
             }
         }
     }

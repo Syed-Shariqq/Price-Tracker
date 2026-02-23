@@ -21,7 +21,7 @@ public class JwtUtil {
                 .setSubject(String.valueOf(user.getId()))
                 .setIssuedAt(new Date())
                 .setExpiration(
-                        new Date(System.currentTimeMillis() + 1000 * 60 * 60)
+                        new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 30)
                 )
                 .signWith(
                         Keys.hmacShaKeyFor(SECRET.getBytes()),
