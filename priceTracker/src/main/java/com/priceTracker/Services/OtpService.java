@@ -1,9 +1,12 @@
 package com.priceTracker.Services;
 
 import com.priceTracker.Entities.EmailOtp;
+import com.priceTracker.Entities.ResetPasswordToken;
 import com.priceTracker.Entities.User;
 import com.priceTracker.Repositories.EmailOtpRepository;
+import com.priceTracker.Repositories.ResetTokenRepository;
 import com.priceTracker.Repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Base64;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -31,6 +36,9 @@ public class OtpService {
 
     @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
+    private final ResetTokenRepository tokenRepository;
 
     public void sendOtp(String email){
 
@@ -113,4 +121,91 @@ public class OtpService {
 
     }
 
+    public String generateToken(){
+
+        byte[] bytes = new byte[32];
+        random.nextBytes(bytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+
+    }
+
+
+                                    // Forgot Password Section
+
+    @Transactional
+    public void forgotPassword(String email){
+
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+
+        if(optionalUser.isEmpty()){
+            return;
+        }
+
+        Optional<ResetPasswordToken> oldToken = tokenRepository.findByEmailAndUsedFalse(email);
+
+        if(oldToken.isPresent()){
+
+            ResetPasswordToken token = oldToken.get();
+
+            if(token.getCreatedAt().plusSeconds(60).isAfter(LocalDateTime.now())){
+                return;
+            }
+
+            tokenRepository.deleteByEmail(email);
+
+        }
+
+        userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        tokenRepository.deleteByEmail(email);
+
+        String rawToken = generateToken();
+
+        String resetLink = "http://localhost:3000/reset-password?token=" + rawToken;
+
+        String hashedToken = passwordEncoder.encode(rawToken);
+
+        ResetPasswordToken token = new ResetPasswordToken();
+        token.setHashToken(hashedToken);
+        token.setUsed(false);
+        token.setCreatedAt(LocalDateTime.now());
+        token.setEmail(email);
+        token.setExpiry(LocalDateTime.now().plusMinutes(15));
+
+        tokenRepository.save(token);
+
+        emailService.sendResetPass(email , resetLink);
+
+    }
+
+    @Transactional
+    public void resetPassword(String email , String rawToken, String newPassword){
+
+        ResetPasswordToken token = tokenRepository.findByEmailAndUsedFalse(email)
+                .orElseThrow(() -> new RuntimeException("Invalid Token"));
+
+        if(LocalDateTime.now().isAfter(token.getExpiry())){
+
+            tokenRepository.deleteByEmail(email);
+            throw new RuntimeException("Token Expired");
+        }
+
+        if(!passwordEncoder.matches(rawToken, token.getHashToken())){
+
+            throw new RuntimeException("Token is Invalid");
+        }
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setPassword(Objects.requireNonNull(passwordEncoder.encode(newPassword)));
+        userRepository.save(user);
+
+        token.setUsed(true);
+        tokenRepository.save(token);
+
+        tokenRepository.deleteByEmail(email);
+
+    }
 }

@@ -40,4 +40,17 @@ public class EmailService {
 
      }
 
+    public void sendResetPass(String email, String resetLink){
+
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        message.setTo(email);
+        message.setSubject("Account Recovery --- Price Tracker");
+        message.setText("Click the link below to reset your password:\n\n" + resetLink +
+                "\n\nThis link expires in 15 minutes.");
+
+        mailSender.send(message);
+
+    }
+
 }

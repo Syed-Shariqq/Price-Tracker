@@ -1,7 +1,9 @@
 package com.priceTracker.Controllers;
 
 import com.priceTracker.DTOs.EmailRequest;
+import com.priceTracker.DTOs.ForgotPassDto;
 import com.priceTracker.DTOs.OtpRequest;
+import com.priceTracker.DTOs.ResetPassDto;
 import com.priceTracker.Services.OtpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,26 @@ public class OtpController {
 
         otpService.sendOtp(request.getEmail());
         return ResponseEntity.ok("Otp sent Successfully");
+
+    }
+
+
+
+                                      //Forgot Password Section//
+
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPassDto forgotPassDto){
+
+        otpService.forgotPassword(forgotPassDto.getEmail());
+        return ResponseEntity.ok("Reset Link Sent ");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPassDto resetPass){
+
+        otpService.resetPassword(resetPass.getEmail(), resetPass.getToken(), resetPass.getNewPassword());
+        return ResponseEntity.ok("Password changed successfully");
 
     }
 
