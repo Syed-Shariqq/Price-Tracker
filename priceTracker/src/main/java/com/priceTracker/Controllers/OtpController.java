@@ -5,11 +5,15 @@ import com.priceTracker.DTOs.ForgotPassDto;
 import com.priceTracker.DTOs.OtpRequest;
 import com.priceTracker.DTOs.ResetPassDto;
 import com.priceTracker.Services.OtpService;
+import com.priceTracker.payload.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/otp")
@@ -18,19 +22,30 @@ public class OtpController {
     @Autowired
     private OtpService otpService;
 
+    public <T> ApiResponse<T> successResponse(T data, String message, HttpStatus status){
+
+        return ApiResponse.<T>builder()
+                .message(message)
+                .status(status.value())
+                .data(data)
+                .timeStamp(LocalDateTime.now())
+                .build();
+    }
+
     @PostMapping("/verify-otp")
-    public String verifyOtp(@RequestBody OtpRequest otpRequest){
+    public ApiResponse<String> verifyOtp(@RequestBody OtpRequest otpRequest){
 
         otpService.verifyOtp(otpRequest.getEmail(), otpRequest.getOtp());
-        return "Email Verified Successfully";
+        return successResponse("Email Verified Successfully",
+                "Verification Successful", HttpStatus.OK);
 
     }
 
     @PostMapping("/send-otp")
-    public String sendOtp(@RequestBody EmailRequest request){
+    public ApiResponse<String> sendOtp(@RequestBody EmailRequest request){
 
         otpService.sendOtp(request.getEmail());
-        return "Otp sent Successfully";
+        return successResponse("Otp sent Successfully","Check OTP",HttpStatus.OK);
 
     }
 
@@ -40,17 +55,19 @@ public class OtpController {
 
 
     @PostMapping("/forgot-password")
-    public String forgotPassword(@RequestBody ForgotPassDto forgotPassDto){
+    public ApiResponse<String> forgotPassword(@RequestBody ForgotPassDto forgotPassDto){
 
         otpService.forgotPassword(forgotPassDto.getEmail());
-        return "Reset Link Sent ";
+        return successResponse("Reset Link Sent"
+                ,"Click the link to reset your password",HttpStatus.OK);
     }
 
     @PostMapping("/reset-password")
-    public String resetPassword(@RequestBody ResetPassDto resetPass){
+    public ApiResponse<String> resetPassword(@RequestBody ResetPassDto resetPass){
 
         otpService.resetPassword(resetPass.getEmail(), resetPass.getToken(), resetPass.getNewPassword());
-        return "Password changed successfully";
+        return successResponse("Password changed successfully"
+                ,"Log In with new password", HttpStatus.OK);
 
     }
 

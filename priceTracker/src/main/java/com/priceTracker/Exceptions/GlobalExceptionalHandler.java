@@ -48,11 +48,11 @@ public class GlobalExceptionalHandler {
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponseDto handleInvalidCredentials(InvalidCredentialsException ex,
                                                      HttpServletRequest request){
 
-        return buildResponse(ex , HttpStatus.BAD_REQUEST, request);
+        return buildResponse(ex , HttpStatus.UNAUTHORIZED, request);
 
     }
 
@@ -104,6 +104,14 @@ public class GlobalExceptionalHandler {
     public ErrorResponseDto handleTooManyAttempts(TooManyAttemptsException ex, HttpServletRequest request){
 
         return buildResponse(ex, HttpStatus.TOO_MANY_REQUESTS, request);
+    }
+
+    @ExceptionHandler(AccountNotVerifiedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponseDto handleAccountNotVerified(AccountNotVerifiedException ex
+            , HttpServletRequest request){
+
+        return buildResponse(ex, HttpStatus.FORBIDDEN, request);
     }
 
     @ExceptionHandler(Exception.class)

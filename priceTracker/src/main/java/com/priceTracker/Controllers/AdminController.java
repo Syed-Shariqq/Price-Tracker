@@ -2,14 +2,17 @@ package com.priceTracker.Controllers;
 
 import com.priceTracker.Services.CheckPriceService;
 import com.priceTracker.Services.EmailService;
+import com.priceTracker.payload.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/admin")
@@ -22,17 +25,27 @@ public class AdminController {
     @Autowired
     private final EmailService emailService;
 
+    public <T> ApiResponse<T> successResponse(T data, String message){
+
+        return ApiResponse.<T>builder()
+                .message(message)
+                .status(HttpStatus.OK.value())
+                .data(data)
+                .timeStamp(LocalDateTime.now())
+                .build();
+    }
+
     @PostMapping("/check-prices")
-    public ResponseEntity<String> triggerPriceCheck() {
+    public ApiResponse<String> triggerPriceCheck() {
 
         priceService.checkPrices();
 
-        return ResponseEntity.ok("Price check triggered manually");
+        return successResponse("Price check triggered manually","Success");
     }
 
 
     @PostMapping("/email")
-    public ResponseEntity<String> testEmail() {
+    public ApiResponse<String> testEmail() {
 
         emailService.priceAlert(
                 "syedshariq0824@gmail.com",
@@ -41,6 +54,6 @@ public class AdminController {
                 new BigDecimal("40.00")
         );
 
-        return ResponseEntity.ok("Test email sent");
+        return successResponse("Test email sent","Success");
     }
 }

@@ -3,7 +3,9 @@ package com.priceTracker.Services;
 import com.priceTracker.DTOs.LoginRequest;
 import com.priceTracker.DTOs.SignUpDto;
 import com.priceTracker.Entities.User;
+import com.priceTracker.Exceptions.AccountNotVerifiedException;
 import com.priceTracker.Exceptions.InvalidCredentialsException;
+import com.priceTracker.Exceptions.UserNotFoundException;
 import com.priceTracker.Repositories.UserRepository;
 import com.priceTracker.Security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +48,16 @@ public class AuthService {
 
     public String userLogin(LoginRequest logInInfo){
 
-        UserDetails userDetails = userService
-                .loadUserByUsername(logInInfo.getEmailOrUsername());
+            UserDetails userDetails = userService
+                    .loadUserByUsername(logInInfo.getEmailOrUsername());
 
         if(!passwordEncoder.matches(logInInfo.getPassword(), userDetails.getPassword())){
-            throw new InvalidCredentialsException("Invalid Credentials");
+            throw new InvalidCredentialsException("Invalid credentials");
         }
+        if(!userDetails.isEnabled()){
+            throw new AccountNotVerifiedException("Account not activated , Please verify your email ");
+        }
+
         return jwtUtil.generateToken(userDetails);
 
     }
