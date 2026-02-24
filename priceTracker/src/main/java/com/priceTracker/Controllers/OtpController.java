@@ -6,7 +6,6 @@ import com.priceTracker.DTOs.OtpRequest;
 import com.priceTracker.DTOs.ResetPassDto;
 import com.priceTracker.Services.OtpService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,18 +19,18 @@ public class OtpController {
     private OtpService otpService;
 
     @PostMapping("/verify-otp")
-    public ResponseEntity<String> verifyOtp(@RequestBody OtpRequest otpRequest){
+    public String verifyOtp(@RequestBody OtpRequest otpRequest){
 
         otpService.verifyOtp(otpRequest.getEmail(), otpRequest.getOtp());
-        return ResponseEntity.ok("Email Verified Succesfully");
+        return "Email Verified Successfully";
 
     }
 
     @PostMapping("/send-otp")
-    public ResponseEntity<String> sendOtp(@RequestBody EmailRequest request){
+    public String sendOtp(@RequestBody EmailRequest request){
 
         otpService.sendOtp(request.getEmail());
-        return ResponseEntity.ok("Otp sent Successfully");
+        return "Otp sent Successfully";
 
     }
 
@@ -41,17 +40,17 @@ public class OtpController {
 
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPassDto forgotPassDto){
+    public String forgotPassword(@RequestBody ForgotPassDto forgotPassDto){
 
         otpService.forgotPassword(forgotPassDto.getEmail());
-        return ResponseEntity.ok("Reset Link Sent ");
+        return "Reset Link Sent ";
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody ResetPassDto resetPass){
+    public String resetPassword(@RequestBody ResetPassDto resetPass){
 
         otpService.resetPassword(resetPass.getEmail(), resetPass.getToken(), resetPass.getNewPassword());
-        return ResponseEntity.ok("Password changed successfully");
+        return "Password changed successfully";
 
     }
 

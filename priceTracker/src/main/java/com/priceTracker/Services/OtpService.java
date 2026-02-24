@@ -3,12 +3,14 @@ package com.priceTracker.Services;
 import com.priceTracker.Entities.EmailOtp;
 import com.priceTracker.Entities.ResetPasswordToken;
 import com.priceTracker.Entities.User;
+import com.priceTracker.Exceptions.*;
 import com.priceTracker.Repositories.EmailOtpRepository;
 import com.priceTracker.Repositories.ResetTokenRepository;
 import com.priceTracker.Repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,10 +45,10 @@ public class OtpService {
     public void sendOtp(String email){
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         if(user.isEmailVerified()){
-            throw new RuntimeException("User Already Verified");
+            throw new UserAlreadyVerifiedException("User Already Verified");
         }
 
         Optional<EmailOtp> oldOtp = otpRepository.findByEmailAndVerifiedFalse(email);
@@ -57,7 +59,7 @@ public class OtpService {
 
             if(otp.getCreatedAt().plusSeconds(60).isAfter(LocalDateTime.now())){
 
-                throw new RuntimeException("Wait before requesting new OTP");
+                throw new OtpRequestTooSoonException("Wait before requesting new OTP");
             }
 
             otpRepository.deleteByEmail(email);
@@ -85,20 +87,20 @@ public class OtpService {
     public void verifyOtp(String email, String rawOtp){
 
         EmailOtp otp = otpRepository.findByEmailAndVerifiedFalse(email)
-                .orElseThrow(() -> new RuntimeException("Otp not Found"));
+                .orElseThrow(() -> new OtpNotFoundException("Otp not Found"));
 
         //Check Expiration
         if(LocalDateTime.now().isAfter(otp.getExpiryTime())){
 
             otpRepository.deleteByEmail(email);
-            throw new RuntimeException("Otp expired");
+            throw new OtpExpiredException("Otp expired");
 
         }
         //Check attempts
         if(otp.getAttempts() >= 5){
 
             otpRepository.deleteByEmail(email);
-            throw new RuntimeException("Too many attempts.");
+            throw new TooManyAttemptsException("Too many attempts.");
         }
 
         //Check validity
@@ -107,14 +109,14 @@ public class OtpService {
             otp.setAttempts(otp.getAttempts() + 1);
             otpRepository.save(otp);
 
-            throw new RuntimeException("Invalid Otp");
+            throw new InvalidOtpException("Invalid Otp");
         }
 
         otp.setVerified(true);
         otpRepository.save(otp);
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         user.setEmailVerified(true);
         userRepository.save(user);
@@ -156,7 +158,7 @@ public class OtpService {
         }
 
         userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         tokenRepository.deleteByEmail(email);
 
@@ -183,21 +185,21 @@ public class OtpService {
     public void resetPassword(String email , String rawToken, String newPassword){
 
         ResetPasswordToken token = tokenRepository.findByEmailAndUsedFalse(email)
-                .orElseThrow(() -> new RuntimeException("Invalid Token"));
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid Token"));
 
         if(LocalDateTime.now().isAfter(token.getExpiry())){
 
             tokenRepository.deleteByEmail(email);
-            throw new RuntimeException("Token Expired");
+            throw new TokenExpiredException("Token Expired");
         }
 
         if(!passwordEncoder.matches(rawToken, token.getHashToken())){
 
-            throw new RuntimeException("Token is Invalid");
+            throw new TokenInvalidException("Token is Invalid");
         }
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         user.setPassword(Objects.requireNonNull(passwordEncoder.encode(newPassword)));
         userRepository.save(user);

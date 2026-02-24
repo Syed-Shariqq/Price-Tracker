@@ -3,6 +3,7 @@ package com.priceTracker.Services;
 import com.priceTracker.DTOs.LoginRequest;
 import com.priceTracker.DTOs.SignUpDto;
 import com.priceTracker.Entities.User;
+import com.priceTracker.Exceptions.InvalidCredentialsException;
 import com.priceTracker.Repositories.UserRepository;
 import com.priceTracker.Security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class AuthService {
                 .loadUserByUsername(logInInfo.getEmailOrUsername());
 
         if(!passwordEncoder.matches(logInInfo.getPassword(), userDetails.getPassword())){
-            throw new RuntimeException("Invalid Credentials");
+            throw new InvalidCredentialsException("Invalid Credentials");
         }
         return jwtUtil.generateToken(userDetails);
 

@@ -5,6 +5,7 @@ import com.priceTracker.DTOs.UserTrackedProductDto;
 import com.priceTracker.Entities.Product;
 import com.priceTracker.Entities.User;
 import com.priceTracker.Entities.UserTrackedProduct;
+import com.priceTracker.Exceptions.ProductAlreadyTrackingException;
 import com.priceTracker.Repositories.ProductRepository;
 import com.priceTracker.Repositories.UserTrackedProductRepository;
 import com.priceTracker.SeviceInterfaces.ProductService;
@@ -39,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
 
         trackedProductRepository.findByUserIdAndProductId(user.getId() , product.getId())
                 .ifPresent(p ->{
-                    throw new RuntimeException("Already Tracking");
+                    throw new ProductAlreadyTrackingException("Already Tracking");
                 });
 
         UserTrackedProduct mapping = new UserTrackedProduct();

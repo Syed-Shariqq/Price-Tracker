@@ -25,12 +25,12 @@ public class ProductController {
     private CheckPriceService priceService;
 
     @PostMapping
-    public ResponseEntity<String> addProduct(@RequestBody AddProductDTO dto
+    public String addProduct(@RequestBody AddProductDTO dto
                          , @AuthenticationPrincipal User user){
 
         productService.addProduct(dto , user);
 
-        return ResponseEntity.ok("Product added Successfully");
+        return "Product added Successfully";
     }
 
     @GetMapping
