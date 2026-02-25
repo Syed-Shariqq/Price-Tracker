@@ -1,8 +1,6 @@
 package com.priceTracker.Controllers;
 
-import com.priceTracker.Repositories.UserRepository;
 import com.priceTracker.payload.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,8 +22,6 @@ public class UserController {
                 .build();
     }
 
-    @Autowired
-    private UserRepository userRepository;
 
     @GetMapping("/me")
     public ApiResponse<String> getCurrentUser() {

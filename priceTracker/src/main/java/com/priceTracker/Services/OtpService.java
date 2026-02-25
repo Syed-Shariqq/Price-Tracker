@@ -1,7 +1,6 @@
 package com.priceTracker.Services;
 
 import com.priceTracker.Entities.User;
-import com.priceTracker.Exceptions.InvalidOtpException;
 import com.priceTracker.Exceptions.TokenInvalidException;
 import com.priceTracker.Exceptions.UserNotFoundException;
 import com.priceTracker.Repositories.UserRepository;

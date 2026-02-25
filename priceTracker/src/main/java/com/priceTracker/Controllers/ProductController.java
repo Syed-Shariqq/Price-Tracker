@@ -3,11 +3,12 @@ package com.priceTracker.Controllers;
 import com.priceTracker.DTOs.AddProductDTO;
 import com.priceTracker.DTOs.UserTrackedProductDto;
 import com.priceTracker.Entities.User;
-import com.priceTracker.Services.CheckPriceService;
 import com.priceTracker.Services.ProductServiceImpl;
 import com.priceTracker.payload.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,8 +25,6 @@ public class ProductController {
     @Autowired
     private ProductServiceImpl productService;
 
-    @Autowired
-    private CheckPriceService priceService;
 
     public <T> ApiResponse<T> successResponse(T data, String message, HttpStatus status){
 

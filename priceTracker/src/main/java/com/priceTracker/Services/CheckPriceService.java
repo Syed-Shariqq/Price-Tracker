@@ -12,6 +12,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -34,6 +35,9 @@ public class CheckPriceService {
     @Autowired
     private final EmailService emailService;
 
+    @Autowired
+    private final CacheManager cacheManager;
+
     public void checkPrices() {
 
         List<Product> products = productRepository.findAll();
@@ -51,6 +55,7 @@ public class CheckPriceService {
                 product.setLastCheckedAt(LocalDateTime.now());
                 productRepository.save(product);
 
+
                 ProductPriceHistory history = new ProductPriceHistory();
                 history.setProduct(product);
                 history.setPrice(newPrice);
@@ -63,6 +68,9 @@ public class CheckPriceService {
                             trackedProductRepository.findByProductId(product.getId());
 
                 for(UserTrackedProduct mapping : trackedProducts){
+
+                    cacheManager.getCache("userTrackedProducts")
+                            .evict(mapping.getUser().getId());
 
                     BigDecimal targetPrice = mapping.getTargetPrice();
 

@@ -11,9 +11,12 @@ import com.priceTracker.Repositories.UserTrackedProductRepository;
 import com.priceTracker.SeviceInterfaces.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
+    @CacheEvict(value = "userTrackedProducts" , key = "#user.id")
     public void addProduct(AddProductDTO dto, User user) {
 
         Product product = productRepository.findByProductUrl(dto.getProductUrl())
@@ -53,6 +57,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = "userTrackedProducts" , key = "#user.id")
     public List<UserTrackedProductDto> getUserTrackedProducts(User user) {
 
         List<UserTrackedProduct> trackedProducts =
