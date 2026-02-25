@@ -19,8 +19,6 @@ import java.time.LocalDateTime;
 @RequestMapping("/otp")
 public class OtpController {
 
-    @Autowired
-    private OtpService otpService;
 
     public <T> ApiResponse<T> successResponse(T data, String message, HttpStatus status){
 
@@ -31,21 +29,23 @@ public class OtpController {
                 .timeStamp(LocalDateTime.now())
                 .build();
     }
+    @Autowired
+    private OtpService otpService;
 
     @PostMapping("/verify-otp")
     public ApiResponse<String> verifyOtp(@RequestBody OtpRequest otpRequest){
 
-        otpService.verifyOtp(otpRequest.getEmail(), otpRequest.getOtp());
-        return successResponse("Email Verified Successfully",
-                "Verification Successful", HttpStatus.OK);
+        ApiResponse<String> stringApiResponse = otpService.verifyOtp(otpRequest.getEmail(), otpRequest.getOtp());
+        return successResponse(stringApiResponse.getData(),
+                stringApiResponse.getMessage(), HttpStatus.valueOf(stringApiResponse.getStatus()));
 
     }
 
     @PostMapping("/send-otp")
     public ApiResponse<String> sendOtp(@RequestBody EmailRequest request){
 
-        otpService.sendOtp(request.getEmail());
-        return successResponse("Otp sent Successfully","Check OTP",HttpStatus.OK);
+        ApiResponse<String> response = otpService.sendOtp(request.getEmail());
+        return successResponse(response.getData(),response.getMessage(), HttpStatus.valueOf(response.getStatus()));
 
     }
 
@@ -57,15 +57,15 @@ public class OtpController {
     @PostMapping("/forgot-password")
     public ApiResponse<String> forgotPassword(@RequestBody ForgotPassDto forgotPassDto){
 
-        otpService.forgotPassword(forgotPassDto.getEmail());
-        return successResponse("Reset Link Sent"
+        String response = otpService.forgotPassword(forgotPassDto.getEmail());
+        return successResponse(response
                 ,"Click the link to reset your password",HttpStatus.OK);
     }
 
     @PostMapping("/reset-password")
     public ApiResponse<String> resetPassword(@RequestBody ResetPassDto resetPass){
 
-        otpService.resetPassword(resetPass.getEmail(), resetPass.getToken(), resetPass.getNewPassword());
+        otpService.resetPassword(resetPass.getToken(), resetPass.getNewPassword());
         return successResponse("Password changed successfully"
                 ,"Log In with new password", HttpStatus.OK);
 

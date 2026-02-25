@@ -6,7 +6,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.security.SecureRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +33,7 @@ public class EmailService {
 
          message.setTo(email);
          message.setSubject("Verify your email --- Price Tracker");
-         message.setText("Your Otp is: " + rawOtp + "\nvalid for 3 minutes.");
+         message.setText("Your Otp is: " + rawOtp + "\nvalid for 5 minutes.");
 
          mailSender.send(message);
 

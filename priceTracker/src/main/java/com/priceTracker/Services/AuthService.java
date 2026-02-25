@@ -5,13 +5,13 @@ import com.priceTracker.DTOs.SignUpDto;
 import com.priceTracker.Entities.User;
 import com.priceTracker.Exceptions.AccountNotVerifiedException;
 import com.priceTracker.Exceptions.InvalidCredentialsException;
-import com.priceTracker.Exceptions.UserNotFoundException;
 import com.priceTracker.Repositories.UserRepository;
 import com.priceTracker.Security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -31,8 +31,9 @@ public class AuthService {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private OtpService otpService;
+    private OtpService redisService;
 
+    @Transactional
     public void userSignUp(SignUpDto signup){
 
         User user = new User();
@@ -42,7 +43,7 @@ public class AuthService {
 
         userRepository.save(user);
 
-        otpService.sendOtp(user.getEmail());
+        redisService.sendOtp(user.getEmail());
 
     }
 

@@ -2,14 +2,12 @@ package com.priceTracker.Controllers;
 
 import com.priceTracker.Services.CheckPriceService;
 import com.priceTracker.Services.EmailService;
+import com.priceTracker.Services.OtpService;
 import com.priceTracker.payload.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -56,4 +54,21 @@ public class AdminController {
 
         return successResponse("Test email sent","Success");
     }
+
+    @Autowired
+    private OtpService service;
+
+
+    @GetMapping
+    public String redis(){
+
+        return service.testRedis();
+    }
+
+     @GetMapping("/redis")
+     public String redd(){
+        return service.getKey();
+     }
+
+
 }

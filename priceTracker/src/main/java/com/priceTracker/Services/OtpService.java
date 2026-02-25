@@ -1,127 +1,145 @@
 package com.priceTracker.Services;
 
-import com.priceTracker.Entities.EmailOtp;
-import com.priceTracker.Entities.ResetPasswordToken;
 import com.priceTracker.Entities.User;
-import com.priceTracker.Exceptions.*;
-import com.priceTracker.Repositories.EmailOtpRepository;
-import com.priceTracker.Repositories.ResetTokenRepository;
+import com.priceTracker.Exceptions.InvalidOtpException;
+import com.priceTracker.Exceptions.TokenInvalidException;
+import com.priceTracker.Exceptions.UserNotFoundException;
 import com.priceTracker.Repositories.UserRepository;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import com.priceTracker.payload.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Base64;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class OtpService {
 
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private final SecureRandom random = new SecureRandom();
 
-    @Autowired
-    private final PasswordEncoder passwordEncoder;
+    public <T> ApiResponse<T> successResponse(T data,String message, HttpStatus status){
 
-    @Autowired
-    private final EmailOtpRepository otpRepository;
+        return ApiResponse.<T>builder()
+                .message(message)
+                .status(status.value())
+                .data(data)
+                .timeStamp(LocalDateTime.now())
+                .build();
+    }
 
-    @Autowired
-    private final EmailService emailService;
 
-    @Autowired
-    private final UserRepository userRepository;
+    public String testRedis() {
+        redisTemplate.opsForValue()
+                .set("key", "hello", Duration.ofMinutes(1));
 
-    @Autowired
-    private final ResetTokenRepository tokenRepository;
+        String value = redisTemplate.opsForValue()
+                .get("key");
 
-    public void sendOtp(String email){
+        return "Redis value: " + value;
+    }
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        if(user.isEmailVerified()){
-            throw new UserAlreadyVerifiedException("User Already Verified");
-        }
+    public String getKey() {
+        return redisTemplate.opsForValue().get("key");
+    }
 
-        Optional<EmailOtp> oldOtp = otpRepository.findByEmailAndVerifiedFalse(email);
+    public ApiResponse<String> sendOtp(String email){
 
-        if(oldOtp.isPresent()){
+        String otpKey = "OTP:" + email;
+        String coolDownKey = "OTP:cooldown:" + email;
+        String attemptKey = "OTP:attemptKey:" + email;
 
-            EmailOtp otp = oldOtp.get();
+       User user = userRepository.findByEmail(email)
+               .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-            if(otp.getCreatedAt().plusSeconds(60).isAfter(LocalDateTime.now())){
+       if(user.isEmailVerified()){
 
-                throw new OtpRequestTooSoonException("Wait before requesting new OTP");
-            }
+           return successResponse("User already Verified","Warning", HttpStatus.BAD_REQUEST);
+       }
 
-            otpRepository.deleteByEmail(email);
-        }
+       Boolean cooldown = redisTemplate.hasKey(coolDownKey);
+
+       if(Boolean.TRUE.equals(cooldown)){
+
+           return successResponse("Please wait before requesting for another otp","Warning", HttpStatus.TOO_EARLY);
+       }
 
         String rawOtp = String.valueOf(100000 + random.nextInt(900000));
 
-        String hashedOtp = passwordEncoder.encode(rawOtp);
-
-        EmailOtp otp = new EmailOtp();
-
-        otp.setVerified(false);
-        otp.setOtpHash(hashedOtp);
-        otp.setEmail(email);
-        otp.setAttempts(0);
-        otp.setCreatedAt(LocalDateTime.now());
-        otp.setExpiryTime(LocalDateTime.now().plusMinutes(3));
-
-        otpRepository.save(otp);
+       redisTemplate.opsForValue().set(otpKey , rawOtp , Duration.ofMinutes(5));
+       redisTemplate.opsForValue().set(coolDownKey , "true" , Duration.ofMinutes(1));
+       redisTemplate.opsForValue().set(attemptKey , "0" , Duration.ofMinutes(5));
 
        emailService.sendOtpToUser(email , rawOtp);
 
+       return successResponse("Success."," Otp sent successfully", HttpStatus.OK);
     }
 
-    public void verifyOtp(String email, String rawOtp){
+    public ApiResponse<String> verifyOtp(String email , String userOtp){
 
-        EmailOtp otp = otpRepository.findByEmailAndVerifiedFalse(email)
-                .orElseThrow(() -> new OtpNotFoundException("Otp not Found"));
+        String attemptKey = "OTP:attemptKey:" + email;
+        String coolDownKey = "OTP:cooldown:" + email;
+        String blockKey = "OTP:blockKey:" + email;
+        String otpKey = "OTP:" + email;
 
-        //Check Expiration
-        if(LocalDateTime.now().isAfter(otp.getExpiryTime())){
+        String existingOtp = redisTemplate.opsForValue().get(otpKey);
 
-            otpRepository.deleteByEmail(email);
-            throw new OtpExpiredException("Otp expired");
+        if(existingOtp == null){
 
-        }
-        //Check attempts
-        if(otp.getAttempts() >= 5){
-
-            otpRepository.deleteByEmail(email);
-            throw new TooManyAttemptsException("Too many attempts.");
+            return successResponse("Otp expired or not found","Expired",HttpStatus.NOT_FOUND);
         }
 
-        //Check validity
-        if(!passwordEncoder.matches(rawOtp , otp.getOtpHash())){
+        int attemptCount = Integer.parseInt(redisTemplate.opsForValue().get(attemptKey));
 
-            otp.setAttempts(otp.getAttempts() + 1);
-            otpRepository.save(otp);
+        if(attemptCount >= 3){
 
-            throw new InvalidOtpException("Invalid Otp");
+            redisTemplate.delete(otpKey);
+            redisTemplate.delete(coolDownKey);
+            redisTemplate.opsForValue().set(blockKey , "true" , Duration.ofMinutes(7));
+            return successResponse("Too many attempts. Try again later","Warning", HttpStatus.TOO_MANY_REQUESTS);
         }
 
-        otp.setVerified(true);
-        otpRepository.save(otp);
+        if(!existingOtp.equals(userOtp)){
+
+            redisTemplate.opsForValue().increment(attemptKey);
+            return successResponse("Invalid Otp","Warning", HttpStatus.UNAUTHORIZED);
+        }
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         user.setEmailVerified(true);
         userRepository.save(user);
 
+        redisTemplate.delete(attemptKey);
+        redisTemplate.delete(coolDownKey);
+        redisTemplate.delete(otpKey);
+
+        return successResponse("Email verified Successfully",
+                "Verification Completed",HttpStatus.OK);
+
     }
+
+                         //Forgot Password
 
     public String generateToken(){
 
@@ -132,82 +150,63 @@ public class OtpService {
     }
 
 
-                                    // Forgot Password Section
+
+    private final String cooldownToken = "TOKEN:COOLDOWN:";
+    private final String emailToken = "TOKEN:EMAIL";
+    private final String token = "TOKEN:";
+
 
     @Transactional
-    public void forgotPassword(String email){
+    public String forgotPassword(String email){
 
-        Optional<User> optionalUser = userRepository.findByEmail(email);
 
-        if(optionalUser.isEmpty()){
-            return;
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if(user.isEmpty()){
+            return "";
         }
 
-        Optional<ResetPasswordToken> oldToken = tokenRepository.findByEmailAndUsedFalse(email);
-
-        if(oldToken.isPresent()){
-
-            ResetPasswordToken token = oldToken.get();
-
-            if(token.getCreatedAt().plusSeconds(60).isAfter(LocalDateTime.now())){
-                return;
-            }
-
-            tokenRepository.deleteByEmail(email);
-
+        if(Boolean.TRUE.equals(redisTemplate.hasKey(cooldownToken + email))){
+            return "Wait for sometime before requesting another link";
         }
 
-        userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        String oldToken = redisTemplate.opsForValue().get(emailToken + email);
 
-        tokenRepository.deleteByEmail(email);
+        if(oldToken != null){
+            redisTemplate.delete(token + oldToken);
+            redisTemplate.delete(emailToken + email);
+        }
 
         String rawToken = generateToken();
 
+        redisTemplate.opsForValue().set(token + rawToken, email, Duration.ofMinutes(15));
+        redisTemplate.opsForValue().set(emailToken + email , rawToken , Duration.ofMinutes(15));
+        redisTemplate.opsForValue().set(cooldownToken + email, "true", Duration.ofMinutes(2));
+
         String resetLink = "http://localhost:3000/reset-password?token=" + rawToken;
-
-        String hashedToken = passwordEncoder.encode(rawToken);
-
-        ResetPasswordToken token = new ResetPasswordToken();
-        token.setHashToken(hashedToken);
-        token.setUsed(false);
-        token.setCreatedAt(LocalDateTime.now());
-        token.setEmail(email);
-        token.setExpiry(LocalDateTime.now().plusMinutes(15));
-
-        tokenRepository.save(token);
-
         emailService.sendResetPass(email , resetLink);
 
+        return "Reset link sent";
     }
 
     @Transactional
-    public void resetPassword(String email , String rawToken, String newPassword){
+    public void resetPassword(String rawToken, String newPassword) {
 
-        ResetPasswordToken token = tokenRepository.findByEmailAndUsedFalse(email)
-                .orElseThrow(() -> new InvalidCredentialsException("Invalid Token"));
+        String email = redisTemplate.opsForValue().get(token + rawToken);
 
-        if(LocalDateTime.now().isAfter(token.getExpiry())){
-
-            tokenRepository.deleteByEmail(email);
-            throw new TokenExpiredException("Token Expired");
-        }
-
-        if(!passwordEncoder.matches(rawToken, token.getHashToken())){
-
-            throw new TokenInvalidException("Token is Invalid");
+        if (email == null) {
+            throw new TokenInvalidException("Invalid or expired token");
         }
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        user.setPassword(Objects.requireNonNull(passwordEncoder.encode(newPassword)));
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
 
-        token.setUsed(true);
-        tokenRepository.save(token);
-
-        tokenRepository.deleteByEmail(email);
-
+        redisTemplate.delete(token + rawToken);
+        redisTemplate.delete(emailToken + email);
     }
+
 }
+

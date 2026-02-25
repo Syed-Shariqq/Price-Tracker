@@ -37,7 +37,8 @@ public class AuthController {
     public ApiResponse<String> signUp(@Valid @RequestBody SignUpDto signup){
 
         authService.userSignUp(signup);
-        return successResponse("User Registered Successfully","Account Created", HttpStatus.CREATED);
+        return successResponse("User Registered Successfully"
+                ,"Verify Otp for Account Activation", HttpStatus.CREATED);
 
     }
 

@@ -32,7 +32,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column(name = "is_email_verified")
-    private boolean isEmailVerified = false;
+    private boolean emailVerified = false;
 
     @Column(name = "is_Acc_Non_Locked")
     private boolean isAccountNonLocked = true;
@@ -65,7 +65,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.isEmailVerified;
+        return this.emailVerified;
     }
 
 }
