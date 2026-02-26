@@ -12,7 +12,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "product_price_history")
+@Table(name = "product_price_history"
+       ,indexes = {
+            @Index(name = "idx_product_checked", columnList = "product_id, checked_at")
+}  )
 public class ProductPriceHistory {
 
     @Id

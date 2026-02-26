@@ -3,7 +3,6 @@ package com.priceTracker.DTOs;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 

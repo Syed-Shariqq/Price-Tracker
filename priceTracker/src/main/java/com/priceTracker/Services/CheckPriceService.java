@@ -6,6 +6,7 @@ import com.priceTracker.Entities.UserTrackedProduct;
 import com.priceTracker.Repositories.ProductHistoryRepository;
 import com.priceTracker.Repositories.ProductRepository;
 import com.priceTracker.Repositories.UserTrackedProductRepository;
+import com.priceTracker.events.PriceDropEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -13,7 +14,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,6 +43,11 @@ public class CheckPriceService {
     @Autowired
     private final CacheManager cacheManager;
 
+    @Autowired
+    private final ApplicationEventPublisher eventPublisher;
+
+    @Async
+    @Transactional
     public void checkPrices() {
 
         List<Product> products = productRepository.findAll();
@@ -65,7 +75,7 @@ public class CheckPriceService {
 
                 //Notification part
                 List<UserTrackedProduct> trackedProducts =
-                            trackedProductRepository.findByProductId(product.getId());
+                            trackedProductRepository.findByProductIdWithUser(product.getId());
 
                 for(UserTrackedProduct mapping : trackedProducts){
 
@@ -77,8 +87,14 @@ public class CheckPriceService {
                     if(newPrice.compareTo(targetPrice) <= 0 && !Boolean.TRUE.equals(mapping.getAlertSent())){
 
                         //function call for email send
-                        emailService.priceAlert(mapping.getUser().getEmail()
-                                  ,mapping.getProduct().getProductName(), newPrice , targetPrice);
+
+                        System.out.println("Email Service triggered");
+
+                        eventPublisher.publishEvent(
+                                new PriceDropEvent(mapping , newPrice)
+                        );
+
+                        System.out.println("EVENT PUBLISHED");
 
                         mapping.setAlertSent(true);
                         trackedProductRepository.save(mapping);
