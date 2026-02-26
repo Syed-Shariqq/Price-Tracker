@@ -15,7 +15,9 @@ import java.time.LocalDateTime;
 @Table(name = "product_price_history"
        ,indexes = {
             @Index(name = "idx_product_checked", columnList = "product_id, checked_at")
-}  )
+} ,uniqueConstraints = @UniqueConstraint(
+        columnNames = {"product_id", "price"}
+) )
 public class ProductPriceHistory {
 
     @Id

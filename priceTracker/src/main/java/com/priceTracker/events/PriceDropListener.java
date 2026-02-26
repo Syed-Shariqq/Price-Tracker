@@ -20,15 +20,13 @@ public class PriceDropListener {
 
 
         System.out.println("EVENT RECEIVED FOR USER: "
-                + priceDropEvent.getUserTrackedProduct().getUser().getEmail());
-
-        UserTrackedProduct mapping = priceDropEvent.getUserTrackedProduct();
+                + priceDropEvent.getEmail());
 
         emailService.priceAlert(
-                mapping.getUser().getEmail(),
-                mapping.getProduct().getProductName(),
-                priceDropEvent.getNewPrice(),
-                mapping.getTargetPrice()
+                priceDropEvent.getEmail(),
+                priceDropEvent.getProductName(),
+                priceDropEvent.getTargetPrice(),
+                priceDropEvent.getNewPrice()
         );
 
     }

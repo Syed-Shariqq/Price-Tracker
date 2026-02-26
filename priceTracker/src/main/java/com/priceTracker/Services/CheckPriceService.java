@@ -19,12 +19,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +54,14 @@ public class CheckPriceService {
     @Autowired
     private final ApplicationEventPublisher eventPublisher;
 
-    
+    @Autowired
+    private final ProductProcessingService productProcessingService;
+
+
+    private final ExecutorService executor = Executors.newFixedThreadPool(8);
+
+
+    @Scheduled(fixedRate = 10000)
     public void checkPrices() {
 
         int page = 0;
@@ -62,90 +74,26 @@ public class CheckPriceService {
 
             List<Product> products = productPage.getContent();
 
+            List<Future<?>> futures = new ArrayList<>();
+
+            // Submit tasks for this page
             for (Product product : products) {
-                processProduct(product);
+                futures.add(
+                        executor.submit(() -> productProcessingService.processProduct(product))
+                );
+            }
+
+            for (Future<?> future : futures) {
+                try {
+                    future.get();
+                } catch (Exception e) {
+                    log.error("Thread error", e);
+                }
             }
 
             page++;
 
         } while (productPage.hasNext());
-
-
     }
 
-    @Transactional
-    public void processProduct(Product product) {
-
-        BigDecimal oldPrice = product.getCurrentPrice();
-        BigDecimal newPrice = fetchPrice(product.getProductUrl());
-
-        if (newPrice == null) return;
-
-        if (oldPrice == null || oldPrice.compareTo(newPrice) != 0) {
-
-            product.setCurrentPrice(newPrice);
-            product.setLastCheckedAt(LocalDateTime.now());
-            productRepository.save(product);
-
-            ProductPriceHistory history = new ProductPriceHistory();
-            history.setProduct(product);
-            history.setPrice(newPrice);
-            history.setCheckedAt(LocalDateTime.now());
-            historyRepository.save(history);
-
-            List<UserTrackedProduct> trackedProducts =
-                    trackedProductRepository.findByProductIdWithUser(product.getId());
-
-            for (UserTrackedProduct mapping : trackedProducts) {
-
-                cacheManager.getCache("userTrackedProducts")
-                        .evict(mapping.getUser().getId());
-
-                BigDecimal targetPrice = mapping.getTargetPrice();
-
-                if (newPrice.compareTo(targetPrice) <= 0 &&
-                        !Boolean.TRUE.equals(mapping.getAlertSent())) {
-
-                    eventPublisher.publishEvent(
-                            new PriceDropEvent(mapping, newPrice)
-                    );
-
-                    mapping.setAlertSent(true);
-                    trackedProductRepository.save(mapping);
-                }
-
-                if (newPrice.compareTo(targetPrice) > 0 &&
-                        Boolean.TRUE.equals(mapping.getAlertSent())) {
-
-                    mapping.setAlertSent(false);
-                    trackedProductRepository.save(mapping);
-                }
-            }
-        }
-    }
-
-    public BigDecimal fetchPrice(String productUrl){
-        try{
-
-            Document document = Jsoup.connect(productUrl)
-                    .userAgent("Mozilla/5.0")
-                    .timeout(10000)
-                    .get();
-
-            Element priceElement = document.select(".price_color").first();
-
-            if(priceElement == null) return null;
-
-            String priceText = priceElement.text();
-
-            String cleaned = priceText.replaceAll("[^0-9.]","");
-            System.out.println(cleaned);
-
-            return new BigDecimal(cleaned);
-
-        }catch (Exception e){
-           log.error(String.valueOf(e));
-           return null;
-        }
-    }
 }

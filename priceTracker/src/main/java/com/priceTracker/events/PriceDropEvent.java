@@ -15,7 +15,11 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class PriceDropEvent {
 
-    private UserTrackedProduct userTrackedProduct;
+    private String productName;
+
+    private String email;
+
+    private BigDecimal targetPrice;
 
     private BigDecimal newPrice;
 
