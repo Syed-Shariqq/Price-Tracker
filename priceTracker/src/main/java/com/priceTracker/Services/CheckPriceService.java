@@ -15,6 +15,9 @@ import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,65 +49,76 @@ public class CheckPriceService {
     @Autowired
     private final ApplicationEventPublisher eventPublisher;
 
-    @Async
-    @Transactional
+    
     public void checkPrices() {
 
-        List<Product> products = productRepository.findAll();
+        int page = 0;
+        int size = 50;
+        Page<Product> productPage;
+
+        do {
+            Pageable pageable = PageRequest.of(page, size);
+            productPage = productRepository.findAll(pageable);
+
+            List<Product> products = productPage.getContent();
+
+            for (Product product : products) {
+                processProduct(product);
+            }
+
+            page++;
+
+        } while (productPage.hasNext());
 
 
-        for(Product product : products){
+    }
 
-            BigDecimal oldPrice = product.getCurrentPrice();
-            BigDecimal newPrice = fetchPrice(product.getProductUrl());
+    @Transactional
+    public void processProduct(Product product) {
 
-            if(newPrice == null) continue;
+        BigDecimal oldPrice = product.getCurrentPrice();
+        BigDecimal newPrice = fetchPrice(product.getProductUrl());
 
-            if(oldPrice == null || oldPrice.compareTo(newPrice) != 0){
-                product.setCurrentPrice(newPrice);
-                product.setLastCheckedAt(LocalDateTime.now());
-                productRepository.save(product);
+        if (newPrice == null) return;
 
+        if (oldPrice == null || oldPrice.compareTo(newPrice) != 0) {
 
-                ProductPriceHistory history = new ProductPriceHistory();
-                history.setProduct(product);
-                history.setPrice(newPrice);
-                history.setCheckedAt(LocalDateTime.now());
+            product.setCurrentPrice(newPrice);
+            product.setLastCheckedAt(LocalDateTime.now());
+            productRepository.save(product);
 
-                historyRepository.save(history);
+            ProductPriceHistory history = new ProductPriceHistory();
+            history.setProduct(product);
+            history.setPrice(newPrice);
+            history.setCheckedAt(LocalDateTime.now());
+            historyRepository.save(history);
 
-                //Notification part
-                List<UserTrackedProduct> trackedProducts =
-                            trackedProductRepository.findByProductIdWithUser(product.getId());
+            List<UserTrackedProduct> trackedProducts =
+                    trackedProductRepository.findByProductIdWithUser(product.getId());
 
-                for(UserTrackedProduct mapping : trackedProducts){
+            for (UserTrackedProduct mapping : trackedProducts) {
 
-                    cacheManager.getCache("userTrackedProducts")
-                            .evict(mapping.getUser().getId());
+                cacheManager.getCache("userTrackedProducts")
+                        .evict(mapping.getUser().getId());
 
-                    BigDecimal targetPrice = mapping.getTargetPrice();
+                BigDecimal targetPrice = mapping.getTargetPrice();
 
-                    if(newPrice.compareTo(targetPrice) <= 0 && !Boolean.TRUE.equals(mapping.getAlertSent())){
+                if (newPrice.compareTo(targetPrice) <= 0 &&
+                        !Boolean.TRUE.equals(mapping.getAlertSent())) {
 
-                        //function call for email send
+                    eventPublisher.publishEvent(
+                            new PriceDropEvent(mapping, newPrice)
+                    );
 
-                        System.out.println("Email Service triggered");
+                    mapping.setAlertSent(true);
+                    trackedProductRepository.save(mapping);
+                }
 
-                        eventPublisher.publishEvent(
-                                new PriceDropEvent(mapping , newPrice)
-                        );
+                if (newPrice.compareTo(targetPrice) > 0 &&
+                        Boolean.TRUE.equals(mapping.getAlertSent())) {
 
-                        System.out.println("EVENT PUBLISHED");
-
-                        mapping.setAlertSent(true);
-                        trackedProductRepository.save(mapping);
-                    }
-
-                    if(newPrice.compareTo(targetPrice) > 0 && Boolean.TRUE.equals(mapping.getAlertSent())){
-
-                        mapping.setAlertSent(false);
-                        trackedProductRepository.save(mapping);
-                    }
+                    mapping.setAlertSent(false);
+                    trackedProductRepository.save(mapping);
                 }
             }
         }
