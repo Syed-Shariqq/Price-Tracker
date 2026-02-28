@@ -1,8 +1,6 @@
 package com.priceTracker.events;
 
-import com.priceTracker.Entities.UserTrackedProduct;
 import com.priceTracker.Services.EmailService;
-import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;

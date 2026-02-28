@@ -1,7 +1,6 @@
 package com.priceTracker.events;
 
 
-import com.priceTracker.Entities.UserTrackedProduct;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
