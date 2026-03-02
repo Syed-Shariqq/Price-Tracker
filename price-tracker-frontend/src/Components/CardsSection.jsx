@@ -55,11 +55,11 @@ const CardsSection = () => {
   ]
 
   return (
-    <div className='min-h-screen md:py-5 md:min-h-2/3 bg-white'>
-             <div className='py-10'>
-              <h1 className='text-center text-nowrap text-3xl font-semibold'>A Central Hub for All Your <br /> Tracked Products</h1>
+    <div className='min-h-screen md:py-8 lg:py-12 bg-white'>
+             <div className='py-8 md:py-10 lg:py-12 px-4'>
+              <h1 className='text-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold'>A Central Hub for All Your <br className='hidden sm:block' /> Tracked Products</h1>
              </div>
-             <div className='flex flex-col gap-6 md:flex-row flex-wrap justify-center items-center'>
+             <div className='flex flex-col gap-6 md:flex-row flex-wrap justify-center items-center px-4'>
                {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
                ))}

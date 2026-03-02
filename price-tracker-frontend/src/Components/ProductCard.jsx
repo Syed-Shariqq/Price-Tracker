@@ -3,19 +3,19 @@ import React from 'react'
 
 const ProductCard = ({product}) => {
   return (
-            <div className='h-100 hover:-translate-y-2 transition-all duration-300 md:max-w-1/3 2xl:h-120 flex-col 2xl:max-w-1/4 flex gap-3 max-w-full mx-5 border border-gray-200 shadow-xl rounded-2xl p-5'>
-                  <div className='max-w-full min-h-32 flex gap-7 items-center justify-start'>
+            <div className='hover:-translate-y-2 transition-all duration-300 flex-col flex gap-3 w-full sm:max-w-72 md:max-w-sm lg:max-w-xs border border-gray-200 shadow-xl rounded-2xl p-4 md:p-5 h-auto'>
+                  <div className='w-full min-h-24 flex gap-4 md:gap-6 items-start justify-start'>
                     <img src={product.imageUrl}
-                     alt={product.name} className='min-h-16 max-w-16 bg-contain rounded-2xl'/>
-                     <p className='text-2xl font-semibold'>{product.name}</p>
+                     alt={product.name} className='h-16 w-16 md:h-20 md:w-20 object-cover rounded-lg shrink-0'/>
+                     <p className='text-lg md:text-xl lg:text-2xl font-semibold line-clamp-2'>{product.name}</p>
                   </div>
-                  <div className='flex text-xl flex-col '>
-                    <p className='flex'>Current Price:<IndianRupee className='pt-2'/>{product.currentPrice}</p>
-                    <p className='flex'>Target Price:<IndianRupee className='pt-2'/>{product.targetPrice}</p>
-                    <img src="../src/assets/lines.png" alt="" />
+                  <div className='flex text-lg md:text-xl flex-col gap-2'>
+                    <p className='flex items-center gap-2'>Current Price:<IndianRupee className='w-4 h-4'/><span>{product.currentPrice}</span></p>
+                    <p className='flex items-center gap-2'>Target Price:<IndianRupee className='w-4 h-4'/><span>{product.targetPrice}</span></p>
+                    <img src="../src/assets/lines.png" alt="" className='w-full' />
                   </div>
-                  <div className='flex items-center text-2xl justify-start'>
-                    <div className='bg-green-600 mx-3 h-4 w-4 rounded-full'></div>
+                  <div className='flex items-center text-lg md:text-xl lg:text-2xl justify-start gap-2'>
+                    <div className='bg-green-600 h-3 w-3 md:h-4 md:w-4 rounded-full shrink-0'></div>
                     <p>{product.status}</p>
                   </div>
                </div>

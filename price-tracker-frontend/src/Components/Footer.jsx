@@ -3,18 +3,18 @@ import CTA from './CTA'
 
 const Footer = () => {
   return (
-    <div className='min-h-9/10 2xl:min-h-[40vh] md:min-h-[70vh] w-full flex flex-col items-center justify-start gap-10'>
+    <div className='w-full flex flex-col items-center justify-start gap-12 md:gap-16 py-12 md:py-16 lg:py-20 px-4'>
           <CTA />
-          <div className='min-h-40 w-full flex flex-col items-center justify-center gap-5'>
-            <div className='flex items-center justify-center gap-1'>
-              <img src="../src/assets/Icon.png" alt="" className='bg-contain lg:w-20 lg:h-20 w-10 h-10 rounded-full' />
-              <h1 className='text-xl lg:text-4xl font-bold'>CostTrack</h1>
+          <div className='w-full flex flex-col items-center justify-center gap-6 md:gap-8'>
+            <div className='flex items-center justify-center gap-2 md:gap-3'>
+              <img src="../src/assets/Icon.png" alt="CostTrack" className='w-10 h-10 md:w-14 md:h-14 lg:w-20 lg:h-20 rounded-full object-cover' />
+              <h1 className='text-xl md:text-2xl lg:text-4xl font-bold'>CostTrack</h1>
             </div>
-            <div>
-              <p className='text-gray-500 text-lg'>© 2026 CostTrack. All rights reserved.</p>
+            <div className='text-center'>
+              <p className='text-gray-500 text-sm md:text-base lg:text-lg'>© 2026 CostTrack. All rights reserved.</p>
             </div>
-            <div>
-              <p className='text-lg'>Terms of Service | Privacy Policy | Contact</p>
+            <div className='text-center text-sm md:text-base lg:text-lg'>
+              <p>Terms of Service | Privacy Policy | Contact</p>
             </div>
           </div>
          </div>
