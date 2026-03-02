@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import SignUp from '../Components/SignUp'
-import Login from '../Components/Login'
-import AuthLeftSection from '../Components/AuthLeftSection';
+import AuthLeftSection from '../Features/Auth/AuthLeftSection';
+import SignUp from '../Features/Auth/SignUp';
+import Login from '../Features/Auth/Login';
 
 const AuthPage = () => {
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Bell, Menu, Search } from 'lucide-react';
 import { useState } from 'react';
-import SideBar from '../Components/SideBar';
+import SideBar from '../Components/Layout/SideBar';
 
 const HomePage = () => {
 
@@ -29,7 +29,7 @@ const HomePage = () => {
         <div className='w-full bg-blue-50 flex flex-col items-center justify-start gap-10'>
            <div className='flex  items-center justify-between w-full'>
               <div className='relative flex items-center justify-center gap-2 md:w-[50vw] max-w-xl md:min-h-16 min-h-12 rounded-2xl py-2 px-4 '>
-                <input type="text" placeholder='Search Products..' className='text-xl md:pr-10 bg-white md:min-h-16 md:w-[50vw] w-full outline-none border-2 border-gray-400/50 min-h-12 pr-8 pl-4 rounded-full'/>
+                <input type="text" placeholder='Search Products..' className='text-sm md:text-lg 2xl:text-xl md:pr-10 bg-white md:min-h-16 md:w-[50vw] w-full outline-none border-2 border-gray-400/50 min-h-12 pr-8 pl-4 rounded-full'/>
                 <Search className='absolute md:top-7 md:right-8 top-5 right-6'/>
               </div>
               <div className='flex md:gap-10 items-center p-3 justify-center gap-5'>

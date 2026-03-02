@@ -1,5 +1,5 @@
 import React from 'react'
-import CTA from './CTA'
+import CTA from "../../Features/Landing/CTA"
 
 const Footer = () => {
   return (

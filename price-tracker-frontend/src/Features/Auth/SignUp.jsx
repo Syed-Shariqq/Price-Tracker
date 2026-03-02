@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Login from './Login'
 import { Eye, EyeClosed } from 'lucide-react';
 
 const SignUp = ({setActiveTab , activeTab}) => {
