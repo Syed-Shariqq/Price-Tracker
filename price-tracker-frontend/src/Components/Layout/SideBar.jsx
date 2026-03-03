@@ -1,18 +1,20 @@
-import React from 'react'
 import { Bell, ChartNoAxesCombined, File, LayoutDashboard, Settings, ShoppingBasket, X } from 'lucide-react'
-import NavLogo from './NavLogo';
+import NavLogo from '@/Components/Layout/NavLogo';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const SideBar = ({ onClose }) => {
 
     const menuItems = [
-                { label: 'DashBoard', icon: LayoutDashboard },
-                { label: 'Products', icon: ShoppingBasket },
-                { label: 'Alerts', icon: Bell },
-                { label: 'Analytics', icon: ChartNoAxesCombined },
-                { label: 'Reports', icon: File },
-                { label: 'Settings', icon: Settings },
+                { label: 'DashBoard', icon: LayoutDashboard, path: "/home" },
+                { label: 'Products', icon: ShoppingBasket, path: "/products" },
+                { label: 'Alerts', icon: Bell, path: "/alerts" },
+                { label: 'Analytics', icon: ChartNoAxesCombined, path: "/analytics" },
+                { label: 'Reports', icon: File, path: "/reports" },
+                { label: 'Settings', icon: Settings, path: "/settings" },
               ];
 
+   const navigate = useNavigate();
 
   return (
     <>
@@ -31,6 +33,10 @@ const SideBar = ({ onClose }) => {
         {menuItems.map((item, index) => (
           <div
             key={index}
+            onClick={() => {
+              navigate(item.path);
+              if(onClose) onClose();
+            }}
             className='flex xl:text-2xl lg:text-base cursor-pointer hover:bg-blue-300/60 hover:text-blue-700 transition-all duration-200 rounded-lg py-3 px-4 items-center gap-4 font-semibold'
           >
             <item.icon className='w-5 h-5 shrink-0'/>

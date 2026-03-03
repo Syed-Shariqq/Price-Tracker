@@ -1,5 +1,5 @@
 import React from 'react'
-import ProductCard from '../../Components/Common/ProductCard'
+import ProductCard from '@/Components/Common/ProductCard'
 
 const CardsSection = () => {
 

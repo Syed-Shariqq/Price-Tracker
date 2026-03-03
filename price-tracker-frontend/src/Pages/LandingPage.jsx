@@ -1,10 +1,10 @@
 import React from 'react'
-import LandingNavbar from '../Components/Layout/Navbar'
-import CardsSection from '../Features/Landing/CardsSection'
-import Footer from '../Components/Layout/Footer'
-import HeroSection from '../Features/Landing/HeroSection'
-import HowItWorks from '../Features/Landing/HowItWorks'
-import Testimonials from '../Features/Landing/Testimonials'
+import LandingNavbar from '@/Components/Layout/Navbar'
+import CardsSection from '@/Features/Landing/CardsSection'
+import Footer from '@/Components/Layout/Footer'
+import HeroSection from '@/Features/Landing/HeroSection'
+import HowItWorks from '@/Features/Landing/HowItWorks'
+import Testimonials from '@/Features/Landing/Testimonials'
 
 const LandingPage = () => {
   return (

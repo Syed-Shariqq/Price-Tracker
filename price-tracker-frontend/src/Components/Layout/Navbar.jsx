@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import NavLogo from './NavLogo'
+import NavLogo from '@/Components/Layout/NavLogo'
 
 const Navbar = () => {
   return (

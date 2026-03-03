@@ -1,7 +1,13 @@
 import { Routes , Route} from 'react-router-dom'
-import LandingPage from './Pages/LandingPage'
-import AuthPage from './Pages/AuthPage'
-import HomePage from './Pages/HomePage'
+import LandingPage from '@/Pages/LandingPage'
+import AuthPage from '@/Pages/AuthPage'
+import HomePage from '@/Pages/HomePage'
+import LayoutWrapper from '@/Components/Layout/LayoutWrapper'
+import ProductsPage from '@/Pages/ProductsPage'
+import AlertsPage from '@/Pages/AlertsPage'
+import AnalyticsPage from '@/Pages/AnalyticsPage'
+import ReportsPage from '@/Pages/ReportsPage'
+import SettingsPage from '@/Pages/SettingsPage'
 
 
 const App = () => {
@@ -12,6 +18,13 @@ const App = () => {
         <Route path='/' element={<LandingPage />} />
         <Route path='/auth' element={<AuthPage />} />
         <Route path='/home' element={<HomePage />} />
+        <Route element={<LayoutWrapper />}>
+           <Route path='/products' element={<ProductsPage />} />
+           <Route path='/alerts' element={<AlertsPage />} />
+           <Route path='/analytics' element={<AnalyticsPage />} />
+           <Route path='/reports' element={<ReportsPage />} />
+           <Route path='/settings' element={<SettingsPage />} />
+        </Route>
       </Routes>
      
     </>
