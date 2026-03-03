@@ -38,3 +38,7 @@
 .tab-item.inactive:hover {
     color: #9ca3af;
 }
+
+.scrollbar::-webkit-scrollbar{
+    display: none;
+}

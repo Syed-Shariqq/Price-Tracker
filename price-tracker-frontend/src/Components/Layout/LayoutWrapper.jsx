@@ -25,7 +25,7 @@ export default function Layout() {
                      duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} xl:hidden`}>
                    <SideBar onClose={() => setIsSidebarOpen(false)} />
                  </div>
-                 <div className='w-full bg-blue-50 flex flex-col items-start gap-10'>
+                 <div className='w-full bg-linear-to-br from-slate-100 to-blue-100 flex flex-col items-start gap-10'>
                     <DashboardNav setIsSidebarOpen={setIsSidebarOpen} isSidebarOpen={isSidebarOpen} />
                     <main className="w-full px-6">
                         <Outlet />
