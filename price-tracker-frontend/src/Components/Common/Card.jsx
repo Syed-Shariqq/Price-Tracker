@@ -19,7 +19,6 @@ const Card = ({ product }) => {
 
                 {/* Details */}
                 <div className="flex flex-col justify-between flex-1">
-
                     <div>
                         <h1 className="text-sm md:text-lg 2xl:text-2xl font-bold">
                             {product.name}
@@ -43,12 +42,12 @@ const Card = ({ product }) => {
                     </div>
 
                 </div>
+
             </div>
 
             {/* Button */}
-           
-             <button className="w-full flex gap-2 active:scale-95 hover:scale-105 transition-all duration-300 hover:bg-blue-700 md:w-auto md:self-end px-4 py-2 md:px-6 md:py-3 bg-blue-600 text-white text-sm md:text-base rounded-lg">
-                 View Analytics
+            <button className="w-full flex gap-2 active:scale-95 hover:scale-105 transition-all duration-300 hover:bg-blue-700 md:w-auto md:self-end px-4 py-2 md:px-6 md:py-3 bg-blue-600 text-white text-sm md:text-base rounded-lg">
+                View Analytics
                 <ChartNoAxesCombined />
             </button>
 

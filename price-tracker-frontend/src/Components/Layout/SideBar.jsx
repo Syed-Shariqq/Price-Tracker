@@ -5,20 +5,22 @@ import { useState } from 'react';
 
 const SideBar = ({ onClose }) => {
 
-    const menuItems = [
-                { label: 'DashBoard', icon: LayoutDashboard, path: "/home" },
-                { label: 'Products', icon: ShoppingBasket, path: "/products" },
-                { label: 'Alerts', icon: Bell, path: "/alerts" },
-                { label: 'Analytics', icon: ChartNoAxesCombined, path: "/analytics" },
-                { label: 'Reports', icon: File, path: "/reports" },
-                { label: 'Settings', icon: Settings, path: "/settings" },
-              ];
+  const menuItems = [
+    { label: 'DashBoard', icon: LayoutDashboard, path: "/home" },
+    { label: 'Products', icon: ShoppingBasket, path: "/products" },
+    { label: 'Alerts', icon: Bell, path: "/alerts" },
+    { label: 'Analytics', icon: ChartNoAxesCombined, path: "/analytics" },
+    { label: 'Reports', icon: File, path: "/reports" },
+    { label: 'Settings', icon: Settings, path: "/settings" },
+  ];
 
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
     <>
       <div className='py-4 px-4 w-full bg-linear-to-r from-blue-300 to-blue-200 flex items-center justify-between'>
+
+        {/* Logo */}
         <NavLogo />
         {onClose && (
           <button
@@ -29,21 +31,24 @@ const SideBar = ({ onClose }) => {
           </button>
         )}
       </div>
+
+      {/* Menu Items */}
       <div className='my-8 px-2 grid text-gray-600 grid-rows-6 items-center justify-start gap-4'>
         {menuItems.map((item, index) => (
           <div
             key={index}
             onClick={() => {
               navigate(item.path);
-              if(onClose) onClose();
+              if (onClose) onClose();
             }}
             className='flex xl:text-2xl lg:text-base cursor-pointer hover:bg-blue-300/60 hover:text-blue-700 transition-all duration-200 rounded-lg py-3 px-4 items-center gap-4 font-semibold'
           >
-            <item.icon className='w-5 h-5 shrink-0'/>
+            <item.icon className='w-5 h-5 shrink-0' />
             <h1>{item.label}</h1>
           </div>
         ))}
       </div>
+
     </>
   )
 }

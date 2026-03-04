@@ -62,15 +62,20 @@ const ProductsPage = () => {
 
   return (
     <div className='w-full gap-5 flex flex-col items-center justify-center'>
+
+      {/* Header Section */}
       <div className='flex flex-col gap-4 items-center justify-center'>
         <h1 className='2xl:text-6xl md:text-4xl text-2xl font-bold'>Tracked Products</h1>
         <h2 className='text-gray-500 2xl:text-3xl md:text-2xl text-sm'>Manage and monitor your tracked products</h2>
       </div>
+
+      {/* Cards Section */}
       <div className='flex scrollbar md:max-h-screen overflow-y-auto flex-wrap md:flex-row flex-col items-center justify-start gap-5'>
         {products.map((product, index) => (
           <Card key={index} product={product} />
         ))}
       </div>
+
     </div>
   )
 }

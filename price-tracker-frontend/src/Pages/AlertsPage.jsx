@@ -62,10 +62,14 @@ const AlertsPage = () => {
 
   return (
     <div className='w-full flex flex-col gap-10'>
+
+      {/* Header Section */}
       <div className='flex items-center justify-center flex-col'>
         <h1 className='text-3xl font-bold'>Alerts</h1>
         <h2 className='text-lg text-gray-600'>View and manage Price Drops and increase</h2>
       </div>
+
+      {/* Cards Section */}
       <div className='flex scrollbar md:max-h-screen overflow-y-auto flex-wrap md:flex-row flex-col items-center justify-start gap-5'>
         {products.map((product) => (
           <div key={product.id} className='w-full lg:w-2/5 2xl:w-full hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 md:max-w-xl shadow-xl bg-white rounded-2xl p-4 mx-auto px-6 flex flex-col gap-4'>
@@ -87,6 +91,7 @@ const AlertsPage = () => {
         </div>
         ))}
       </div>
+      
     </div>
   )
 }

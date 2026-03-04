@@ -4,6 +4,7 @@ import { Bell, Lock, Trash2, Upload } from 'lucide-react'
 const SettingsPage = () => {
 
   const [isEditingProfile, setIsEditingProfile] = useState(false)
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false)
   const [profileData, setProfileData] = useState({
     name: 'Syed Shariq',
     email: 'shariq@email.com',
@@ -52,16 +53,18 @@ const SettingsPage = () => {
     setNotifications({ ...notifications, [field]: value })
   }
 
+
   const handleSecurityChange = (field, value) => {
     setSecurity({ ...security, [field]: value })
   }
 
   const handleUpdatePassword = () => {
     if (security.newPassword === security.confirmPassword) {
-      alert('Password updated successfully!')
       setSecurity({ currentPassword: '', newPassword: '', confirmPassword: '' })
-    } else {
-      alert('Passwords do not match!')
+      setIsUpdatingPassword(prev => !prev)
+      alert("Password updated successfully")
+    }else{
+      alert("Password do not match")
     }
   }
 
@@ -128,7 +131,7 @@ const SettingsPage = () => {
                 {!isEditingProfile ? (
                   <button
                     onClick={handleEditProfile}
-                    className='bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-all duration-300 active:scale-95 font-semibold'
+                    className='active:scale-95 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'
                   >
                     Update Profile
                   </button>
@@ -136,13 +139,13 @@ const SettingsPage = () => {
                   <>
                     <button
                       onClick={handleSaveProfile}
-                      className='bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition font-semibold'
+                      className='bg-green-500 active:scale-95 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'
                     >
                       Save Changes
                     </button>
                     <button
                       onClick={handleCancelProfile}
-                      className='bg-gray-400 hover:bg-gray-500 text-white px-6 py-2 rounded-lg transition font-semibold'
+                      className='active:scale-95 bg-gray-400 hover:bg-gray-500 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'
                     >
                       Cancel
                     </button>
@@ -265,7 +268,7 @@ const SettingsPage = () => {
 
             <div className='pt-2'>
               <p className='text-gray-600 text-sm mb-4'>Last Fetch: <span className='font-semibold text-gray-800'>{priceFetch.lastFetch}</span></p>
-              <button className='bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition font-semibold'>
+              <button className='active:scale-95 bg-blue-500 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'>
                 Fetch Now
               </button>
             </div>
@@ -285,10 +288,12 @@ const SettingsPage = () => {
                 <label className='block text-sm md:text-md 2xl:text-2xl font-semibold text-gray-700 mb-2'>Current Password</label>
                 <input
                   type='password'
+                  disabled={isUpdatingPassword ? false : true}
                   placeholder='••••••••'
                   value={security.currentPassword}
+                  
                   onChange={(e) => handleSecurityChange('currentPassword', e.target.value)}
-                  className='w-full px-4 py-2  rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  className='w-full disabled:bg-gray-50 disabled:text-gray-600 px-4 py-2  rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500'
                 />
               </div>
 
@@ -297,9 +302,10 @@ const SettingsPage = () => {
                 <input
                   type='password'
                   placeholder='••••••••'
+                  disabled={isUpdatingPassword ? false : true}
                   value={security.newPassword}
                   onChange={(e) => handleSecurityChange('newPassword', e.target.value)}
-                  className='w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  className='w-full disabled:bg-gray-50 disabled:text-gray-600 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500'
                 />
               </div>
 
@@ -308,18 +314,34 @@ const SettingsPage = () => {
                 <input
                   type='password'
                   placeholder='••••••••'
+                  disabled={isUpdatingPassword ? false : true}
                   value={security.confirmPassword}
                   onChange={(e) => handleSecurityChange('confirmPassword', e.target.value)}
-                  className='w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  className='w-full disabled:bg-gray-50 disabled:text-gray-600 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500'
                 />
               </div>
 
-              <button
-                onClick={handleUpdatePassword}
-                className='w-full 2xl:px-8 2xl:py-3 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition font-semibold mt-6'
+              {isUpdatingPassword ? (
+                <div className='flex items-center justify-between'>
+                  <button 
+                  onClick={handleUpdatePassword}
+                  className='active:scale-95 mt-6 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'>
+                    Save Changes
+                  </button>
+                  <button
+                    onClick={() => setIsUpdatingPassword(prev => !prev)}
+                   className='active:scale-95 mt-6 bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'>
+                    Cancel
+                  </button>
+                </div>
+              ): (
+                <button
+                onClick={() => setIsUpdatingPassword(prev => !prev)}
+                className='w-full active:scale-95 2xl:px-8 2xl:py-3 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold mt-6'
               >
                 Update Password
               </button>
+              )}
             </div>
           </div>
 

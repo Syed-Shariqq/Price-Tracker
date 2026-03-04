@@ -9,10 +9,14 @@ const AuthPage = () => {
 
   return (
     <div className='min-h-screen bg-linear-to-br from-blue-200 via-blue-100 to-white px-6 py-10 flex flex-col items-center'>
+
+      {/* Logo */}
       <div className='flex items-center justify-center mb-8'>
         <img src="../src/assets/Icon.png" alt="" className='w-12 h-12 rounded-full'/>
         <h1 className='text-2xl font-bold ml-3'>CostTrack</h1>
       </div>
+
+      {/* Auth Section */}
       <div className='relative flex items-stretch justify-center gap-0 w-160 md:w-240 2xl:w-[60vw]'>
         <AuthLeftSection />
         <div className='backdrop-blur-sm bg-white/40 rounded-r-3xl border border-white/40 shadow-xl'>
@@ -23,6 +27,7 @@ const AuthPage = () => {
           )}
         </div>
       </div>
+      
     </div>
   )
 }

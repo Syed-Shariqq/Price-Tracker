@@ -8,14 +8,14 @@ import Testimonials from '@/Features/Landing/Testimonials'
 
 const LandingPage = () => {
   return (
-     <div className='min-h-screen w-full overflow-x-hidden text-black'>
+    <div className='min-h-screen w-full overflow-x-hidden text-black'>
       <LandingNavbar />
       <HeroSection />
-      <HowItWorks />  
-      <CardsSection />   
-      <Testimonials />  
-      <Footer />   
-     </div>
+      <HowItWorks />
+      <CardsSection />
+      <Testimonials />
+      <Footer />
+    </div>
   )
 }
 
