@@ -22,7 +22,7 @@ const LeftSidePage = ({ setIsSidebarOpen, isSidebarOpen }) => {
               <h1 className='mt-4 md:text-2xl 2xl:text-4xl font-extrabold'> ₹1,24,990 </h1>
               <h1 className='md:text-xl 2xl:text-2xl text-gray-500 font-normal line-through '> ₹1,54,900 </h1>
               <span className="bg-green-100 mb-3 w-24 text-green-600 text-sm px-4 py-2 rounded-full font-medium">19% OFF</span>
-              <p className='md:text-xl leading-10 2xl:w-2/3 text-sm text-gray-400'> 34.46 cm (13.6″) Liquid Retina Display, 16GB Unified Memory, 512GB SSD Storage, Backlit Keyboard, 1080p FaceTime HD Camera, Touch ID- Midnight</p>
+              <p className='md:text-xl leading-7 2xl:w-2/3 text-sm text-gray-400'> 34.46 cm (13.6″) Liquid Retina Display, 16GB Unified Memory, 512GB SSD Storage, Backlit Keyboard, 1080p FaceTime HD Camera, Touch ID- Midnight</p>
               <div className='flex my-5 md:text-xl items-center justify-center gap-5'>
                 <button className='bg-blue-500 md:py-4 md:px-8 text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition-colors active:scale-95 duration-300'>Track Product</button>
                 <button className='bg-gray-200 md:py-4 md:px-8 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-300 transition-colors active:scale-95 duration-300 ml-2'>Cancel</button>
