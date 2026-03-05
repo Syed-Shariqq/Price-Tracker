@@ -72,7 +72,9 @@ const ProductsPage = () => {
       {/* Cards Section */}
       <div className='flex scrollbar md:max-h-screen overflow-y-auto flex-wrap md:flex-row flex-col items-center justify-start gap-5'>
         {products.map((product, index) => (
-          <Card key={index} product={product} />
+
+          <Card isProduct={true} showButton={false} key={index} product={product} />
+
         ))}
       </div>
 

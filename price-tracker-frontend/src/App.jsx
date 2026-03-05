@@ -6,8 +6,8 @@ import LayoutWrapper from '@/Components/Layout/LayoutWrapper'
 import ProductsPage from '@/Pages/ProductsPage'
 import AlertsPage from '@/Pages/AlertsPage'
 import AnalyticsPage from '@/Pages/AnalyticsPage'
-import ReportsPage from '@/Pages/ReportsPage'
 import SettingsPage from '@/Pages/SettingsPage'
+import ProductAnalytics from '@/Pages/ProductAnalytics'
 
 
 const App = () => {
@@ -22,7 +22,7 @@ const App = () => {
            <Route path='/products' element={<ProductsPage />} />
            <Route path='/alerts' element={<AlertsPage />} />
            <Route path='/analytics' element={<AnalyticsPage />} />
-           <Route path='/reports' element={<ReportsPage />} />
+           <Route path='/analytics/:id' element={<ProductAnalytics />} />
            <Route path='/settings' element={<SettingsPage />} />
         </Route>
       </Routes>

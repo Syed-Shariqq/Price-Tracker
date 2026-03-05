@@ -10,7 +10,6 @@ const SideBar = ({ onClose }) => {
     { label: 'Products', icon: ShoppingBasket, path: "/products" },
     { label: 'Alerts', icon: Bell, path: "/alerts" },
     { label: 'Analytics', icon: ChartNoAxesCombined, path: "/analytics" },
-    { label: 'Reports', icon: File, path: "/reports" },
     { label: 'Settings', icon: Settings, path: "/settings" },
   ];
 
