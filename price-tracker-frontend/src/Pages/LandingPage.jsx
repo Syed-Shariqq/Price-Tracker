@@ -7,6 +7,7 @@ import HowItWorks from '@/Features/Landing/HowItWorks'
 import Testimonials from '@/Features/Landing/Testimonials'
 
 const LandingPage = () => {
+
   return (
     <div className='relative min-h-screen w-full overflow-x-hidden text-black'>
       <LandingNavbar />

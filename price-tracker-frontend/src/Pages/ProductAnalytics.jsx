@@ -94,6 +94,8 @@ const ProductAnalytics = () => {
 
     return (
         <div className='w-full flex flex-col items-start justify-center gap-3'>
+
+            {/* Header */}
             <div className='flex w-full items-center justify-between'>
                 <div>
                     <h1 className='text-sm md:text-md 2xl:text-xl font-semibold text-gray-500'>Analytics / {product.name}</h1>
@@ -104,6 +106,8 @@ const ProductAnalytics = () => {
                     <button>Buy Now</button>
                 </div>
             </div>
+
+            {/* Price History */}
             <div className='flex flex-wrap w-full md:flex-row flex-col gap-5'>
                 <Card variant="analytics" showButton={false} product={product}>
                     <div className="w-full bg-white rounded-2xl shadow-xl p-3">
@@ -114,6 +118,7 @@ const ProductAnalytics = () => {
 
                         <div className="w-full h-62.5">
 
+                            {/* Chart */}
                             <ResponsiveContainer width="100%" height={300}>
                                 <AreaChart
                                     data={priceHistory}>
@@ -175,6 +180,7 @@ const ProductAnalytics = () => {
 
                         </div>
 
+                        {/* Current and Target Price */}
                         <div className='flex gap-7 mt-20'>
                             <h2 className="text-md text-gray-500 md:text-xl 2xl:text-2xl font-semibold mb-4">
                                 Current:<span className='text-black text-lg md:text-2xl 2xl:text-3xl'> 2,999</span>

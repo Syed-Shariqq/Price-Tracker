@@ -78,6 +78,7 @@ const Card = ({ product, showButton = true, variant, children, isProduct = false
                 <ChartNoAxesCombined />
             </button>)}
 
+            {/*Products Page Button */}
             {isProduct && (<div className='flex items-center justify-between'>
                 <button className='px-4 py-1 md:px-6 md:py-3 hover:bg-blue-500 transition-all duration-300 active:scale-95 bg-blue-400 text-white rounded-lg'>Buy</button>
                 <button className='px-4 py-1 md:px-6 md:py-3 hover:bg-gray-500 transition-all duration-300 active:scale-95 bg-gray-400 text-white rounded-lg'>Cancel Tracking</button>

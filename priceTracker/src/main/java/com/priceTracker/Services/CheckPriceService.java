@@ -31,7 +31,7 @@ public class CheckPriceService {
     private final ExecutorService executor = Executors.newFixedThreadPool(8);
 
 
-    @Scheduled(fixedDelay = 300000)
+
     public void checkPrices() {
 
         int page = 0;

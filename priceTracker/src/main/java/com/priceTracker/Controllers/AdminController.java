@@ -41,6 +41,11 @@ public class AdminController {
         return successResponse("Price check triggered manually","Success");
     }
 
+    @GetMapping("/test")
+    public String test(){
+         return "Working";
+    }
+
 
     @PostMapping("/email")
     public ApiResponse<String> testEmail() {
