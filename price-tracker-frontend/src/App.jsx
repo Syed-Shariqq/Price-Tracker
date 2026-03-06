@@ -1,4 +1,4 @@
-import { Routes , Route} from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import LandingPage from '@/Pages/LandingPage'
 import AuthPage from '@/Pages/AuthPage'
 import HomePage from '@/Pages/HomePage'
@@ -8,7 +8,7 @@ import AlertsPage from '@/Pages/AlertsPage'
 import AnalyticsPage from '@/Pages/AnalyticsPage'
 import SettingsPage from '@/Pages/SettingsPage'
 import ProductAnalytics from '@/Pages/ProductAnalytics'
-import OtpPage from '@/Pages/OtpPage'
+import ProtectedRoute from './Utils/ProtectedRoute'
 
 
 const App = () => {
@@ -18,19 +18,49 @@ const App = () => {
       <Routes>
         <Route path='/' element={<LandingPage />} />
         <Route path='/auth' element={<AuthPage />} />
-        <Route path='/home' element={<HomePage />} />
+
+        <Route path='/home' element={
+          <ProtectedRoute>
+            <HomePage />
+          </ProtectedRoute>
+        } />
+
         <Route element={<LayoutWrapper />}>
-           <Route path='/products' element={<ProductsPage />} />
-           <Route path='/alerts' element={<AlertsPage />} />
-           <Route path='/analytics' element={<AnalyticsPage />} />
-           <Route path='/analytics/:id' element={<ProductAnalytics />} />
-           <Route path='/settings' element={<SettingsPage />} />
+          <Route path='/products' element={
+            <ProtectedRoute>
+              <ProductsPage />
+            </ProtectedRoute>
+          } />
+
+          <Route path='/alerts' element={
+            <ProtectedRoute>
+              <AlertsPage />
+            </ProtectedRoute>
+          } />
+
+          <Route path='/analytics' element={
+            <ProtectedRoute>
+              <AnalyticsPage />
+            </ProtectedRoute>
+          } />
+
+          <Route path='/analytics/:id' element={
+            <ProtectedRoute>
+              <ProductAnalytics />
+            </ProtectedRoute>
+          } />
+
+          <Route path='/settings' element={
+            <ProtectedRoute>
+              <SettingsPage />
+            </ProtectedRoute>
+          } />
+
         </Route>
-        <Route path='/Otp' element={<OtpPage />} />
       </Routes>
-     
+
     </>
-    
+
   )
 }
 

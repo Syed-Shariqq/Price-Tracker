@@ -1,4 +1,4 @@
-import { Bell, ChartNoAxesCombined, File, LayoutDashboard, Settings, ShoppingBasket, X } from 'lucide-react'
+import { Bell, ChartNoAxesCombined, File, LayoutDashboard, Settings, ShoppingBasket, SquareArrowRightExit, X } from 'lucide-react'
 import NavLogo from '@/Components/Layout/NavLogo';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -14,6 +14,13 @@ const SideBar = ({ onClose }) => {
   ];
 
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+
+    localStorage.removeItem('token');
+    navigate('/auth');
+    
+  }
 
   return (
     <>
@@ -47,7 +54,12 @@ const SideBar = ({ onClose }) => {
           </div>
         ))}
       </div>
-
+     <button 
+     onClick={handleLogout}
+     className='text-md gap-2 hover:bg-red-600 2xl:px-6 2xl:py-3 font-semibold lg:text-xl px-4 py-2 border-2 border-red-500 ml-5 transition-colors duration-300 active:scale-95 rounded-2xl w-[80%] flex items-center justify-center text-white bg-red-400 cursor-pointer'>
+      <SquareArrowRightExit />
+      <h1>Logout</h1> 
+     </button>
     </>
   )
 }

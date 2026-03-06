@@ -3,11 +3,13 @@ import AuthLeftSection from '@/Features/Auth/AuthLeftSection';
 import SignUp from '@/Features/Auth/SignUp';
 import Login from '@/Features/Auth/Login';
 import { verifyOtp } from '@/Api/auth';
+import Loader from '../Components/Common/Loader';
 
 const AuthPage = () => {
 
   const [activeTab, setActiveTab] = useState('signup');
   const [isOtpSent, setIsOtpSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [signUpData, setSignUpData] = useState({
     username: '',
@@ -20,13 +22,20 @@ const AuthPage = () => {
     email: signUpData.email,
     otp: ''
   });
+
+  const [logInData, setLogInData] = useState({
+    emailOrUsername: '',
+    password: ''
+  })
+
+
   const handleOtpVerfication = async () => {
 
     {/* OTP verification logic */ }
     try {
-
+      setLoading(true);
       const res = await verifyOtp({
-        email: signUpData.email,  
+        email: signUpData.email,
         otp: data.otp
       });
 
@@ -40,14 +49,21 @@ const AuthPage = () => {
       }
 
     } catch (err) {
+
       console.log(err.response?.data);
+
+    } finally {
+
+      setLoading(false);
+
     }
 
   }
 
   return (
-    <div className='min-h-screen bg-linear-to-br from-blue-200 via-blue-100 to-white px-6 py-10 flex flex-col items-center'>
+    <div className='min-h-screen relative bg-linear-to-br from-blue-200 via-blue-100 to-white px-6 py-10 flex flex-col items-center'>
 
+      {loading && <Loader />}
       {/* Logo */}
       <div className='flex items-center justify-center mb-8'>
         <img src="../src/assets/Icon.png" alt="" className='w-12 h-12 rounded-full' />
@@ -62,6 +78,7 @@ const AuthPage = () => {
               e.preventDefault();
               handleOtpVerfication();
             }}>
+              
             {/* Just an OTP input goes here */}
             <p className='text-xl font-bold p-4'>We sent a code to your email.<br /> Please enter it below.</p>
             <div className='flex bg-white py-2 shadow-2xl rounded-2xl px-4 items-center justify-center gap-5'>
@@ -81,9 +98,9 @@ const AuthPage = () => {
           <AuthLeftSection />
           <div className='backdrop-blur-sm bg-white/40 rounded-r-3xl border border-white/40 shadow-xl'>
             {activeTab === 'signup' ? (
-              <SignUp setSignUpData={setSignUpData} signUpData={signUpData} setIsOtpSent={setIsOtpSent} setActiveTab={setActiveTab} activeTab={activeTab} />
+              <SignUp loading={loading} setLoading={setLoading} setSignUpData={setSignUpData} signUpData={signUpData} setIsOtpSent={setIsOtpSent} setActiveTab={setActiveTab} activeTab={activeTab} />
             ) : (
-              <Login setIsOtpSent={setIsOtpSent} setActiveTab={setActiveTab} activeTab={activeTab} />
+              <Login loading={loading} setLoading={setLoading} setLogInData={setLogInData} logInData={logInData} setIsOtpSent={setIsOtpSent} setActiveTab={setActiveTab} activeTab={activeTab} />
             )}
           </div>
         </div>

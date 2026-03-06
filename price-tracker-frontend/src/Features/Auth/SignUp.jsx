@@ -3,7 +3,7 @@ import { Eye, EyeClosed } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { sendOtp, signup } from '@/Api/auth';
 
-const SignUp = ({ setActiveTab, activeTab, setIsOtpSent, signUpData, setSignUpData }) => {
+const SignUp = ({ setActiveTab, setLoading, loading, activeTab, setIsOtpSent, signUpData, setSignUpData }) => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState(false);
@@ -15,14 +15,20 @@ const SignUp = ({ setActiveTab, activeTab, setIsOtpSent, signUpData, setSignUpDa
   const handleSignUp = async () => {
     // Handle sign-up logic here
     try {
-
-      if(signUpData.password !== signUpData.confirmPassword) return alert('Passwords do not match');
+      setLoading(true);
+      if (signUpData.password !== signUpData.confirmPassword) return alert('Passwords do not match');
 
       await signup(signUpData);
       setIsOtpSent(true);
 
     } catch (err) {
+
       console.log(err.response.data);
+      
+    }  finally {
+
+      setLoading(false);
+
     }
 
   }
@@ -108,8 +114,9 @@ const SignUp = ({ setActiveTab, activeTab, setIsOtpSent, signUpData, setSignUpDa
             )}
           </div>
           <button
-            className='w-64 hover:bg-blue-700 hover:scale-105 transition-all duration-300 active:scale-95 2xl:w-100 2xl:text-2xl 2xl:h-16 md:h-12 md:text-xl cursor-pointer 
-            md:w-80 outline-none mt-5 h-10 rounded-full bg-blue-500 text-white font-semibold'>Create My Account
+          disabled={loading}
+            className={`w-64 hover:bg-blue-700 ${loading ? "cursor-not-allowed opacity-50" : ""} hover:scale-105 transition-all duration-300 active:scale-95 2xl:w-100 2xl:text-2xl 2xl:h-16 md:h-12 md:text-xl cursor-pointer 
+            md:w-80 outline-none mt-5 h-10 rounded-full bg-blue-500 text-white font-semibold`}>Create My Account
           </button>
         </div>
       </form>

@@ -8,6 +8,9 @@ const HomePage = () => {
 
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+   const token = localStorage.getItem('token');
+   console.log(token);
+
   return (
     <div className='min-h-screen flex'>
 

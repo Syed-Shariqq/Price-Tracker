@@ -19,7 +19,7 @@ api.interceptors.request.use((config) => {
     config.url.includes(route)
   );
 
-  if (token && !isPublic) {
+  if (token && !isPublic && token !== "undefined" && token !== null) {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
