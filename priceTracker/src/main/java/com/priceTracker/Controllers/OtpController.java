@@ -35,6 +35,7 @@ public class OtpController {
     @PostMapping("/verify-otp")
     public ApiResponse<String> verifyOtp(@RequestBody OtpRequest otpRequest){
 
+        System.out.println(otpRequest.getEmail());
         ApiResponse<String> stringApiResponse = otpService.verifyOtp(otpRequest.getEmail(), otpRequest.getOtp());
         return successResponse(stringApiResponse.getData(),
                 stringApiResponse.getMessage(), HttpStatus.valueOf(stringApiResponse.getStatus()));
