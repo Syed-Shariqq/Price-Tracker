@@ -8,6 +8,7 @@ import AlertsPage from '@/Pages/AlertsPage'
 import AnalyticsPage from '@/Pages/AnalyticsPage'
 import SettingsPage from '@/Pages/SettingsPage'
 import ProductAnalytics from '@/Pages/ProductAnalytics'
+import OtpPage from '@/Pages/OtpPage'
 
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
            <Route path='/analytics/:id' element={<ProductAnalytics />} />
            <Route path='/settings' element={<SettingsPage />} />
         </Route>
+        <Route path='/Otp' element={<OtpPage />} />
       </Routes>
      
     </>

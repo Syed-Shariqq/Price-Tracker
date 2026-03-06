@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
 import { Eye, EyeClosed } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const SignUp = ({ setActiveTab, activeTab }) => {
+const SignUp = ({ setActiveTab, activeTab , setIsOtpSent }) => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState(false);
 
-  return (
+  const navigate = useNavigate();
 
-    <div className=' shadow-2xl bg-white/80  flex items-center justify-center flex-col  m-10 2xl:w-[30vw] rounded-3xl md:w-120 w-80'>
+  return (
+    
+     <div className=' shadow-2xl bg-white/80  flex items-center justify-center flex-col  m-10 2xl:w-[30vw] rounded-3xl md:w-120 w-80'>
    
    {/* Sign Up Form */}
       <form
@@ -59,7 +62,10 @@ const SignUp = ({ setActiveTab, activeTab }) => {
                 className={`absolute ${confirmPassword ? 'hidden' : 'block'} cursor-pointer top-2 2xl:top-5 right-2`} />
             )}
           </div>
-          <button className='w-64 hover:bg-blue-700 hover:scale-105 transition-all duration-300 active:scale-95 2xl:w-100 2xl:text-2xl 2xl:h-16 md:h-12 md:text-xl cursor-pointer md:w-80 outline-none mt-5 h-10 rounded-full bg-blue-500 text-white font-semibold'>Create My Account</button>
+          <button 
+          onClick={() => {setIsOtpSent(true)}}
+          className='w-64 hover:bg-blue-700 hover:scale-105 transition-all duration-300 active:scale-95 2xl:w-100 2xl:text-2xl 2xl:h-16 md:h-12 md:text-xl cursor-pointer 
+          Fmd:w-80 outline-none mt-5 h-10 rounded-full bg-blue-500 text-white font-semibold'>Create My Account</button>
         </div>
       </form>
 
@@ -74,6 +80,7 @@ const SignUp = ({ setActiveTab, activeTab }) => {
       </div>
       
     </div>
+    
   )
 }
 

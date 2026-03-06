@@ -1,9 +1,12 @@
 import { Eye, EyeClosed } from 'lucide-react';
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const Login = ({ setActiveTab, activeTab }) => {
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
 
   return (
     <div className='shadow-2xl bg-white/80 flex items-center py-25 flex-col m-10 2xl:w-[30vw] rounded-3xl md:w-120 w-80'>
@@ -41,7 +44,9 @@ const Login = ({ setActiveTab, activeTab }) => {
                 onClick={() => setShowPassword(!showPassword)}
                 className={`absolute ${showPassword ? 'hidden' : 'block'} cursor-pointer top-2 2xl:top-5 right-2`} />)}
           </div>
-          <button className='w-64 hover:bg-blue-700 hover:scale-105 transition-all duration-300 active:scale-95 2xl:w-100 2xl:text-2xl 2xl:h-16 md:h-12 md:text-xl cursor-pointer md:w-80 outline-none mt-5 h-10 rounded-full bg-blue-500 text-white font-semibold'>Log Into My Account</button>
+          <button 
+          onClick={() => {navigate("/home")}}
+          className='w-64 hover:bg-blue-700 hover:scale-105 transition-all duration-300 active:scale-95 2xl:w-100 2xl:text-2xl 2xl:h-16 md:h-12 md:text-xl cursor-pointer md:w-80 outline-none mt-5 h-10 rounded-full bg-blue-500 text-white font-semibold'>Log Into My Account</button>
         </div>
       </form>
 
