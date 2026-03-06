@@ -2,7 +2,7 @@ import React from 'react'
 
 const AuthLeftSection = () => {
   return (
-    <div className='hidden gap-10 lg:flex flex-col justify-start w-80 md:w-120 2xl:w-[30vw] backdrop-blur-md bg-white/30 rounded-l-3xl p-8 shadow-xl border border-white/40'>
+    <div className='hidden md:min-h-200 gap-10 lg:flex flex-col justify-start w-80 md:w-120 2xl:w-[30vw] backdrop-blur-md bg-white/30 rounded-l-3xl p-8 shadow-xl border border-white/40'>
 
       {/* Left Section Content */}
       <div>

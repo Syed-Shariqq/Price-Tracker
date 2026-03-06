@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import LandingPage from '@/Pages/LandingPage'
 import AuthPage from '@/Pages/AuthPage'
 import HomePage from '@/Pages/HomePage'
@@ -9,9 +9,22 @@ import AnalyticsPage from '@/Pages/AnalyticsPage'
 import SettingsPage from '@/Pages/SettingsPage'
 import ProductAnalytics from '@/Pages/ProductAnalytics'
 import ProtectedRoute from './Utils/ProtectedRoute'
+import { useEffect } from 'react'
 
 
 const App = () => {
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+
+    const token = localStorage.getItem('token')
+    
+    if(token){
+      navigate('/home')
+    }
+
+  }, [])
 
   return (
     <>

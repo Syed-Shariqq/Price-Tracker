@@ -61,9 +61,9 @@ const AuthPage = () => {
   }
 
   return (
-    <div className='min-h-screen relative bg-linear-to-br from-blue-200 via-blue-100 to-white px-6 py-10 flex flex-col items-center'>
+    <div className='min-h-screen overflow-hidden bg-linear-to-br from-blue-200 via-blue-100 to-white px-6 py-10 flex flex-col items-center'>
 
-      {loading && <Loader />}
+       {loading && <Loader />}
       {/* Logo */}
       <div className='flex items-center justify-center mb-8'>
         <img src="../src/assets/Icon.png" alt="" className='w-12 h-12 rounded-full' />
