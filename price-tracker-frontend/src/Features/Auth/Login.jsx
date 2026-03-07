@@ -1,6 +1,6 @@
 import { Eye, EyeClosed } from 'lucide-react';
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { login } from '@/Api/auth';
 import Loader from '@/Components/Common/Loader';
 
@@ -97,6 +97,11 @@ const Login = ({ setActiveTab, loading, setLoading, activeTab, setLogInData, log
             className={`w-64 ${loading ? 'cursor-not-allowed opacity-50' : ''} hover:bg-blue-700 hover:scale-105 transition-all duration-300 active:scale-95 2xl:w-100 2xl:text-2xl 2xl:h-16 md:h-12 md:text-xl cursor-pointer md:w-80 outline-none mt-5 h-10 rounded-full bg-blue-500 text-white font-semibold`}>Log Into My Account</button>
         </div>
       </form>
+
+      <Link to="/forgot-password" 
+      className='text-sm md:text-md 2xl:text-lg cursor-pointer hover:text-blue-900 transition-all duration-300 mt-4 text-blue-600'>
+        <p>Forgot Password?</p>
+      </Link>
 
       {/* Don't have an account section */}
       <div className='flex my-5 items-center justify-center'>

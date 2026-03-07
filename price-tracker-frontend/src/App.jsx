@@ -10,6 +10,7 @@ import SettingsPage from '@/Pages/SettingsPage'
 import ProductAnalytics from '@/Pages/ProductAnalytics'
 import ProtectedRoute from './Utils/ProtectedRoute'
 import { useEffect } from 'react'
+import ForgotPassword from '@/Pages/ForgotPassword'
 
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<LandingPage />} />
         <Route path='/auth' element={<AuthPage />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
 
         <Route path='/home' element={
           <ProtectedRoute>
