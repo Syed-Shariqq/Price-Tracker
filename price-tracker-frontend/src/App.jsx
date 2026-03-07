@@ -11,6 +11,7 @@ import ProductAnalytics from '@/Pages/ProductAnalytics'
 import ProtectedRoute from './Utils/ProtectedRoute'
 import { useEffect } from 'react'
 import ForgotPassword from '@/Pages/ForgotPassword'
+import ResetPassword from '@/Pages/ResetPassword'
 
 
 const App = () => {
@@ -33,6 +34,7 @@ const App = () => {
         <Route path='/' element={<LandingPage />} />
         <Route path='/auth' element={<AuthPage />} />
         <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path='/reset-password/:token' element={<ResetPassword />} />
 
         <Route path='/home' element={
           <ProtectedRoute>
