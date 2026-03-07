@@ -71,8 +71,8 @@ const Login = ({ setActiveTab, loading, setLoading, activeTab, setLogInData, log
               className='w-64 transition-all focus:border-b-2 focus:border-blue-500 2xl:w-100 2xl:text-2xl 2xl:h-16 md:h-12 md:text-xl md:w-80 outline-none border-b-2 border-gray-600 h-10 p-2'
               name='email'
               value={logInData.emailOrUsername}
-              type="email"
-              placeholder='Enter Email Address' />
+              type="text"
+              placeholder='Email or Username' />
           </div>
           <div className='flex relative items-center justify-center'>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock-keyhole-icon lucide-lock-keyhole"><circle cx="12" cy="16" r="1" /><rect x="3" y="10" width="18" height="12" rx="2" /><path d="M7 10V7a5 5 0 0 1 10 0v3" /></svg>
@@ -94,12 +94,13 @@ const Login = ({ setActiveTab, loading, setLoading, activeTab, setLogInData, log
           </div>
           <button
             disabled={loading}
-            className={`w-64 ${loading ? 'cursor-not-allowed opacity-50' : ''} hover:bg-blue-700 hover:scale-105 transition-all duration-300 active:scale-95 2xl:w-100 2xl:text-2xl 2xl:h-16 md:h-12 md:text-xl cursor-pointer md:w-80 outline-none mt-5 h-10 rounded-full bg-blue-500 text-white font-semibold`}>Log Into My Account</button>
+            className={`w-64 ${loading ? 'cursor-not-allowed opacity-50' : ''} hover:bg-blue-700 hover:scale-105 transition-all duration-300 active:scale-95 2xl:w-100 2xl:text-2xl 2xl:h-16 md:h-12 md:text-xl cursor-pointer md:w-80 outline-none mt-5 h-10 rounded-full bg-blue-500 text-white font-semibold`}>{loading ? 'Logging In' : 'Log Into My Account'}
+          </button>
         </div>
       </form>
 
-      <Link to="/forgot-password" 
-      className='text-sm md:text-md 2xl:text-lg cursor-pointer hover:text-blue-900 transition-all duration-300 mt-4 text-blue-600'>
+      <Link to="/forgot-password"
+        className='text-sm md:text-md 2xl:text-lg cursor-pointer hover:text-blue-900 transition-all duration-300 mt-4 text-blue-600'>
         <p>Forgot Password?</p>
       </Link>
 

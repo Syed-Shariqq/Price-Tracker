@@ -1,15 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AuthLeftSection from '@/Features/Auth/AuthLeftSection';
 import SignUp from '@/Features/Auth/SignUp';
 import Login from '@/Features/Auth/Login';
 import { verifyOtp } from '@/Api/auth';
 import Loader from '../Components/Common/Loader';
+import { useSearchParams } from 'react-router-dom';
 
 const AuthPage = () => {
 
   const [activeTab, setActiveTab] = useState('signup');
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [searchParams] = useSearchParams();
 
   const [signUpData, setSignUpData] = useState({
     username: '',
@@ -27,6 +29,14 @@ const AuthPage = () => {
     emailOrUsername: '',
     password: ''
   })
+
+  useEffect(() => {
+
+    if (searchParams.get('tab') === 'login') {
+      setActiveTab('login');
+    }
+
+  },[searchParams]);
 
 
   const handleOtpVerfication = async () => {

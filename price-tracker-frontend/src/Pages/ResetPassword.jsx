@@ -42,7 +42,7 @@ const ResetPassword = () => {
 
             if(res.data.status === 200){
                 alert(res.data.message);
-                navigate('/auth');
+                navigate('/auth?tab=login');
             }else{
                 setError(res.data.message);
             }

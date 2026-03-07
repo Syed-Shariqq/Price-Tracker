@@ -116,7 +116,7 @@ const SignUp = ({ setActiveTab, setLoading, loading, activeTab, setIsOtpSent, si
           <button
           disabled={loading}
             className={`w-64 hover:bg-blue-700 ${loading ? "cursor-not-allowed opacity-50" : ""} hover:scale-105 transition-all duration-300 active:scale-95 2xl:w-100 2xl:text-2xl 2xl:h-16 md:h-12 md:text-xl cursor-pointer 
-            md:w-80 outline-none mt-5 h-10 rounded-full bg-blue-500 text-white font-semibold`}>Create My Account
+            md:w-80 outline-none mt-5 h-10 rounded-full bg-blue-500 text-white font-semibold`}>{loading ? "Creating Account...":"Create My Account"}
           </button>
         </div>
       </form>
