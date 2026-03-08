@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import AuthLeftSection from '@/Features/Auth/AuthLeftSection';
 import SignUp from '@/Features/Auth/SignUp';
 import Login from '@/Features/Auth/Login';
-import { verifyOtp } from '@/Api/auth';
+import { verifyOtp, sendOtp } from '@/Api/auth';
 import Loader from '../Components/Common/Loader';
 import { useSearchParams } from 'react-router-dom';
+import { ArrowBigLeft, X } from 'lucide-react';
 
 const AuthPage = () => {
 
@@ -36,7 +37,7 @@ const AuthPage = () => {
       setActiveTab('login');
     }
 
-  },[searchParams]);
+  }, [searchParams]);
 
 
   const handleOtpVerfication = async () => {
@@ -52,8 +53,7 @@ const AuthPage = () => {
       if (res.data.status === 200) {
         setActiveTab('login');
         setIsOtpSent(false);
-        setData({ email: '', otp: '' });
-        setSignUpData({ username: '', email: '', password: '', confirmPassword: '' });
+        
       } else {
         alert(res.data.message);
       }
@@ -67,13 +67,41 @@ const AuthPage = () => {
       setLoading(false);
 
     }
+  }
+
+  
+  const handleResendOtp = async () => {
+
+    try {
+      setLoading(true);
+
+      console.log('Sending OTP to:', signUpData.email);
+      const res = await sendOtp({ email: signUpData.email });
+     
+      if (res.data.status === 200) {
+        alert('OTP sent successfully!');
+      } else {
+        alert(res.data.message);
+      }
+
+    } catch (err) {
+
+      console.log('Error:', err.response?.data);
+      alert('Failed to resend OTP');
+
+    } finally {
+
+      setLoading(false);
+    }
+
+    
 
   }
 
   return (
     <div className='min-h-screen overflow-hidden bg-linear-to-br from-blue-200 via-blue-100 to-white px-6 py-10 flex flex-col items-center'>
 
-       {loading && <Loader />}
+      {loading && <Loader />}
       {/* Logo */}
       <div className='flex items-center justify-center mb-8'>
         <img src="../src/assets/Icon.png" alt="" className='w-12 h-12 rounded-full' />
@@ -83,12 +111,12 @@ const AuthPage = () => {
       {/* Auth Section */}
       {isOtpSent ? (
         <div className='min-h-[50vh] flex items-center justify-center'>
-          <form
+          <form className='bg-gray-50 flex flex-col items-center justify-center gap-5 p-5 rounded-lg'
             onSubmit={(e) => {
               e.preventDefault();
               handleOtpVerfication();
             }}>
-              
+
             {/* Just an OTP input goes here */}
             <p className='text-xl font-bold p-4'>We sent a code to your email.<br /> Please enter it below.</p>
             <div className='flex bg-white py-2 shadow-2xl rounded-2xl px-4 items-center justify-center gap-5'>
@@ -99,7 +127,20 @@ const AuthPage = () => {
                 type="text"
                 placeholder="Enter OTP" />
               <button
-                className='px-4 py-2 active:scale-95 hover:bg-blue-700 transition-all duration-300 bg-blue-500 rounded-lg text-white' type="submit">Verify</button>
+                className='px-4 py-2 cursor-pointer active:scale-95 hover:bg-blue-700 transition-all duration-300 bg-blue-500 rounded-lg text-white' type="submit">Verify</button>
+            </div>
+            <h1 className='flex gap-2 font-semibold text-md'>Didn't receive the code?
+              <span 
+              onClick={handleResendOtp}
+              className='text-blue-500 hover:text-blue-800 transition-all duration-300 cursor-pointer'>
+                Resend Otp
+              </span>
+            </h1>
+            <div
+              onClick={() => setIsOtpSent(false)}
+              className='flex hover:bg-blue-700 transition-all duration-300 cursor-pointer justify-center text-sm px-3 gap-2 bg-blue-500 py-2 rounded-2xl text-white items-center '>
+              <ArrowBigLeft />
+              <h1> Back to Sign Up </h1>
             </div>
           </form>
         </div>
