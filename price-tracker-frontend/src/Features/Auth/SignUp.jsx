@@ -1,16 +1,12 @@
-import React, { use, useState } from 'react'
+import React, { useState } from 'react'
 import { Eye, EyeClosed } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { sendOtp, signup } from '@/Api/auth';
+import { signup } from '@/Api/auth';
 import { toast } from 'react-toastify';
 
 const SignUp = ({ setActiveTab, setLoading, loading, activeTab, setIsOtpSent, signUpData, setSignUpData }) => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState(false);
-
-
-  const navigate = useNavigate();
 
 
   const handleSignUp = async () => {

@@ -1,8 +1,9 @@
 import { Mail } from 'lucide-react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { forgotPassword } from '@/Api/changePass';
 import Loader from '@/Components/Common/Loader';
+import { toast } from 'react-toastify';
 
 const ForgotPassword = () => {
 
@@ -19,7 +20,7 @@ const ForgotPassword = () => {
             const res = await forgotPassword({ email : email });
 
             if (res.data.status === 200) {
-                alert(res.data.message);
+                toast.success('Reset link sent successfully!');
             }else{
                 alert(res.data.message);
             }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Bell, Lock, Trash2, Upload } from 'lucide-react'
+import { Lock, Trash2, Upload } from 'lucide-react'
 
 const SettingsPage = () => {
 

@@ -1,5 +1,4 @@
 import { ChartNoAxesCombined, X } from 'lucide-react'
-import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const Card = ({ product, showButton = true, variant, children, isProduct = false }) => {

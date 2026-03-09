@@ -1,7 +1,6 @@
-import { Bell, ChartNoAxesCombined, File, LayoutDashboard, Settings, ShoppingBasket, SquareArrowRightExit, X } from 'lucide-react'
+import { Bell, ChartNoAxesCombined, LayoutDashboard, Settings, ShoppingBasket, SquareArrowRightExit, X } from 'lucide-react'
 import NavLogo from '@/Components/Layout/NavLogo';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 
 const SideBar = ({ onClose }) => {
 

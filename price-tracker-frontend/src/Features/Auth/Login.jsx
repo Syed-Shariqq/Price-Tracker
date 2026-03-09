@@ -2,7 +2,6 @@ import { Eye, EyeClosed } from 'lucide-react';
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '@/Api/auth';
-import Loader from '@/Components/Common/Loader';
 import { toast } from 'react-toastify';
 
 const Login = ({ setActiveTab, loading, setLoading, activeTab, setLogInData, logInData }) => {

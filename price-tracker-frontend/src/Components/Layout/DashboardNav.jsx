@@ -1,7 +1,7 @@
 import React from 'react'
 import { Bell, Menu, Search } from 'lucide-react';
 
-const DashboardNav = ({ setIsSidebarOpen, isSidebarOpen }) => {
+const DashboardNav = ({ setIsSidebarOpen }) => {
   const handleMenuClick = () => {
     console.log('Menu clicked', setIsSidebarOpen)
     setIsSidebarOpen(prev => !prev)

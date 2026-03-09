@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import AuthLeftSection from '@/Features/Auth/AuthLeftSection';
 import SignUp from '@/Features/Auth/SignUp';
 import Login from '@/Features/Auth/Login';
