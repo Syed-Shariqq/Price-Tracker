@@ -5,7 +5,8 @@ import Login from '@/Features/Auth/Login';
 import { verifyOtp, sendOtp } from '@/Api/auth';
 import Loader from '../Components/Common/Loader';
 import { useSearchParams } from 'react-router-dom';
-import { ArrowBigLeft, X } from 'lucide-react';
+import { ArrowBigLeft } from 'lucide-react';
+import {  toast } from 'react-toastify';
 
 const AuthPage = () => {
 
@@ -51,6 +52,8 @@ const AuthPage = () => {
       });
 
       if (res.data.status === 200) {
+
+        toast.success('OTP verified successfully! Please login');
         setActiveTab('login');
         setIsOtpSent(false);
         
@@ -74,12 +77,12 @@ const AuthPage = () => {
 
     try {
       setLoading(true);
-
       console.log('Sending OTP to:', signUpData.email);
       const res = await sendOtp({ email: signUpData.email });
-     
+      
+
       if (res.data.status === 200) {
-        alert('OTP sent successfully!');
+        toast.success('OTP sent successfully!');
       } else {
         alert(res.data.message);
       }

@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '@/Api/auth';
 import Loader from '@/Components/Common/Loader';
+import { toast } from 'react-toastify';
 
 const Login = ({ setActiveTab, loading, setLoading, activeTab, setLogInData, logInData }) => {
 
@@ -20,6 +21,7 @@ const Login = ({ setActiveTab, loading, setLoading, activeTab, setLogInData, log
 
       if (res.data.status === 200) {
 
+        toast.success("Login Successfull");
         localStorage.setItem('token', res.data.data);
         navigate('/home');
 

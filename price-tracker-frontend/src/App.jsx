@@ -12,6 +12,7 @@ import ProtectedRoute from './Utils/ProtectedRoute'
 import { useEffect } from 'react'
 import ForgotPassword from '@/Pages/ForgotPassword'
 import ResetPassword from '@/Pages/ResetPassword'
+import { Bounce, ToastContainer } from 'react-toastify'
 
 
 const App = () => {
@@ -21,8 +22,8 @@ const App = () => {
   useEffect(() => {
 
     const token = localStorage.getItem('token')
-    
-    if(token){
+
+    if (token) {
       navigate('/home')
     }
 
@@ -30,6 +31,14 @@ const App = () => {
 
   return (
     <>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        theme="dark"
+        transition={Bounce}
+         />
+
       <Routes>
         <Route path='/' element={<LandingPage />} />
         <Route path='/auth' element={<AuthPage />} />

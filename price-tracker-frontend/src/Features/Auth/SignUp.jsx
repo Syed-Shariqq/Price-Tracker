@@ -2,6 +2,7 @@ import React, { use, useState } from 'react'
 import { Eye, EyeClosed } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { sendOtp, signup } from '@/Api/auth';
+import { toast } from 'react-toastify';
 
 const SignUp = ({ setActiveTab, setLoading, loading, activeTab, setIsOtpSent, signUpData, setSignUpData }) => {
 
@@ -19,11 +20,14 @@ const SignUp = ({ setActiveTab, setLoading, loading, activeTab, setIsOtpSent, si
       if (signUpData.password !== signUpData.confirmPassword) return alert('Passwords do not match');
 
       await signup(signUpData);
+      toast.success("Otp sent successfull")
       setIsOtpSent(true);
+      
 
     } catch (err) {
 
       console.log(err.response.data);
+    
       
     }  finally {
 
