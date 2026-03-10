@@ -67,7 +67,7 @@ const Login = ({ setActiveTab, loading, setLoading, activeTab, setLogInData, log
           <p className='font-semibold text-gray-500 text-nowrap text-sm'>Track Prices, Never Overpay Again</p>
         </div>
         {errorMessage && (
-          <div className='w-64 md:w-80 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm text-center'>
+          <div className='w-64 md:w-80 2xl:text-lg text-red-700 px-4 rounded-lg text-sm text-center'>
             {errorMessage}
           </div>
         )}

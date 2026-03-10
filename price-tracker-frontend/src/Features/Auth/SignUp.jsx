@@ -21,28 +21,16 @@ const SignUp = ({ setActiveTab, setLoading, handleResendOtp, loading, activeTab,
       }
 
       await signup(signUpData);
-      toast.success("OTP sent successfully!")
+      toast.success("Sign Up Successful!, Please verify your email");
       setIsOtpSent(true);
       
 
     } catch (err) {
 
       console.log(err.response.data);
-      
+      setErrorMessage(err.response?.data?.message + ', try to login or verify your email'  || 'Sign up failed. Please try again.');
       // Check if error is due to duplicate email (user already exists but not verified)
-      const errorMsg = err.response?.data?.message || 'Sign up failed';
-      if (errorMsg.toLowerCase().includes('email') || 
-          errorMsg.toLowerCase().includes('already exists') ||
-          errorMsg.toLowerCase().includes('duplicate')) {
-        setErrorMessage('Email already registered. Please verify your OTP.');
-        setIsOtpSent(true);
-        // Automatically resend OTP
-        setTimeout(() => {
-          handleResendOtp();
-        }, 500);
-      } else {
-        setErrorMessage(errorMsg);
-      }
+      
     }  finally {
 
       setLoading(false);
@@ -75,7 +63,7 @@ const SignUp = ({ setActiveTab, setLoading, handleResendOtp, loading, activeTab,
           <p className='font-semibold text-gray-500 text-nowrap text-sm'>Track Prices, Never Overpay Again</p>
         </div>
         {errorMessage && (
-          <div className='w-64 md:w-80 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm text-center'>
+          <div className='w-64 md:w-80 2xl:text-lg text-red-700 px-4 rounded-lg text-sm text-center'>
             {errorMessage}
           </div>
         )}
