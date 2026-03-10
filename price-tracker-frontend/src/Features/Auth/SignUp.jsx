@@ -3,7 +3,7 @@ import { Eye, EyeClosed } from 'lucide-react';
 import { signup } from '@/Api/auth';
 import { toast } from 'react-toastify';
 
-const SignUp = ({ setActiveTab, setLoading, handleResendOtp, loading, activeTab, setIsOtpSent, signUpData, setSignUpData }) => {
+const SignUp = ({ setActiveTab, setLoading, handleResendOtp, loading, activeTab, setIsOtpSent, signUpData, setSignUpData, otpError, setOtpError }) => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState(false);
@@ -62,9 +62,9 @@ const SignUp = ({ setActiveTab, setLoading, handleResendOtp, loading, activeTab,
           <h1 className='text-xl font-bold'>Sign Up Form</h1>
           <p className='font-semibold text-gray-500 text-nowrap text-sm'>Track Prices, Never Overpay Again</p>
         </div>
-        {errorMessage && (
+        {(errorMessage || otpError) && (
           <div className='w-64 md:w-80 2xl:text-lg text-red-700 px-4 rounded-lg text-sm text-center'>
-            {errorMessage}
+            {errorMessage || otpError}
           </div>
         )}
         <div className='flex flex-col items-center justify-center gap-3'>
@@ -163,7 +163,7 @@ const SignUp = ({ setActiveTab, setLoading, handleResendOtp, loading, activeTab,
             return;
           }
           setErrorMessage('');
-          setIsOtpSent(true);
+          setOtpError('');
           handleResendOtp();
         }}
         className='text-white bg-blue-500 hover:bg-blue-700 transition-all duration-300 px-4 py-2 rounded-lg font-semibold cursor-pointer'>

@@ -9,6 +9,7 @@ const ForgotPassword = () => {
 
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState('')
 
     const navigate = useNavigate();
 
@@ -16,17 +17,23 @@ const ForgotPassword = () => {
 
         try {
             e.preventDefault();
+            if (!email.trim()) {
+                setError("Please enter your email address");
+                return;
+            }
             setLoading(true);
-            const res = await forgotPassword({ email : email });
+            const res = await forgotPassword({ email: email });
+            console.log(res.data);
 
             if (res.data.status === 200) {
                 toast.success('Reset link sent successfully!');
-            }else{
-                alert(res.data.message);
+                setError('');
+            } else {
+                setError(res.data.data || 'Failed to send reset link, Check your email.');
             }
         } catch (err) {
             console.log(err);
-        }finally{
+        } finally {
             setLoading(false);
         }
 
@@ -37,11 +44,17 @@ const ForgotPassword = () => {
         <div className='min-h-screen w-fulltext-black bg-linear-120 from-gray-300 to-blue-100 flex 2xl:justify-center flex-col items-center py-20 justify-start'>
             {loading && <Loader />}
             <div className='bg-white p-5 shadow-2xl flex flex-col items-center justify-center rounded-2xl'>
-                <form onSubmit={handleSubmit} className='flex gap-10 flex-col items-center justify-center' action="">
+                <form onSubmit={handleSubmit}
+                    className='flex gap-10 flex-col items-center justify-center' action="">
                     <div className='flex gap-1 flex-col items-center justify-center'>
                         <h1 className='font-bold 2xl:text-4xl text-2xl'>Forgot Password</h1>
                         <p className='text-gray-600 2xl:text-lg'>Enter your email to reset your password</p>
                     </div>
+                    {error && (
+                        <div className='w-64 md:w-80 2xl:text-md text-red-700 px-4 rounded-lg text-sm text-center'>
+                            {error}
+                        </div>
+                    )}
                     <div className='flex items-center gap-2 pb-10 border-b-2 border-gray-200 flex-col'>
                         <p className='2xl:text-xl font-bold'>Email Address</p>
                         <div className='flex px-2 2xl:py-3 2xl:text-lg 2xl:px-6 py-1 border-2 border-gray-200 rounded-lg items-center justify-center gap-2'>
@@ -53,7 +66,7 @@ const ForgotPassword = () => {
                                 placeholder='Enter Email Address'
                                 type="email"
                                 name="email"
-                                 />
+                            />
                         </div>
                         <button className='px-4 cursor-pointer hover:bg-blue-600 transition-all duration-300 py-2 mt-2 w-full 2xl:text-lg bg-blue-500 text-white rounded-lg'>Send Reset Link</button>
                         <p className='text-sm 2xl:text-lg text-gray-600 font-semibold'>Remember your Password? <Link className="2xl:text-md text-blue-600" to="/auth">Back to Login</Link></p>

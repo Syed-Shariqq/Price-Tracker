@@ -2,6 +2,7 @@ import { Eye, EyeClosed, Lock } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { resetPassword } from '../Api/changePass';
+import { toast } from 'react-toastify';
 
 const ResetPassword = () => {
     const [showNewPassword, setShowNewPassword] = useState(false);
@@ -41,10 +42,10 @@ const ResetPassword = () => {
              const res = await resetPassword({ token, newPassword: passwords.newPassword });
 
             if(res.data.status === 200){
-                alert(res.data.message);
+                toast.success(res.data.message);
                 navigate('/auth?tab=login');
             }else{
-                setError(res.data.message);
+                setError(res.data.message || 'Failed to reset password');
             }
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to reset password');
@@ -66,7 +67,7 @@ const ResetPassword = () => {
 
                     {/* Error Message */}
                     {error && (
-                        <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg 2xl:text-lg'>
+                        <div className='w-64 md:w-80 2xl:text-md text-red-700 px-4 rounded-lg text-sm text-center'>
                             {error}
                         </div>
                     )}

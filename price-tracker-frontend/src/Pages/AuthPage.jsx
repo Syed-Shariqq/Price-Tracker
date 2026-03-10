@@ -6,7 +6,7 @@ import { verifyOtp, sendOtp } from '@/Api/auth';
 import Loader from '../Components/Common/Loader';
 import { useSearchParams } from 'react-router-dom';
 import { ArrowBigLeft } from 'lucide-react';
-import {  toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const AuthPage = () => {
 
@@ -68,14 +68,15 @@ const AuthPage = () => {
         toast.success('OTP verified successfully! Please login');
         setActiveTab('login');
         setIsOtpSent(false);
+        setData({ email: '', otp: '' });
         
       } else {
-        setOtpError(res.data.message || 'Failed to verify OTP');
+        setOtpError(res.data.data || 'Failed to verify OTP');
       }
 
     } catch (err) {
-  
-      
+
+
       console.log(err.response?.data);
       const errorMsg = err.response?.data?.message || 'Failed to verify OTP';
       setOtpError(errorMsg);
@@ -83,11 +84,11 @@ const AuthPage = () => {
     } finally {
 
       setLoading(false);
-
+      
     }
   }
 
-  
+
   const handleResendOtp = async () => {
 
     if (!signUpData.email) {
@@ -98,28 +99,32 @@ const AuthPage = () => {
     try {
       setOtpError('');
       setLoading(true);
-      console.log('Sending OTP to:', signUpData.email);
       const res = await sendOtp({ email: signUpData.email });
-      
+
 
       if (res.data.status === 200) {
         toast.success('OTP sent successfully!');
+        setIsOtpSent(true);
       } else {
-        setOtpError(res.data.message || 'Failed to send OTP');
+        console.log(res.data);
+        setOtpError(res.data.data || 'Failed to send OTP');
+
       }
 
     } catch (err) {
 
-      console.log('Error:', err.response?.data);
-      const errorMsg = err.response?.data?.message || 'Failed to resend OTP';
-      setOtpError(errorMsg);
+      const message =
+        err?.response?.data?.message || 'Failed to resend OTP';
 
+      setOtpError(message);
+
+      console.log('Error:', err?.response?.data || err);
     } finally {
 
       setLoading(false);
     }
 
-    
+
 
   }
 
@@ -145,14 +150,14 @@ const AuthPage = () => {
             {/* Just an OTP input goes here */}
             <p className='text-xl font-bold p-4'>We sent a code to your email.<br /> Please enter it below.</p>
             {otpError && (
-              <div className='w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm text-center'>
+              <div className='w-64 md:w-80 2xl:text-lg text-red-700 px-4 rounded-lg text-sm text-center'>
                 {otpError}
               </div>
             )}
             <div className='flex bg-white py-2 shadow-2xl rounded-2xl px-4 items-center justify-center gap-5'>
               <input
                 value={data.otp}
-                onChange={(e) => { 
+                onChange={(e) => {
                   setData({ ...data, otp: e.target.value });
                   setOtpError('');
                 }}
@@ -163,9 +168,9 @@ const AuthPage = () => {
                 className='px-4 py-2 cursor-pointer active:scale-95 hover:bg-blue-700 transition-all duration-300 bg-blue-500 rounded-lg text-white' type="submit">Verify</button>
             </div>
             <h1 className='flex gap-2 font-semibold text-md'>Didn't receive the code?
-              <span 
-              onClick={handleResendOtp}
-              className='text-blue-500 hover:text-blue-800 transition-all duration-300 cursor-pointer'>
+              <span
+                onClick={handleResendOtp}
+                className='text-blue-500 hover:text-blue-800 transition-all duration-300 cursor-pointer'>
                 Resend Otp
               </span>
             </h1>
@@ -185,7 +190,7 @@ const AuthPage = () => {
           <AuthLeftSection />
           <div className='backdrop-blur-sm bg-white/40 rounded-r-3xl border border-white/40 shadow-xl'>
             {activeTab === 'signup' ? (
-              <SignUp handleResendOtp={handleResendOtp} loading={loading} setLoading={setLoading} setSignUpData={setSignUpData} signUpData={signUpData} setIsOtpSent={setIsOtpSent} setActiveTab={setActiveTab} activeTab={activeTab} />
+              <SignUp handleResendOtp={handleResendOtp} loading={loading} setLoading={setLoading} setSignUpData={setSignUpData} signUpData={signUpData} setIsOtpSent={setIsOtpSent} setActiveTab={setActiveTab} activeTab={activeTab} otpError={otpError} setOtpError={setOtpError} />
             ) : (
               <Login loading={loading} setLoading={setLoading} setLogInData={setLogInData} logInData={logInData} setIsOtpSent={setIsOtpSent} setActiveTab={setActiveTab} activeTab={activeTab} />
             )}
