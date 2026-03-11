@@ -151,22 +151,22 @@ public class OtpService {
 
 
     private final String cooldownToken = "TOKEN:COOLDOWN:";
-    private final String emailToken = "TOKEN:EMAIL";
+    private final String emailToken = "TOKEN:EMAIL:";
     private final String token = "TOKEN:";
 
 
     @Transactional
-    public String forgotPassword(String email){
+    public ApiResponse<String> forgotPassword(String email){
 
 
         Optional<User> user = userRepository.findByEmail(email);
 
         if(user.isEmpty()){
-            return "";
+            return successResponse("","",HttpStatus.FORBIDDEN);
         }
 
         if(Boolean.TRUE.equals(redisTemplate.hasKey(cooldownToken + email))){
-            return "Wait for sometime before requesting another link";
+            return successResponse("Wait for sometime before requesting another link","Too many requests",HttpStatus.TOO_MANY_REQUESTS);
         }
 
         String oldToken = redisTemplate.opsForValue().get(emailToken + email);
@@ -182,10 +182,10 @@ public class OtpService {
         redisTemplate.opsForValue().set(emailToken + email , rawToken , Duration.ofMinutes(15));
         redisTemplate.opsForValue().set(cooldownToken + email, "true", Duration.ofMinutes(2));
 
-        String resetLink = "http://localhost:3000/reset-password?token=" + rawToken;
+        String resetLink = "http://localhost:5173/reset-password/" + rawToken;
         emailService.sendResetPass(email , resetLink);
 
-        return "Reset link sent";
+        return successResponse("Reset link sent","Sent",HttpStatus.OK);
     }
 
     @Transactional

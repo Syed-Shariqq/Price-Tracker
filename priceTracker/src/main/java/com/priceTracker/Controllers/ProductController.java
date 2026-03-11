@@ -1,8 +1,11 @@
 package com.priceTracker.Controllers;
 
 import com.priceTracker.DTOs.AddProductDTO;
+import com.priceTracker.DTOs.ScrapeRequest;
+import com.priceTracker.DTOs.ScrapeResponseDTO;
 import com.priceTracker.DTOs.UserTrackedProductDto;
 import com.priceTracker.Entities.User;
+import com.priceTracker.Services.ProductProcessingService;
 import com.priceTracker.Services.ProductServiceImpl;
 import com.priceTracker.payload.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,9 @@ public class ProductController {
 
     @Autowired
     private ProductServiceImpl productService;
+
+    @Autowired
+    private ProductProcessingService processingService;
 
 
     public <T> ApiResponse<T> successResponse(T data, String message, HttpStatus status){
@@ -51,6 +57,13 @@ public class ProductController {
         List<UserTrackedProductDto> products = productService.getUserTrackedProducts(user);
        return ResponseEntity.ok(successResponse(products, "Products fetched successfully", HttpStatus.OK));
 
+    }
+
+    @PostMapping("/scrape")
+    public ApiResponse<ScrapeResponseDTO> scrapeProduct(@RequestBody ScrapeRequest request){
+
+        return successResponse(processingService.fetchPrice(request.getUrl()),
+                "Product details fetched successfully",HttpStatus.OK);
     }
 
 }

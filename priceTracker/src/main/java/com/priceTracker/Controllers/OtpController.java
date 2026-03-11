@@ -6,6 +6,7 @@ import com.priceTracker.DTOs.OtpRequest;
 import com.priceTracker.DTOs.ResetPassDto;
 import com.priceTracker.Services.OtpService;
 import com.priceTracker.payload.ApiResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,13 +59,13 @@ public class OtpController {
     @PostMapping("/forgot-password")
     public ApiResponse<String> forgotPassword(@RequestBody ForgotPassDto forgotPassDto){
 
-        String response = otpService.forgotPassword(forgotPassDto.getEmail());
-        return successResponse(response
-                ,"Click the link to reset your password",HttpStatus.OK);
+        ApiResponse<String> response = otpService.forgotPassword(forgotPassDto.getEmail());
+        return successResponse(response.getData()
+                ,response.getMessage(),HttpStatus.valueOf(response.getStatus()));
     }
 
     @PostMapping("/reset-password")
-    public ApiResponse<String> resetPassword(@RequestBody ResetPassDto resetPass){
+    public ApiResponse<String> resetPassword(@Valid @RequestBody ResetPassDto resetPass){
 
         otpService.resetPassword(resetPass.getToken(), resetPass.getNewPassword());
         return successResponse("Password changed successfully"

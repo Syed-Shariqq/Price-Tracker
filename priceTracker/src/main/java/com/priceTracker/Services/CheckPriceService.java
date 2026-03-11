@@ -31,7 +31,7 @@ public class CheckPriceService {
     private final ExecutorService executor = Executors.newFixedThreadPool(8);
 
 
-
+    @Scheduled(fixedDelay = 360000)
     public void checkPrices() {
 
         int page = 0;
@@ -49,7 +49,7 @@ public class CheckPriceService {
             // Submit tasks for this page
             for (Product product : products) {
                 futures.add(
-                        executor.submit(() -> productProcessingService.processProduct(product))
+                        executor.submit(() -> productProcessingService.processProduct(product.getId()))
                 );
             }
 

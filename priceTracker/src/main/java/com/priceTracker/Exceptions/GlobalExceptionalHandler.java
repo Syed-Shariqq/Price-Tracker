@@ -127,6 +127,13 @@ public class GlobalExceptionalHandler {
                 .build();
     }
 
+    @ExceptionHandler(ProductNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponseDto handleProductNotFoundException(ProductNotFoundException ex, HttpServletRequest request){
+
+        return buildResponse(ex, HttpStatus.NOT_FOUND, request);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDto handleValidationException(MethodArgumentNotValidException ex ,

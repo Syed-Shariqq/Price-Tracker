@@ -1,8 +1,10 @@
 package com.priceTracker.Services;
 
+import com.priceTracker.DTOs.ScrapeResponseDTO;
 import com.priceTracker.Entities.Product;
 import com.priceTracker.Entities.ProductPriceHistory;
 import com.priceTracker.Entities.UserTrackedProduct;
+import com.priceTracker.Exceptions.ProductNotFoundException;
 import com.priceTracker.Repositories.ProductHistoryRepository;
 import com.priceTracker.Repositories.ProductRepository;
 import com.priceTracker.Repositories.UserTrackedProductRepository;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -42,22 +45,27 @@ public class ProductProcessingService {
     private ApplicationEventPublisher eventPublisher;
 
     @Transactional
-    public void processProduct(Product product) {
+    public void processProduct(Long productId) {
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("Product Not found"));
 
         BigDecimal oldPrice = product.getCurrentPrice();
-        BigDecimal newPrice = fetchPrice(product.getProductUrl());
+        ScrapeResponseDTO newPrice = fetchPrice(product.getProductUrl());
 
-        if (newPrice == null) return;
+        if (newPrice == null || newPrice.getPrice() == null ) return;
 
-        if (oldPrice == null || oldPrice.compareTo(newPrice) != 0) {
+        product.setLastCheckedAt(LocalDateTime.now());
+        productRepository.save(product);
 
-            product.setCurrentPrice(newPrice);
-            product.setLastCheckedAt(LocalDateTime.now());
+        if (oldPrice == null || oldPrice.compareTo(newPrice.getPrice()) != 0) {
+
+            product.setCurrentPrice(newPrice.getPrice());
             productRepository.save(product);
 
             ProductPriceHistory history = new ProductPriceHistory();
             history.setProduct(product);
-            history.setPrice(newPrice);
+            history.setPrice(newPrice.getPrice());
             history.setCheckedAt(LocalDateTime.now());
             historyRepository.save(history);
 
@@ -71,7 +79,7 @@ public class ProductProcessingService {
 
                 BigDecimal targetPrice = mapping.getTargetPrice();
 
-                if (newPrice.compareTo(targetPrice) <= 0 &&
+                if (targetPrice.compareTo(newPrice.getPrice()) >= 0 &&
                         !Boolean.TRUE.equals(mapping.getAlertSent())) {
 
                     eventPublisher.publishEvent(
@@ -79,14 +87,14 @@ public class ProductProcessingService {
                                     mapping.getProduct().getProductName(),
                                     mapping.getUser().getEmail(),
                                     targetPrice
-                                    , newPrice)
+                                    , newPrice.getPrice())
                     );
 
                     mapping.setAlertSent(true);
                     trackedProductRepository.save(mapping);
                 }
 
-                if (newPrice.compareTo(targetPrice) > 0 &&
+                if (targetPrice.compareTo(newPrice.getPrice()) < 0 &&
                         Boolean.TRUE.equals(mapping.getAlertSent())) {
 
                     mapping.setAlertSent(false);
@@ -97,13 +105,18 @@ public class ProductProcessingService {
     }
 
 
-    public BigDecimal fetchPrice(String productUrl){
+    public ScrapeResponseDTO fetchPrice(String productUrl){
         try{
 
             Document document = Jsoup.connect(productUrl)
                     .userAgent("Mozilla/5.0")
                     .timeout(10000)
                     .get();
+
+            String title = document.select("div.product_main h1").text();
+            String description = document.select("#product_description + p").text();
+            String imgUrl = document.select(".item img").attr("abs:src");
+            String website = URI.create(productUrl).getHost();
 
             Element priceElement = document.select(".price_color").first();
 
@@ -112,9 +125,20 @@ public class ProductProcessingService {
             String priceText = priceElement.text();
 
             String cleaned = priceText.replaceAll("[^0-9.]","");
-            System.out.println(cleaned);
+            BigDecimal price = new BigDecimal(cleaned);
+            System.out.println(price);
+            System.out.println(imgUrl);
+            System.out.println(title);
+            System.out.println(description);
+            System.out.println(website);
 
-            return new BigDecimal(cleaned);
+            return new ScrapeResponseDTO(
+                 price,
+                 imgUrl,
+                 description,
+                 title,
+                 website
+            );
 
         }catch (Exception e){
             log.error(String.valueOf(e));
