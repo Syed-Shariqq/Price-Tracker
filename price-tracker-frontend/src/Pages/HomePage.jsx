@@ -4,10 +4,14 @@ import LeftSidePage from '@/Components/Layout/LeftSidePage';
 
 const HomePage = () => {
 
-   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [data, setData] = useState({
+    url: '',
+  });
 
-   const token = localStorage.getItem('token');
-   console.log(token);
+  const [productDetails, setProductDetails] = useState(null);
+
+  const token = localStorage.getItem('token');
 
   return (
     <div className='min-h-screen flex'>
@@ -20,7 +24,7 @@ const HomePage = () => {
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 xl:hidden"
-          onClick={() => setIsSidebarOpen(false)}/>
+          onClick={() => setIsSidebarOpen(false)} />
       )}
 
       {/* Sidebar for smaller screens */}
@@ -32,7 +36,7 @@ const HomePage = () => {
       </div>
 
       {/* Main Content Area */}
-        <LeftSidePage setIsSidebarOpen={setIsSidebarOpen} isSidebarOpen={isSidebarOpen} />
+      <LeftSidePage productDetails={productDetails} setProductDetails={setProductDetails} data={data} setData={setData} setIsSidebarOpen={setIsSidebarOpen} isSidebarOpen={isSidebarOpen} />
     </div>
   )
 }

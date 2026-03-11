@@ -72,3 +72,10 @@
     transform: rotate(360deg);
   }
 }
+
+.description {
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
