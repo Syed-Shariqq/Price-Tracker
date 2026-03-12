@@ -127,6 +127,13 @@ public class GlobalExceptionalHandler {
                 .build();
     }
 
+    @ExceptionHandler(InvalidUrlException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDto handleInvalidUrlException(InvalidUrlException ex, HttpServletRequest request){
+
+        return buildResponse(ex , HttpStatus.BAD_REQUEST, request);
+    }
+
     @ExceptionHandler(ProductNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponseDto handleProductNotFoundException(ProductNotFoundException ex, HttpServletRequest request){

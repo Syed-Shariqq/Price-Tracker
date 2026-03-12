@@ -4,6 +4,7 @@ import com.priceTracker.DTOs.ScrapeResponseDTO;
 import com.priceTracker.Entities.Product;
 import com.priceTracker.Entities.ProductPriceHistory;
 import com.priceTracker.Entities.UserTrackedProduct;
+import com.priceTracker.Exceptions.InvalidUrlException;
 import com.priceTracker.Exceptions.ProductNotFoundException;
 import com.priceTracker.Repositories.ProductHistoryRepository;
 import com.priceTracker.Repositories.ProductRepository;
@@ -106,6 +107,9 @@ public class ProductProcessingService {
 
 
     public ScrapeResponseDTO fetchPrice(String productUrl){
+
+        validateUrl(productUrl);
+
         try{
 
             Document document = Jsoup.connect(productUrl)
@@ -141,8 +145,21 @@ public class ProductProcessingService {
             );
 
         }catch (Exception e){
-            log.error(String.valueOf(e));
-            return null;
+            throw new InvalidUrlException("Enter a valid url");
+        }
+    }
+
+    private void validateUrl(String url){
+        try{
+            URI uri = new URI(url);
+
+            if(uri.getHost() == null){
+                throw new InvalidUrlException("Invalid URL: Host missing");
+            }
+
+        }catch (Exception e){
+            log.error("Error: ",e);
+            throw new InvalidUrlException("Invalid URL provided.");
         }
     }
 }
