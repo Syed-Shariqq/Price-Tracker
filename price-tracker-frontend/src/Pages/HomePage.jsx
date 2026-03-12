@@ -10,6 +10,7 @@ const HomePage = () => {
   });
 
   const [productDetails, setProductDetails] = useState(null);
+  const [error, setError] = useState('');
 
   const token = localStorage.getItem('token');
 
@@ -36,7 +37,7 @@ const HomePage = () => {
       </div>
 
       {/* Main Content Area */}
-      <LeftSidePage productDetails={productDetails} setProductDetails={setProductDetails} data={data} setData={setData} setIsSidebarOpen={setIsSidebarOpen} isSidebarOpen={isSidebarOpen} />
+      <LeftSidePage error={error} setError={setError} productDetails={productDetails} setProductDetails={setProductDetails} data={data} setData={setData} setIsSidebarOpen={setIsSidebarOpen} isSidebarOpen={isSidebarOpen} />
     </div>
   )
 }

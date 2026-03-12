@@ -3,7 +3,7 @@ import DashboardNav from '@/Components/Layout/DashboardNav';
 import { scrapeProduct } from '@/Api/productApi';
 import Loader from '@/Components/Common/Loader';
 
-const LeftSidePage = ({ data, productDetails, setProductDetails, setData, setIsSidebarOpen, isSidebarOpen }) => {
+const LeftSidePage = ({ error, setError, data, productDetails, setProductDetails, setData, setIsSidebarOpen, isSidebarOpen }) => {
 
   const [loading, setLoading] = useState(false)
   const [expanded, setExpanded] = useState(false);
@@ -11,11 +11,23 @@ const LeftSidePage = ({ data, productDetails, setProductDetails, setData, setIsS
 
     try {
       setLoading(true)
+
+      if(!data.url){
+        setError('Please enter URL')
+        return
+      }
       const res = await scrapeProduct({ url: data.url })
-      setProductDetails(res.data.data)
-      console.log(res.data.data)
+      if (res.data.status === 200) {
+        setProductDetails(res.data.data)
+        setError('')
+      } else {
+        console.log(res.data.message)
+        setError(res.data.message)
+      }
+
     } catch (err) {
-      console.log(err)
+      console.log(err.response.data)
+      setError(err.response.data.message)
     } finally {
       setLoading(false)
     }
@@ -41,7 +53,7 @@ const LeftSidePage = ({ data, productDetails, setProductDetails, setData, setIsS
               console.log(data.url);
             }}
             value={data.url}
-            className='md:text-xl md:min-h-16 min-h-14 outline-none w-[50vw]'
+            className='md:text-xl md:min-h-16 pr-3 min-h-14 outline-none w-full'
             type="text"
             placeholder='Paste Product Url..'
           />
@@ -51,6 +63,12 @@ const LeftSidePage = ({ data, productDetails, setProductDetails, setData, setIsS
             Fetch Price
           </button>
         </div>
+
+        {error && (
+          <div className='w-64 md:w-80 2xl:text-lg text-red-700 px-4 rounded-lg text-sm text-center'>
+            {error}
+          </div>
+        )}
 
         {/* Product Card */}
         {productDetails && (<div className='bg-white w-9/10 2xl:min-h-[40vh] lg:flex-row 2xl:flex-row shadow-2xl flex flex-col items-center justify-center rounded-2xl'>
@@ -67,20 +85,24 @@ const LeftSidePage = ({ data, productDetails, setProductDetails, setData, setIsS
             </div>
 
             <h1 className='mt-4 md:text-2xl 2xl:text-4xl font-extrabold'> ₹{(productDetails.price * 92.18).toFixed(2)} </h1>
-            <h1 className='md:text-xl 2xl:text-2xl text-gray-500 font-normal line-through '> ₹1,54,900 </h1>
+            <h1 className='md:text-xl 2xl:text-2xl text-gray-500 font-normal line-through '> ₹{(((productDetails.price) - (productDetails.price * 0.19)) * 92.18).toFixed(2)} </h1>
             <span className="bg-green-100 mb-3 w-24 text-green-600 text-sm px-4 py-2 rounded-full font-medium">19% OFF</span>
             <div className='flex items-end'>
               <p className={`md:text-xl ${expanded ? "" : "line-clamp-3"} leading-7 2xl:w-2/3 text-sm text-gray-400`}>{productDetails.description}</p>
-            <button
-              className="text-blue-500 text-sm md:text-md 2xl:text-lg cursor-pointer"
-              onClick={() => setExpanded(!expanded)}
-            >
-              {expanded ? "Show less" : "...more"}
-            </button>
+              <button
+                className="text-blue-500 text-sm md:text-md 2xl:text-lg cursor-pointer"
+                onClick={() => setExpanded(!expanded)}
+              >
+                {expanded ? "Show less" : "...more"}
+              </button>
             </div>
             <div className='flex my-5 md:text-xl items-center justify-center gap-5'>
               <button className='bg-blue-500 md:py-4 md:px-8 text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition-colors active:scale-95 duration-300'>Track Product</button>
-              <button className='bg-gray-200 md:py-4 md:px-8 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-300 transition-colors active:scale-95 duration-300 ml-2'>Cancel</button>
+              <button
+                onClick={() => setProductDetails(null)}
+                className='bg-gray-200 md:py-4 md:px-8 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-300 transition-colors active:scale-95 duration-300 ml-2'>
+                Cancel
+              </button>
             </div>
 
           </div>
