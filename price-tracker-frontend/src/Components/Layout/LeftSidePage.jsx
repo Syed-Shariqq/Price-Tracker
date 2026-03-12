@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import DashboardNav from '@/Components/Layout/DashboardNav';
 import { scrapeProduct } from '@/Api/productApi';
 import Loader from '@/Components/Common/Loader';
@@ -7,6 +7,7 @@ const LeftSidePage = ({ error, setError, data, productDetails, setProductDetails
 
   const [loading, setLoading] = useState(false)
   const [expanded, setExpanded] = useState(false);
+  const inputRef = useRef(null);
   const handleProductDetails = async () => {
 
     try {
@@ -46,27 +47,73 @@ const LeftSidePage = ({ error, setError, data, productDetails, setProductDetails
         <h1 className='text-3xl font-bold'>Track Prices Effortlessly</h1>
 
         {/* Search Bar */}
-        <div className=' flex shadow-2xl items-center px-4 bg-white py-1 w-full border-2 border-gray-400/50 rounded-3xl justify-between'>
-          <input
-            onChange={(e) => {
-              setData({ ...data, url: e.target.value })
-              console.log(data.url);
-            }}
-            value={data.url}
-            className='md:text-xl md:min-h-16 pr-3 min-h-14 outline-none w-full'
-            type="text"
-            placeholder='Paste Product Url..'
-          />
-          <button
-            onClick={handleProductDetails}
-            className='bg-blue-500 text-nowrap text-white px-6 py-2 md:py-3 md:text-lg rounded-xl hover:bg-blue-600 transition-colors active:scale-95 duration-300'>
-            Fetch Price
-          </button>
+        <div className='flex flex-col w-full gap-3'>
+          <div className=' flex shadow-2xl items-center px-4 bg-white py-1 w-full border-2 border-gray-400/50 rounded-3xl justify-between'>
+            <input
+              ref={inputRef}
+              onChange={(e) => {
+                setData({ ...data, url: e.target.value })
+                console.log(data.url);
+              }}
+              value={data.url}
+              className='md:text-xl md:min-h-16 pr-3 min-h-14 outline-none w-full'
+              type="text"
+              placeholder='Paste product URL '
+            />
+            <button
+              onClick={handleProductDetails}
+              className='bg-blue-500 text-nowrap text-white px-6 py-2 md:py-3 md:text-lg rounded-xl hover:bg-blue-600 transition-colors active:scale-95 duration-300'>
+              Fetch Price
+            </button>
+          </div>
+          <p className='text-sm text-gray-600 pl-4'>Supports major e-commerce platforms for real-time price tracking.</p>
         </div>
 
         {error && (
           <div className='w-64 md:w-80 2xl:text-lg text-red-700 px-4 rounded-lg text-sm text-center'>
             {error}
+          </div>
+        )}
+
+        {/* Empty State Card */}
+        {!productDetails && (
+          <div className='bg-white w-full md:w-9/10 shadow-2xl rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center gap-6'>
+            {/* Illustration */}
+            <div className='w-32 h-32 md:w-40 md:h-40 bg-linear-to-br from-blue-100 to-blue-50 rounded-full flex items-center justify-center'>
+              <svg className='w-20 h-20 md:w-32 md:h-32 text-blue-400' fill='currentColor' viewBox='0 0 24 24'>
+                <path d='M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z'/>
+              </svg>
+            </div>
+
+            {/* Content */}
+            <h2 className='text-2xl md:text-3xl font-bold text-gray-800'>No products tracked yet</h2>
+            <p className='text-center text-gray-600 text-sm md:text-base max-w-md'>
+              Start tracking products to monitor prices and get alerts when prices drop.
+            </p>
+
+            {/* Add Product Button */}
+            <button
+              onClick={() => {
+                inputRef.current?.focus();
+                inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }}
+              className='bg-blue-500 cursor-pointer text-white px-6 py-3 md:px-8 md:py-4 rounded-xl hover:bg-blue-600 transition-colors active:scale-95 duration-300 font-semibold flex items-center gap-2'>
+              <span className='text-xl'>+</span> Add Your First Product
+            </button>
+
+            {/* Getting Started Guide */}
+            <div className='w-full mt-4 text-center'>
+              <p className='text-sm text-gray-600 mb-4'>To get started, paste the product URL from any supported e-commerce website.</p>
+              <div className='bg-blue-50 rounded-lg p-4 border border-blue-200'>
+                <p className='text-md 2xl:text-lg font-semibold text-gray-700 mb-2'>How to find a product link:</p>
+                <ul className='text-sm 2xl:text-md text-gray-600 space-y-1'>
+                  <li>• Visit any e-commerce website</li>
+                  <li>• Search for a product</li>
+                  <li>• Copy the product page URL from your browser</li>
+                  <li>• Paste it in the input field above</li>
+                </ul>
+              </div>
+            </div>
           </div>
         )}
 
