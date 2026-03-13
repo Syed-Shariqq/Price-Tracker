@@ -6,7 +6,7 @@ import TargetPriceBox from '@/Components/Common/TargetPriceBox';
 import { addProduct } from '@/Api/productApi';
 import { toast } from 'react-toastify';
 
-const LeftSidePage = ({ error, setError, data, productDetails, setProductDetails, setData, setIsSidebarOpen, isSidebarOpen }) => {
+const LeftSidePage = ({inputRef, error, setError, data, productDetails, setProductDetails, setData, setIsSidebarOpen, isSidebarOpen }) => {
 
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -17,7 +17,6 @@ const LeftSidePage = ({ error, setError, data, productDetails, setProductDetails
     targetPrice: ''
   })
 
-  const inputRef = useRef(null);
   const handleProductDetails = async () => {
 
     try {

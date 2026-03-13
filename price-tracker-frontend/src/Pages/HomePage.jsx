@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SideBar from '@/Components/Layout/SideBar';
 import LeftSidePage from '@/Components/Layout/LeftSidePage';
 
@@ -12,7 +12,11 @@ const HomePage = () => {
   const [productDetails, setProductDetails] = useState(null);
   const [error, setError] = useState('');
 
-  const token = localStorage.getItem('token');
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  })
 
   return (
     <div className='min-h-screen flex'>
@@ -37,7 +41,7 @@ const HomePage = () => {
       </div>
 
       {/* Main Content Area */}
-      <LeftSidePage error={error} setError={setError} productDetails={productDetails} setProductDetails={setProductDetails} data={data} setData={setData} setIsSidebarOpen={setIsSidebarOpen} isSidebarOpen={isSidebarOpen} />
+      <LeftSidePage inputRef={inputRef} error={error} setError={setError} productDetails={productDetails} setProductDetails={setProductDetails} data={data} setData={setData} setIsSidebarOpen={setIsSidebarOpen} isSidebarOpen={isSidebarOpen} />
     </div>
   )
 }
