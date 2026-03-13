@@ -2,18 +2,28 @@ import React, { useState, useRef } from 'react'
 import DashboardNav from '@/Components/Layout/DashboardNav';
 import { scrapeProduct } from '@/Api/productApi';
 import Loader from '@/Components/Common/Loader';
+import TargetPriceBox from '@/Components/Common/TargetPriceBox';
+import { addProduct } from '@/Api/productApi';
+import { toast } from 'react-toastify';
 
 const LeftSidePage = ({ error, setError, data, productDetails, setProductDetails, setData, setIsSidebarOpen, isSidebarOpen }) => {
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [isTargetPriceActive, setIsTargetPriceActive] = useState(false);
+  const [product, setProduct] = useState({
+    productName: '',
+    productUrl: '',
+    targetPrice: ''
+  })
+
   const inputRef = useRef(null);
   const handleProductDetails = async () => {
 
     try {
       setLoading(true)
 
-      if(!data.url){
+      if (!data.url) {
         setError('Please enter URL')
         return
       }
@@ -33,11 +43,46 @@ const LeftSidePage = ({ error, setError, data, productDetails, setProductDetails
       setLoading(false)
     }
   }
+ 
+  const handleAddProduct = async (e) => {
+
+    try {
+      setLoading(true)
+
+      e.preventDefault();
+
+      const res = await addProduct({
+        productName: productDetails.title,
+        productUrl: data.url,
+        targetPrice: product.targetPrice
+      });
+
+      console.log(product.targetPrice)
+      if (res.data.status === 200) {
+
+        setIsTargetPriceActive(false);
+        toast.success(res.data.message);
+        
+      } else {
+        toast.error(res.data.message);
+      }
+    } catch (err) {
+      toast.error(err.response.data.message);
+    } finally {
+      setLoading(false);
+    }
+
+  }
 
   return (
     <div className='w-full bg-blue-50 flex flex-col items-center justify-start gap-10'>
 
+      {isTargetPriceActive && (
+        <TargetPriceBox handleAddProduct={handleAddProduct} product={product} setProduct={setProduct} setIsTargetPriceActive={setIsTargetPriceActive} />
+      )}
+      {/* Loader */}
       {loading && (<Loader />)}
+
       {/* Navigation Bar */}
       <DashboardNav setIsSidebarOpen={setIsSidebarOpen} isSidebarOpen={isSidebarOpen} />
 
@@ -81,7 +126,7 @@ const LeftSidePage = ({ error, setError, data, productDetails, setProductDetails
             {/* Illustration */}
             <div className='w-32 h-32 md:w-40 md:h-40 bg-linear-to-br from-blue-100 to-blue-50 rounded-full flex items-center justify-center'>
               <svg className='w-20 h-20 md:w-32 md:h-32 text-blue-400' fill='currentColor' viewBox='0 0 24 24'>
-                <path d='M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z'/>
+                <path d='M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z' />
               </svg>
             </div>
 
@@ -144,7 +189,11 @@ const LeftSidePage = ({ error, setError, data, productDetails, setProductDetails
               </button>
             </div>
             <div className='flex my-5 md:text-xl items-center justify-center gap-5'>
-              <button className='bg-blue-500 md:py-4 md:px-8 text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition-colors active:scale-95 duration-300'>Track Product</button>
+              <button
+                onClick={() =>
+                  setIsTargetPriceActive(true)
+                }
+                className='bg-blue-500 md:py-4 md:px-8 text-white px-4 py-2 rounded-xl hover:bg-blue-600 transition-colors active:scale-95 duration-300'>Track Product</button>
               <button
                 onClick={() => setProductDetails(null)}
                 className='bg-gray-200 md:py-4 md:px-8 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-300 transition-colors active:scale-95 duration-300 ml-2'>
