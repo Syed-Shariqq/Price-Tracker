@@ -1,7 +1,7 @@
 import { ChartNoAxesCombined, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
-const Card = ({ product, showButton = true, variant, children, isProduct = false }) => {
+const Card = ({handleStopTracking, product, showButton = true, variant, children, isProduct = false }) => {
 
     const navigate = useNavigate();
 
@@ -45,13 +45,13 @@ const Card = ({ product, showButton = true, variant, children, isProduct = false
 
                     <div className={`mt-2 ${variant === "analytics" ? "2xl:flex items-center justify-center 2xl:flex-row 2xl:gap-30 " : ""} space-y-1`}>
                         <p className={`text-sm ${variant === "analytics" ? "2xl:text-3xl text-gray-500 2xl:py-3 bg-gray-100 rounded-lg py-1 px-3 md:text-xl" : ""} md:text-base font-semibold`}>
-                            Current: <span className='text-black font-bold'>₹{(product.currentPrice*92.16).toFixed(2)}</span>
+                            Current: <span className='text-black font-bold'>₹{(product.currentPrice * 92.16).toFixed(2)}</span>
                         </p>
                         {variant === "analytics" && (<p className={`text-sm md:text-xl 2xl:py-3 text-gray-500 bg-gray-100 rounded-lg py-1 px-3 2xl:text-3xl font-semibold`}>
                             Average: <span className='text-black font-bold'>₹{averagePrice}</span>
                         </p>)}
                         <p className={`text-sm md:text-base ${variant === "analytics" ? "2xl:text-3xl text-gray-500 2xl:py-3 bg-gray-100 rounded-lg py-1 px-3 md:text-xl" : ""} font-semibold`}>
-                            Target: <span className='text-black font-bold'>₹{(product.targetPrice*92.16).toFixed(2)}</span>
+                            Target: <span className='text-black font-bold'>₹{(product.targetPrice * 92.16).toFixed(2)}</span>
                         </p>
 
 
@@ -79,8 +79,17 @@ const Card = ({ product, showButton = true, variant, children, isProduct = false
 
             {/*Products Page Button */}
             {isProduct && (<div className='flex items-center justify-between'>
-                <button className='px-4 py-1 md:px-6 md:py-3 hover:bg-blue-500 transition-all duration-300 active:scale-95 bg-blue-400 text-white rounded-lg'>Buy</button>
-                <button className='px-4 py-1 md:px-6 md:py-3 hover:bg-gray-500 transition-all duration-300 active:scale-95 bg-gray-400 text-white rounded-lg'>Cancel Tracking</button>
+                <a href={product.productUrl}>
+                    <button
+                        className='px-4 py-1 md:px-6 md:py-3 hover:bg-blue-500 transition-all duration-300 active:scale-95 bg-blue-400 text-white rounded-lg'>
+                        Buy
+                    </button>
+                </a>
+                <button
+                    onClick={() => { handleStopTracking(product.id)}}
+                    className='px-4 py-1 md:px-6 md:py-3 hover:bg-gray-500 transition-all duration-300 active:scale-95 bg-gray-400 text-white rounded-lg'>
+                    Cancel Tracking
+                </button>
             </div>)}
 
         </div>
