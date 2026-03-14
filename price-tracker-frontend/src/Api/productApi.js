@@ -7,3 +7,7 @@ export const scrapeProduct = (data) => {
 export const addProduct = (data) => {
     return api.post("/products", data);
 }
+
+export const getTrackedProductsOfUser = () => {
+    return api.get("/products");
+}

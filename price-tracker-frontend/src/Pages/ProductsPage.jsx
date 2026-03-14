@@ -1,14 +1,42 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Card from '@/Components/Common/Card'
 import EmptyProductsState from '@/Components/Layout/EmptyProductsState';
+import { getTrackedProductsOfUser } from '../Api/productApi';
+import Loader from '@/Components/Common/Loader';
 
 const ProductsPage = () => {
 
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    fetchProducts();
+  },[]);
+
+  const fetchProducts = async () => {
+
+    try{
+      setLoading(true);
+      const res = await getTrackedProductsOfUser();
+    
+    if(res.data.status === 200){
+      setProducts(res.data.data);
+      console.log(res.data.data);
+    }else{
+      console.log(res.data.message);
+    }
+
+    }catch(err){
+      console.log(err.response.data);
+    } finally{
+      setLoading(false);
+    }
+  }
 
   return (
     <div className='w-full gap-5 flex flex-col items-center justify-center'>
 
+     {loading && <Loader/>}
       {/* Header Section */}
       <div className='flex flex-col gap-4 items-center justify-center'>
         <h1 className='2xl:text-6xl md:text-4xl text-2xl font-bold'>Tracked Products</h1>

@@ -10,7 +10,7 @@ const Card = ({ product, showButton = true, variant, children, isProduct = false
             ? ""
             : "md:max-w-xl"
 
-    const averagePrice = (product.currentPrice + product.lowestPrice) / 2
+    const averagePrice = (product.currentPrice + product.targetPrice) / 2
 
     return (
         <div className={`w-full ${variant === "analytics" ? "min-h-screen md:min-h-full 2xl:min-h-full" : "hover:-translate-y-1 "} ${sizeClasses} overflow-hidden hover:shadow-2xl transition-all duration-300 ${variant !== "analytics" && "md:max-w-xl"} shadow-xl bg-white rounded-2xl p-4 mx-auto px-6 flex flex-col gap-4`}>
@@ -26,7 +26,7 @@ const Card = ({ product, showButton = true, variant, children, isProduct = false
                 {/* Image */}
                 <div className="w-20 h-20 md:w-28 md:h-28 2xl:w-40 2xl:h-40 shrink-0">
                     <img
-                        src={product.imageUrl}
+                        src={product.imgUrl}
                         alt={product.name}
                         className="w-full h-full object-cover rounded-lg"
                     />
@@ -36,22 +36,22 @@ const Card = ({ product, showButton = true, variant, children, isProduct = false
                 <div className={`flex ${variant === "analytics" ? "2xl:flex-row" : ""} flex-col justify-between flex-1`}>
                     <div>
                         <h1 className={`text-sm ${variant === "analytics" ? "2xl:text-3xl md:text-xl" : ""} md:text-lg 2xl:text-2xl font-bold`}>
-                            {product.name}
+                            {product.productName}
                         </h1>
-                        <p className={`text-xs ${variant === "analytics" ? "2xl:text-xl md:text-md" : ""} md:text-sm 2xl:text-lg text-gray-500`}>
+                        <p className={`text-xs line-clamp-3 ${variant === "analytics" ? "2xl:text-xl md:text-md" : ""} md:text-sm 2xl:text-lg text-gray-500`}>
                             {product.description}
                         </p>
                     </div>
 
                     <div className={`mt-2 ${variant === "analytics" ? "2xl:flex items-center justify-center 2xl:flex-row 2xl:gap-30 " : ""} space-y-1`}>
                         <p className={`text-sm ${variant === "analytics" ? "2xl:text-3xl text-gray-500 2xl:py-3 bg-gray-100 rounded-lg py-1 px-3 md:text-xl" : ""} md:text-base font-semibold`}>
-                            Current: <span className='text-black font-bold'>₹{product.currentPrice}</span>
+                            Current: <span className='text-black font-bold'>₹{(product.currentPrice*92.16).toFixed(2)}</span>
                         </p>
                         {variant === "analytics" && (<p className={`text-sm md:text-xl 2xl:py-3 text-gray-500 bg-gray-100 rounded-lg py-1 px-3 2xl:text-3xl font-semibold`}>
                             Average: <span className='text-black font-bold'>₹{averagePrice}</span>
                         </p>)}
                         <p className={`text-sm md:text-base ${variant === "analytics" ? "2xl:text-3xl text-gray-500 2xl:py-3 bg-gray-100 rounded-lg py-1 px-3 md:text-xl" : ""} font-semibold`}>
-                            Target: <span className='text-black font-bold'>₹{product.lowestPrice}</span>
+                            Target: <span className='text-black font-bold'>₹{(product.targetPrice*92.16).toFixed(2)}</span>
                         </p>
 
 
