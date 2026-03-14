@@ -13,6 +13,8 @@ public interface UserTrackedProductRepository extends JpaRepository<UserTrackedP
 
     List<UserTrackedProduct> findByUserId(Long userId);
 
+    Optional<UserTrackedProduct> findByIdAndUserId(Long trackingId, Long userId);
+
     @Query("SELECT utp FROM UserTrackedProduct utp JOIN FETCH utp.user WHERE utp.product.id = :productId")
     List<UserTrackedProduct> findByProductIdWithUser(Long productId);
 }

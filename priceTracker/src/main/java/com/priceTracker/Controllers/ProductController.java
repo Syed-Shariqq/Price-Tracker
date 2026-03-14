@@ -66,4 +66,12 @@ public class ProductController {
                 "Product details fetched successfully",HttpStatus.OK);
     }
 
+    @DeleteMapping("/tracking/{productId}")
+    public ApiResponse<String> deleteUserTrackingProduct(@PathVariable Long productId,
+                                                         @AuthenticationPrincipal User user){
+
+        return successResponse(productService.removeProductFromTracking(productId, user.getId()),
+                 "Product Removed from Tracking",HttpStatus.OK);
+    }
+
 }

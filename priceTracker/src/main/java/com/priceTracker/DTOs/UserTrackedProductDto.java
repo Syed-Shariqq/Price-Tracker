@@ -21,6 +21,10 @@ public class UserTrackedProductDto {
 
     private BigDecimal targetPrice;
 
+    private String imgUrl;
+
+    private String description;
+
     private Long id;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

@@ -49,6 +49,12 @@ public class Product {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "image_url")
+    private String imgUrl;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
     @Version
     private Long version;
 }
