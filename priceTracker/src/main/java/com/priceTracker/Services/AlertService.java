@@ -24,6 +24,7 @@ public class AlertService {
         dto.setNewPrice(alert.getNewPrice());
         dto.setDescription(alert.getDescription());
         dto.setAlertType(alert.getAlertType());
+        dto.setImgUrl(alert.getImgUrl());
         dto.setCreatedAt(alert.getCreatedAt());
 
         return dto;

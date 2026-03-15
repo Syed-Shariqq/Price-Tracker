@@ -93,6 +93,7 @@ public class ProductProcessingService {
                     alert.setProductId(product.getId());
                     alert.setProductName(product.getProductName());
                     alert.setOldPrice(oldPrice);
+                    alert.setImgUrl(product.getImgUrl());
                     alert.setNewPrice(newPrice.getPrice());
                     alert.setAlertType("PRICE_DROP");
                     alert.setDescription(product.getDescription());

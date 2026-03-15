@@ -23,8 +23,8 @@ public class PriceDropListener {
         emailService.priceAlert(
                 priceDropEvent.getEmail(),
                 priceDropEvent.getProductName(),
-                priceDropEvent.getTargetPrice(),
-                priceDropEvent.getNewPrice()
+                priceDropEvent.getNewPrice(),
+                priceDropEvent.getTargetPrice()
         );
 
     }
