@@ -1,11 +1,13 @@
 package com.priceTracker.Services;
 
 import com.priceTracker.DTOs.ScrapeResponseDTO;
+import com.priceTracker.Entities.Alert;
 import com.priceTracker.Entities.Product;
 import com.priceTracker.Entities.ProductPriceHistory;
 import com.priceTracker.Entities.UserTrackedProduct;
 import com.priceTracker.Exceptions.InvalidUrlException;
 import com.priceTracker.Exceptions.ProductNotFoundException;
+import com.priceTracker.Repositories.AlertRepository;
 import com.priceTracker.Repositories.ProductHistoryRepository;
 import com.priceTracker.Repositories.ProductRepository;
 import com.priceTracker.Repositories.UserTrackedProductRepository;
@@ -41,6 +43,9 @@ public class ProductProcessingService {
 
     @Autowired
     private CacheManager cacheManager;
+
+    @Autowired
+    private AlertRepository alertRepository;
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
@@ -82,6 +87,18 @@ public class ProductProcessingService {
 
                 if (targetPrice.compareTo(newPrice.getPrice()) >= 0 &&
                         !Boolean.TRUE.equals(mapping.getAlertSent())) {
+
+                    Alert alert = new Alert();
+                    alert.setUserId(mapping.getUser().getId());
+                    alert.setProductId(product.getId());
+                    alert.setProductName(product.getProductName());
+                    alert.setOldPrice(oldPrice);
+                    alert.setNewPrice(newPrice.getPrice());
+                    alert.setAlertType("PRICE_DROP");
+                    alert.setDescription(product.getDescription());
+                    alert.setCreatedAt(LocalDateTime.now());
+
+                    alertRepository.save(alert);
 
                     eventPublisher.publishEvent(
                             new PriceDropEvent(
