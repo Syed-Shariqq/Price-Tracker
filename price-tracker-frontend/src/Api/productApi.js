@@ -15,3 +15,4 @@ export const getTrackedProductsOfUser = () => {
 export const deleteUserTrackingProduct = (productId) => {
     return api.delete(`/products/tracking/${productId}`);
 }
+

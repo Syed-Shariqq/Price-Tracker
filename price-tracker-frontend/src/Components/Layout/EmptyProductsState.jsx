@@ -44,7 +44,7 @@ const EmptyProductsState = () => {
                 >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                 </svg>
-                Add Your First Product
+                Track a product
             </button>
 
         </div>
