@@ -16,3 +16,7 @@ export const deleteUserTrackingProduct = (productId) => {
     return api.delete(`/products/tracking/${productId}`);
 }
 
+export const getProductAnalytics = (productId) => {
+    return api.get(`/products/${productId}/analytics`);
+}
+

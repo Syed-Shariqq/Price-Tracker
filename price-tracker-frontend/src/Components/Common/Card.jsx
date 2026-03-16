@@ -10,7 +10,7 @@ const Card = ({handleStopTracking, product, showButton = true, variant, children
             ? ""
             : "md:max-w-xl"
 
-    const averagePrice = (product.currentPrice + product.targetPrice) / 2
+    const averagePrice = (((product.currentPrice + product.lowestPrice) / 2)*92.16).toFixed(2);
 
     return (
         <div className={`w-full ${variant === "analytics" ? "min-h-screen md:min-h-full 2xl:min-h-full" : "hover:-translate-y-1 "} ${sizeClasses} overflow-hidden hover:shadow-2xl transition-all duration-300 ${variant !== "analytics" && "md:max-w-xl"} shadow-xl bg-white rounded-2xl p-4 mx-auto px-6 flex flex-col gap-4`}>
@@ -51,7 +51,7 @@ const Card = ({handleStopTracking, product, showButton = true, variant, children
                             Average: <span className='text-black font-bold'>₹{averagePrice}</span>
                         </p>)}
                         <p className={`text-sm md:text-base ${variant === "analytics" ? "2xl:text-3xl text-gray-500 2xl:py-3 bg-gray-100 rounded-lg py-1 px-3 md:text-xl" : ""} font-semibold`}>
-                            Target: <span className='text-black font-bold'>₹{(product.targetPrice * 92.16).toFixed(2)}</span>
+                            {variant === "analytics" ? "Lowest:" : "Target:"} <span className='text-black font-bold'>₹{variant === "analytics" ? (product.lowestPrice * 92.16).toFixed(2) : (product.targetPrice * 92.16).toFixed(2)}</span>
                         </p>
 
 
