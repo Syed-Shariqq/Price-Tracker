@@ -1,9 +1,6 @@
 package com.priceTracker.Controllers;
 
-import com.priceTracker.DTOs.AddProductDTO;
-import com.priceTracker.DTOs.ScrapeRequest;
-import com.priceTracker.DTOs.ScrapeResponseDTO;
-import com.priceTracker.DTOs.UserTrackedProductDto;
+import com.priceTracker.DTOs.*;
 import com.priceTracker.Entities.User;
 import com.priceTracker.Services.ProductProcessingService;
 import com.priceTracker.Services.ProductServiceImpl;
@@ -28,6 +25,7 @@ public class ProductController {
 
     @Autowired
     private ProductProcessingService processingService;
+
 
 
     public <T> ApiResponse<T> successResponse(T data, String message, HttpStatus status){
@@ -74,4 +72,9 @@ public class ProductController {
                  "Product Removed from Tracking",HttpStatus.OK);
     }
 
+    @GetMapping("/{productId}/analytics")
+    public ApiResponse<ProductAnalyticsResponse> getAnalyticsData(@PathVariable Long id){
+
+        return successResponse(productService.getProductAnalytics(id),"Data Fetched Successfully", HttpStatus.OK);
+    }
 }
