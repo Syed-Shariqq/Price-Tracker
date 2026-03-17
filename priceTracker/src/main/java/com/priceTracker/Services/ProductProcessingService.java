@@ -163,21 +163,29 @@ public class ProductProcessingService {
             );
 
         }catch (Exception e){
-            throw new InvalidUrlException("Enter a valid url");
+            throw new InvalidUrlException("Unable to connect to the website. Please try again later.");
         }
     }
 
     private void validateUrl(String url){
-        try{
-            URI uri = new URI(url);
 
-            if(uri.getHost() == null){
-                throw new InvalidUrlException("Invalid URL: Host missing");
-            }
+        URI uri;
 
-        }catch (Exception e){
-            log.error("Error: ",e);
-            throw new InvalidUrlException("Invalid URL provided.");
+        try {
+            uri = new URI(url.trim());
+        } catch (Exception e){
+            log.error("URI parsing failed: {}", url, e);
+            throw new InvalidUrlException("Invalid URL format.");
+        }
+
+        if (uri.getScheme() == null ||
+                (!uri.getScheme().equals("http") && !uri.getScheme().equals("https"))) {
+            throw new InvalidUrlException("URL must start with http or https.");
+        }
+
+        String host = uri.getHost();
+        if (host == null || !host.contains(".")) {
+            throw new InvalidUrlException("Enter a valid website link.");
         }
     }
 }
