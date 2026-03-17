@@ -114,7 +114,7 @@ const LeftSidePage = ({inputRef, error, setError, data, productDetails, setProdu
         </div>
 
         {error && (
-          <div className='w-64 md:w-80 2xl:text-lg text-red-700 px-4 rounded-lg text-sm text-center'>
+          <div className='w-64 text-nowrap md:w-80 2xl:text-lg text-red-700 px-4 rounded-lg text-sm text-center'>
             {error}
           </div>
         )}

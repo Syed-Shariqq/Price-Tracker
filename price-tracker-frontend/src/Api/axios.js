@@ -1,8 +1,10 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 
 const api = axios.create({
     baseURL: "http://localhost:8080",
+    timeout: 7000,
 });
 
 api.interceptors.request.use((config) => {
@@ -25,5 +27,17 @@ api.interceptors.request.use((config) => {
 
   return config;
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+
+    if (error.code === "ECONNABORTED" || !error.response) {
+      toast.error("Something went wrong. Try again later.");
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default api;
