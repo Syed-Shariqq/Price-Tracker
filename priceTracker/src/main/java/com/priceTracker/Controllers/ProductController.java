@@ -72,7 +72,7 @@ public class ProductController {
                  "Product Removed from Tracking",HttpStatus.OK);
     }
 
-    @GetMapping("/{productId}/analytics")
+    @GetMapping("/{id}/analytics")
     public ApiResponse<ProductAnalyticsResponse> getAnalyticsData(@PathVariable Long id){
 
         return successResponse(productService.getProductAnalytics(id),"Data Fetched Successfully", HttpStatus.OK);

@@ -1,7 +1,7 @@
 import { ChartNoAxesCombined, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
-const Card = ({handleStopTracking, product, showButton = true, variant, children, isProduct = false }) => {
+const Card = ({handleStopTracking, avg , product, showButton = true, variant, children, isProduct = false }) => {
 
     const navigate = useNavigate();
 
@@ -48,7 +48,7 @@ const Card = ({handleStopTracking, product, showButton = true, variant, children
                             Current: <span className='text-black font-bold'>₹{(product.currentPrice * 92.16).toFixed(2)}</span>
                         </p>
                         {variant === "analytics" && (<p className={`text-sm md:text-xl 2xl:py-3 text-gray-500 bg-gray-100 rounded-lg py-1 px-3 2xl:text-3xl font-semibold`}>
-                            Average: <span className='text-black font-bold'>₹{averagePrice}</span>
+                            Average: <span className='text-black font-bold'>₹{avg.toFixed(2)}</span>
                         </p>)}
                         <p className={`text-sm md:text-base ${variant === "analytics" ? "2xl:text-3xl text-gray-500 2xl:py-3 bg-gray-100 rounded-lg py-1 px-3 md:text-xl" : ""} font-semibold`}>
                             {variant === "analytics" ? "Lowest:" : "Target:"} <span className='text-black font-bold'>₹{variant === "analytics" ? (product.lowestPrice * 92.16).toFixed(2) : (product.targetPrice * 92.16).toFixed(2)}</span>

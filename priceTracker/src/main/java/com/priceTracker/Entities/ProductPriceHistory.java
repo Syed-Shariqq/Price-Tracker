@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "product_price_history"
        ,indexes = {
-            @Index(name = "idx_product_checked", columnList = "product_id, checked_at")
+            @Index(name = "idx_product_checked", columnList = "product_id, checked_at DESC")
 })
 public class ProductPriceHistory {
 
@@ -31,4 +31,13 @@ public class ProductPriceHistory {
 
     @Column(name = "checked_at", nullable = false)
     private LocalDateTime checkedAt;
+
+    @Column(name = "old_price", precision = 10, scale = 2)
+    private BigDecimal oldPrice;
+
+    @Column(name = "change_amount", precision = 10, scale = 2)
+    private BigDecimal changeAmount;
+
+    @Column(name = "change_percent", precision = 5, scale = 2)
+    private BigDecimal changePercent;
 }

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -57,68 +58,91 @@ public class ProductProcessingService {
                 .orElseThrow(() -> new ProductNotFoundException("Product Not found"));
 
         BigDecimal oldPrice = product.getCurrentPrice();
-        ScrapeResponseDTO newPrice = fetchPrice(product.getProductUrl());
+        ScrapeResponseDTO response = fetchPrice(product.getProductUrl());
 
-        if (newPrice == null || newPrice.getPrice() == null ) return;
+        if (response == null || response.getPrice() == null) return;
+
+        BigDecimal newPrice = response.getPrice();
 
         product.setLastCheckedAt(LocalDateTime.now());
+
+        if (oldPrice != null && oldPrice.compareTo(newPrice) == 0) {
+            productRepository.save(product);
+            return;
+        }
+
+        BigDecimal changeAmount = (oldPrice != null)
+                ? newPrice.subtract(oldPrice)
+                : BigDecimal.ZERO;
+
+        BigDecimal changePercent = (oldPrice != null && oldPrice.compareTo(BigDecimal.ZERO) != 0)
+                ? changeAmount.divide(oldPrice, 4, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(100))
+                : BigDecimal.ZERO;
+
+        product.setCurrentPrice(newPrice);
         productRepository.save(product);
 
-        if (oldPrice == null || oldPrice.compareTo(newPrice.getPrice()) != 0) {
+        ProductPriceHistory history = ProductPriceHistory.builder()
+                .product(product)
+                .price(newPrice)
+                .oldPrice(oldPrice)
+                .changeAmount(changeAmount)
+                .changePercent(changePercent)
+                .checkedAt(LocalDateTime.now())
+                .build();
 
-            product.setCurrentPrice(newPrice.getPrice());
-            productRepository.save(product);
+        historyRepository.save(history);
 
-            ProductPriceHistory history = new ProductPriceHistory();
-            history.setProduct(product);
-            history.setPrice(newPrice.getPrice());
-            history.setCheckedAt(LocalDateTime.now());
-            historyRepository.save(history);
+        List<UserTrackedProduct> trackedProducts =
+                trackedProductRepository.findActiveByProductId(product.getId());
 
-            List<UserTrackedProduct> trackedProducts =
-                    trackedProductRepository.findByProductIdWithUser(product.getId());
+        for (UserTrackedProduct mapping : trackedProducts) {
 
-            for (UserTrackedProduct mapping : trackedProducts) {
+            Long userId = mapping.getUser().getId();
 
-                cacheManager.getCache("userTrackedProducts")
-                        .evict(mapping.getUser().getId());
+            cacheManager.getCache("userTrackedProducts").evict(userId);
 
-                BigDecimal targetPrice = mapping.getTargetPrice();
+            BigDecimal targetPrice = mapping.getTargetPrice();
 
-                if (targetPrice.compareTo(newPrice.getPrice()) >= 0 &&
-                        !Boolean.TRUE.equals(mapping.getAlertSent())) {
+            boolean isSignificantDrop =
+                    changePercent.compareTo(BigDecimal.valueOf(-1)) <= 0;
 
-                    Alert alert = new Alert();
-                    alert.setUserId(mapping.getUser().getId());
-                    alert.setProductId(product.getId());
-                    alert.setProductName(product.getProductName());
-                    alert.setOldPrice(oldPrice);
-                    alert.setImgUrl(product.getImgUrl());
-                    alert.setNewPrice(newPrice.getPrice());
-                    alert.setAlertType("PRICE_DROP");
-                    alert.setDescription(product.getDescription());
-                    alert.setCreatedAt(LocalDateTime.now());
+            boolean shouldTrigger =
+                    targetPrice.compareTo(newPrice) >= 0 && isSignificantDrop;
 
-                    alertRepository.save(alert);
+            if (shouldTrigger && !Boolean.TRUE.equals(mapping.getAlertSent())) {
 
-                    eventPublisher.publishEvent(
-                            new PriceDropEvent(
-                                    mapping.getProduct().getProductName(),
-                                    mapping.getUser().getEmail(),
-                                    targetPrice
-                                    , newPrice.getPrice())
-                    );
+                Alert alert = Alert.builder()
+                        .userId(userId)
+                        .productId(product.getId())
+                        .productName(product.getProductName())
+                        .oldPrice(oldPrice)
+                        .newPrice(newPrice)
+                        .imgUrl(product.getImgUrl())
+                        .alertType("PRICE_DROP")
+                        .description(product.getDescription())
+                        .createdAt(LocalDateTime.now())
+                        .build();
 
-                    mapping.setAlertSent(true);
-                    trackedProductRepository.save(mapping);
-                }
+                alertRepository.save(alert);
 
-                if (targetPrice.compareTo(newPrice.getPrice()) < 0 &&
-                        Boolean.TRUE.equals(mapping.getAlertSent())) {
+                eventPublisher.publishEvent(
+                        new PriceDropEvent(
+                                product.getProductName(),
+                                mapping.getUser().getEmail(),
+                                targetPrice,
+                                newPrice
+                        )
+                );
 
-                    mapping.setAlertSent(false);
-                    trackedProductRepository.save(mapping);
-                }
+                mapping.setAlertSent(true);
+            }
+
+            if (targetPrice.compareTo(newPrice) < 0 &&
+                    Boolean.TRUE.equals(mapping.getAlertSent())) {
+
+                mapping.setAlertSent(false);
             }
         }
     }
