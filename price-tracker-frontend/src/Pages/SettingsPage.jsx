@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Lock, Trash2, Upload } from 'lucide-react'
+import { toast } from 'react-toastify'
 
 const SettingsPage = () => {
 
@@ -11,6 +12,8 @@ const SettingsPage = () => {
     username: 'shariq_dev'
   })
   const [tempProfileData, setTempProfileData] = useState(profileData)
+  const [profileImage, setProfileImage] = useState(null)
+  const [previewImage, setPreviewImage] = useState(null)
 
   const [notifications, setNotifications] = useState({
     priceDrops: true,
@@ -30,6 +33,16 @@ const SettingsPage = () => {
     newPassword: '',
     confirmPassword: ''
   })
+
+  useEffect(() => {
+
+    const savedImage = localStorage.getItem("profileImage")
+
+    if (savedImage) {
+      setPreviewImage(savedImage)
+    }
+
+  }, [])
 
   const handleEditProfile = () => {
     setIsEditingProfile(true)
@@ -63,9 +76,40 @@ const SettingsPage = () => {
       setSecurity({ currentPassword: '', newPassword: '', confirmPassword: '' })
       setIsUpdatingPassword(prev => !prev)
       alert("Password updated successfully")
-    }else{
+    } else {
       alert("Password do not match")
     }
+  }
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Only image files allowed")
+      return
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("File too large (max 2MB)")
+      return
+    }
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      if (!reader.result) {
+        toast.error("Something went wrong")
+        return
+      }
+
+      const base64 = reader.result
+      setPreviewImage(base64)
+      localStorage.setItem("profileImage", base64)
+    }
+    reader.onerror = () => {
+      toast.error("Failed to read file")
+    }
+   
+    reader.readAsDataURL(file)
   }
 
   return (
@@ -78,17 +122,34 @@ const SettingsPage = () => {
         {/* Profile Section */}
         <div className='bg-white rounded-2xl shadow-lg p-6 md:p-8'>
           <h2 className='font-bold text-xl 2xl:text-4xl md:text-2xl mb-6 text-gray-900'>Profile</h2>
-          
+
           <div className='flex flex-col md:flex-row gap-6'>
             {/* Avatar */}
             <div className='flex flex-col items-center md:items-start'>
-              <div className='w-24 h-24 2xl:w-36 2xl:h-36 md:w-28 md:h-28 bg-blue-300 rounded-full flex items-center justify-center text-white text-4xl font-bold mb-4'>
-                {profileData.name.split(' ').map(n => n[0]).join('')}
+              <div className='w-24 h-24 rounded-full 2xl:w-36 2xl:h-36 md:w-28 md:h-28 bg-blue-300 flex items-center justify-center text-white text-4xl font-bold mb-4'>
+                {previewImage ? (
+                  <img
+                    src={previewImage}
+                    alt="Profile"
+                    className="w-full rounded-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-white rounded-full text-4xl font-bold bg-blue-300 w-full h-full flex items-center justify-center">
+                    {profileData.name.split(' ').map(n => n[0]).join('')}
+                  </span>
+                )}
               </div>
-              <button className='flex 2xl:text-lg items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg transition text-gray-700 text-sm'>
+              <label className='flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg cursor-pointer transition text-gray-700 text-sm'>
                 <Upload size={16} />
                 Upload New Avatar
-              </button>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+              </label>
             </div>
 
             {/* Profile Fields */}
@@ -291,7 +352,7 @@ const SettingsPage = () => {
                   disabled={isUpdatingPassword ? false : true}
                   placeholder='••••••••'
                   value={security.currentPassword}
-                  
+
                   onChange={(e) => handleSecurityChange('currentPassword', e.target.value)}
                   className='w-full disabled:bg-gray-50 disabled:text-gray-600 px-4 py-2  rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500'
                 />
@@ -323,24 +384,24 @@ const SettingsPage = () => {
 
               {isUpdatingPassword ? (
                 <div className='flex items-center justify-between'>
-                  <button 
-                  onClick={handleUpdatePassword}
-                  className='active:scale-95 mt-6 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'>
+                  <button
+                    onClick={handleUpdatePassword}
+                    className='active:scale-95 mt-6 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'>
                     Save Changes
                   </button>
                   <button
                     onClick={() => setIsUpdatingPassword(prev => !prev)}
-                   className='active:scale-95 mt-6 bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'>
+                    className='active:scale-95 mt-6 bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'>
                     Cancel
                   </button>
                 </div>
-              ): (
+              ) : (
                 <button
-                onClick={() => setIsUpdatingPassword(prev => !prev)}
-                className='w-full active:scale-95 2xl:px-8 2xl:py-3 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold mt-6'
-              >
-                Update Password
-              </button>
+                  onClick={() => setIsUpdatingPassword(prev => !prev)}
+                  className='w-full active:scale-95 2xl:px-8 2xl:py-3 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold mt-6'
+                >
+                  Update Password
+                </button>
               )}
             </div>
           </div>
