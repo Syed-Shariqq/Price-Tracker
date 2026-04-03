@@ -45,7 +45,7 @@ const Login = ({ setActiveTab, loading, setLoading, activeTab, setLogInData, log
   }
 
   return (
-    <div className='shadow-2xl bg-white/80 flex items-center py-25 flex-col m-10 2xl:w-[30vw] rounded-3xl md:w-120 w-80'>
+    <div className='animate-fade-in shadow-lg bg-white/80 flex items-center py-25 flex-col m-10 2xl:w-[30vw] rounded-3xl md:w-120 w-80'>
 
       {/* Login Form */}
       <form

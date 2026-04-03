@@ -3,7 +3,7 @@ import React from 'react'
 
 const ProductCard = ({ product }) => {
   return (
-    <div className='bg-white rounded-2xl border border-gray-100 shadow-md p-4 hover:-translate-y-1 hover:shadow-xl hover:border-blue-100 transition-all duration-300 ease-out flex flex-col gap-3 w-full sm:max-w-72 md:max-w-sm 2xl:max-w-xl h-auto'>
+    <div className='animate-fade-in bg-white rounded-2xl border border-gray-100/80 shadow-sm p-4 hover:-translate-y-1 hover:shadow-md hover:border-blue-100 transition-all duration-300 ease-out flex flex-col gap-3 w-full sm:max-w-72 md:max-w-sm 2xl:max-w-xl h-auto'>
 
       {/* Product Details */}
       <div className='w-full flex gap-3 items-start justify-start'>

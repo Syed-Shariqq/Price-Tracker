@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 const HeroSection = () => {
   return (
-    <div className='flex flex-col bg-linear-to-b from-blue-200 to-white lg:flex-row lg:pb-20 lg:justify-center lg:items-center lg:pt-0 gap-6 md:gap-10 pt-10 md:pt-20 lg:min-h-[calc(100vh-6rem)] px-4 sm:px-6'>
+    <div className='flex flex-col bg-linear-to-b from-blue-50 to-white lg:flex-row lg:pb-20 lg:justify-center lg:items-center lg:pt-0 gap-6 md:gap-10 pt-10 md:pt-20 lg:min-h-[calc(100vh-6rem)] px-4 sm:px-6'>
 
       {/* Middle Section */}
       <div className='lg:px-8 xl:px-20 flex flex-col lg:h-auto gap-5 md:gap-7 lg:gap-10 xl:gap-20 lg:w-1/2 flex-1'>
@@ -36,7 +36,7 @@ const HeroSection = () => {
       </div>
 
       {/* Graph */}
-      <div className='my-8 md:my-10 lg:my-0 overflow-hidden shadow-2xl shadow-gray-500 w-full lg:w-1/2 max-h-96 md:max-h-full'>
+      <div className='my-8 md:my-10 lg:my-0 overflow-hidden shadow-lg shadow-gray-300 w-full lg:w-1/2 max-h-96 md:max-h-full'>
         <img src="../src/assets/graph.jpeg" alt="Graph showing price trends" className='w-full h-full object-cover' />
       </div>
 

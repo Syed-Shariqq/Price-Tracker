@@ -56,8 +56,8 @@ const ResetPassword = () => {
     };
 
     return (
-        <div className='min-h-screen w-full text-black bg-linear-120 from-gray-300 to-blue-100 flex 2xl:justify-center flex-col items-center py-20 justify-start'>
-            <div className='bg-white md:w-120 p-5 shadow-2xl flex flex-col items-center justify-center rounded-2xl'>
+        <div className='min-h-screen w-full text-black bg-linear-120 from-gray-100 to-blue-50 flex 2xl:justify-center flex-col items-center py-20 justify-start'>
+            <div className='animate-fade-in bg-white md:w-120 p-5 shadow-lg flex flex-col items-center justify-center rounded-2xl'>
                 <form className='flex gap-10 flex-col items-center justify-center' onSubmit={handleResetPassword}>
                     {/* Header */}
                     <div className='flex gap-1 flex-col items-center justify-center'>

@@ -13,7 +13,7 @@ const Card = ({ handleStopTracking, avg, product, showButton = true, variant, ch
     const averagePrice = (((product.currentPrice + product.lowestPrice) / 2) * 92.16).toFixed(2);
 
     return (
-        <div className={`w-full ${variant === "analytics" ? "min-h-screen md:min-h-full 2xl:min-h-full" : "hover:-translate-y-1 hover:shadow-xl hover:border-blue-100 border border-gray-100 shadow-md"} ${sizeClasses} overflow-hidden transition-all duration-300 ease-out ${variant !== "analytics" && "md:max-w-xl"} bg-white rounded-2xl p-4 mx-auto flex flex-col gap-3`}>
+        <div className={`w-full animate-fade-in ${variant === "analytics" ? "min-h-screen md:min-h-full 2xl:min-h-full" : "hover:-translate-y-1 hover:shadow-md hover:border-blue-100 border border-gray-100/80 shadow-sm"} ${sizeClasses} overflow-hidden transition-all duration-300 ease-out ${variant !== "analytics" && "md:max-w-xl"} bg-white rounded-2xl p-4 mx-auto flex flex-col gap-3`}>
 
             {/* Top Section */}
             <div className="flex relative gap-4">

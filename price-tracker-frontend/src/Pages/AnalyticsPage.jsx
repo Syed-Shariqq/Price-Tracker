@@ -37,7 +37,7 @@ const AnalyticsPage = () => {
   }
 
   return (
-    <div className='w-full gap-9 flex flex-col items-center justify-center'>
+    <div className='animate-fade-in w-full gap-9 flex flex-col items-center justify-center'>
 
       {loading && (<Loader />)}
       {/* Header Section */}

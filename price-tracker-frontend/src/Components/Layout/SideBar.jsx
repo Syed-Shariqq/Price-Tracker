@@ -22,8 +22,8 @@ const SideBar = ({ onClose }) => {
   }
 
   return (
-    <div className='flex flex-col h-full bg-blue-50'>
-      <div className='py-4 px-4 w-full border-b border-blue-100 flex items-center justify-between'>
+    <div className='flex flex-col h-full bg-blue-100'>
+      <div className='py-4 px-4 w-full border-b border-blue-200 flex items-center justify-between'>
 
         {/* Logo */}
         <NavLogo />
@@ -46,7 +46,7 @@ const SideBar = ({ onClose }) => {
               navigate(item.path);
               if (onClose) onClose();
             }}
-            className='flex text-sm cursor-pointer hover:bg-blue-100 hover:text-blue-700 transition-all duration-200 rounded-md py-2.5 px-3 items-center gap-3 font-medium'
+            className='flex text-sm cursor-pointer hover:bg-blue-200 hover:text-blue-700 transition-all duration-200 rounded-md py-2.5 px-3 items-center gap-3 font-medium'
           >
             <item.icon className='w-4 h-4 shrink-0' />
             <span>{item.label}</span>

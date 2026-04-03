@@ -75,7 +75,7 @@ const ProductAnalytics = () => {
   if (!product) return <h1>Product Not Found</h1>;
 
   return (
-    <div className="w-full flex flex-col items-start justify-center gap-3">
+    <div className="animate-fade-in w-full flex flex-col items-start justify-center gap-3">
       {/* Header */}
       <div className="flex w-full my-5 items-center justify-between">
         <div>
