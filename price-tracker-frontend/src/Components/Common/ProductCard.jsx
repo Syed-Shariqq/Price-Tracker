@@ -3,37 +3,41 @@ import React from 'react'
 
 const ProductCard = ({ product }) => {
   return (
-    <div className='hover:-translate-y-2 transition-all duration-300 flex-col flex gap-3 w-full sm:max-w-72 md:max-w-sm 2xl:max-w-xl border border-gray-200 shadow-xl rounded-2xl p-4 md:p-5 h-auto'>
+    <div className='bg-white rounded-2xl border border-gray-100 shadow-md p-4 hover:-translate-y-1 hover:shadow-xl hover:border-blue-100 transition-all duration-300 ease-out flex flex-col gap-3 w-full sm:max-w-72 md:max-w-sm 2xl:max-w-xl h-auto'>
 
       {/* Product Details */}
-      <div className='w-full min-h-24 flex gap-4 md:gap-6 items-start justify-start'>
+      <div className='w-full flex gap-3 items-start justify-start'>
         <img src={product.imageUrl}
-          alt={product.name} className='h-16 w-16 md:h-20 md:w-20 object-cover rounded-lg shrink-0' />
-        <p className='text-base font-semibold text-gray-900 line-clamp-2'>{product.name}</p>
+          alt={product.name} className='h-12 w-12 object-cover rounded-md shrink-0' />
+        <p className='text-sm mt-0.5 font-semibold text-gray-900 line-clamp-2 leading-tight'>{product.name}</p>
       </div>
 
       {/* Prices */}
-      <div className='flex flex-col gap-2'>
-        <div className='flex items-center gap-2'>
+      <div className='flex flex-col gap-1 pt-1'>
+        <div className='flex items-center justify-between'>
           <span className='text-xs font-medium text-gray-400 uppercase tracking-wide'>Current Price:</span>
-          <span className='flex items-center text-xl font-extrabold tabular-nums text-gray-900'>
-            <IndianRupee className='w-4 h-4' />{product.currentPrice}
+          <span className='flex items-center text-base font-extrabold tabular-nums text-gray-900'>
+            <IndianRupee className='w-3 h-3' />{product.currentPrice}
           </span>
         </div>
-        <div className='flex items-center gap-2'>
+        <div className='flex items-center justify-between'>
           <span className='text-xs font-medium text-gray-400 uppercase tracking-wide'>Target Price:</span>
-          <span className='flex items-center text-xl font-extrabold tabular-nums text-gray-900'>
-            <IndianRupee className='w-4 h-4' />{product.targetPrice}
+          <span className='flex items-center text-base font-extrabold tabular-nums text-gray-900'>
+            <IndianRupee className='w-3 h-3' />{product.targetPrice}
           </span>
         </div>
-        <img src="../src/assets/lines.png" alt="" className='w-full mt-2' />
       </div>
 
+      <img src="../src/assets/lines.png" alt="" className='w-full opacity-60 mt-1 mb-1 hidden' />
+
       {/* Status */}
-      <div className='flex items-center text-sm font-medium text-gray-900 justify-start gap-2 mt-2'>
-        <div className='bg-green-600 h-3 w-3 rounded-full shrink-0'></div>
-        <p>{product.status}</p>
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center gap-2'>
+            <div className='bg-green-500 h-2 w-2 rounded-full shrink-0 shadow-[0_0_8px_rgba(34,197,94,0.6)]'></div>
+            <p className='text-xs font-semibold uppercase tracking-wide text-gray-600'>{product.status}</p>
+        </div>
       </div>
+      
       
     </div>
   )

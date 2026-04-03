@@ -34,7 +34,7 @@ const ProductAnalytics = () => {
                     });
 
                     return {
-                        price: (h.price * 92.16).toFixed(2),
+                        price: Number((h.price * 92.16).toFixed(2)),
                         date: formatted.replace(",", " ·")
                     };
                 });
@@ -61,9 +61,9 @@ const ProductAnalytics = () => {
     }, [])
 
     const axisFontSize =
-        screenWidth >= 1536 ? 18 :   // 2xl
-            screenWidth >= 768 ? 16 :    // md
-                12                           // mobile
+        screenWidth >= 1536 ? 16 :
+            screenWidth >= 768 ? 14 :
+                14
 
     const { id } = useParams()
 
@@ -73,7 +73,7 @@ const ProductAnalytics = () => {
         <div className='w-full flex flex-col items-start justify-center gap-3'>
 
             {/* Header */}
-            <div className='flex w-full items-center justify-between'>
+            <div className='flex w-full my-5 items-center justify-between'>
                 <div>
                     <h1 className='text-xs font-medium text-gray-400 uppercase tracking-wide'>Analytics / {product.productName}</h1>
                     <h2 className='text-2xl font-extrabold tracking-tight text-gray-900'>{product.productName}</h2>
@@ -100,7 +100,9 @@ const ProductAnalytics = () => {
                             {/* Chart */}
                             <ResponsiveContainer width="100%" height={300}>
                                 <AreaChart
-                                    data={priceHistory}>
+                                    data={priceHistory}
+                                    margin={{ top: 10, right: 20, left: 20, bottom: 35 }} // ✅ spacing fix
+                                >
 
                                     <defs>
                                         <linearGradient id="priceGradient" x1="0" y1="0" x2="0" y2="1">
@@ -125,16 +127,18 @@ const ProductAnalytics = () => {
                                         dataKey="date"
                                         tickLine={false}
                                         axisLine={false}
-                                        tick={{ fill: "#6b7280", fontSize: axisFontSize }}
+                                        tickMargin={12} // ✅ prevents overlap
+                                        tick={{ fill: "#111827", fontSize: axisFontSize, fontWeight: 500 }}
                                     />
 
                                     <YAxis
+                                        width={50} 
                                         tickFormatter={(value) => `₹${value}`}
                                         domain={['auto', 'auto']}
                                         tickLine={false}
                                         axisLine={false}
-                                        tickMargin={20}
-                                        tick={{ fill: "#6b7280", fontSize: axisFontSize }}
+                                        tickMargin={12}
+                                        tick={{ fill: "#111827", fontSize: axisFontSize, fontWeight: 500 }}
                                     />
 
                                     <Tooltip
@@ -165,21 +169,21 @@ const ProductAnalytics = () => {
                                     </p>
                                 )}
                             {priceHistory.length === 0 && (
-                                    <p className="text-sm text-gray-500 leading-relaxed text-center my-2">
-                                        No price changes recorded yet
-                                    </p>
-                                )}
+                                <p className="text-sm text-gray-500 leading-relaxed text-center my-2">
+                                    No price changes recorded yet
+                                </p>
+                            )}
                         </div>
 
                         {/* Current and Target Price */}
                         <div className='flex gap-7 mt-8'>
                             <h2 className="text-xs font-medium text-gray-400 uppercase tracking-wide flex flex-col gap-1">
                                 Current
-                                <span className='text-xl font-extrabold tabular-nums text-gray-900'>{(product.currentPrice * 92.16).toFixed(2)}</span>
+                                <span className='text-xl font-extrabold tabular-nums text-gray-900'>₹{(product.currentPrice * 92.16).toFixed(2)}</span>
                             </h2>
                             <h2 className="text-xs font-medium text-gray-400 uppercase tracking-wide flex flex-col gap-1">
                                 lowest
-                                <span className='text-xl font-extrabold tabular-nums text-gray-900'> {(product.lowestPrice * 92.16).toFixed(2)}</span>
+                                <span className='text-xl font-extrabold tabular-nums text-gray-900'>₹{(product.lowestPrice * 92.16).toFixed(2)}</span>
                             </h2>
                         </div>
                         <div className='flex items-center text-sm font-medium text-gray-900 gap-2 mt-4'>
