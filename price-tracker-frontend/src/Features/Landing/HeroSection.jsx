@@ -10,8 +10,8 @@ const HeroSection = () => {
 
         {/* Heading */}
         <div className='flex flex-col items-center lg:items-start justify-center'>
-          <h1 className='text-2xl font-extrabold tracking-tight text-gray-900 text-center lg:text-left'>Stop Overpaying.</h1>
-          <h1 className='text-2xl font-extrabold tracking-tight text-gray-900 mt-2 text-center lg:text-left'>Start Tracking.</h1>
+          <h1 className='text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 text-center lg:text-left'>Stop Overpaying.</h1>
+          <h1 className='text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 mt-2 text-center lg:text-left'>Start Tracking.</h1>
         </div>
 
         {/* Paragraph */}
@@ -23,11 +23,11 @@ const HeroSection = () => {
         <div>
           <div className='flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-4 md:gap-6 font-semibold'>
             <Link to="/auth">
-              <button className='active:scale-95 bg-blue-500 px-6 md:px-8 lg:px-10 py-2 md:py-3 lg:py-4 text-base md:text-lg lg:text-xl hover:scale-105 hover:bg-blue-700 transition-all duration-300 text-white rounded-4xl whitespace-nowrap'>
+              <button className='active:scale-95 cursor-pointer bg-blue-500 px-6 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4 text-base md:text-md hover:scale-105 hover:bg-blue-700 transition-all duration-300 text-white rounded-4xl whitespace-nowrap'>
                 Start Tracking free
               </button>
             </Link>
-            <button className='active:scale-95 text-base md:text-lg lg:text-xl text-blue-500 px-6 md:px-8 lg:px-10 py-2 md:py-3 lg:py-4 hover:scale-105 hover:text-blue-700 transition-all duration-300 rounded-4xl whitespace-nowrap'>
+            <button className='active:scale-95 cursor-pointer text-base md:text-md text-blue-500 px-6 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4 hover:scale-105 hover:text-blue-700 transition-all duration-300 rounded-4xl whitespace-nowrap'>
               Learn More
             </button>
           </div>
