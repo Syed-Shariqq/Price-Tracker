@@ -123,8 +123,8 @@ const LeftSidePage = ({ inputRef, error, setError, data, productDetails, setProd
         {!productDetails && (
           <div className='bg-white w-full md:w-9/10 shadow-2xl rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center gap-6'>
             {/* Illustration */}
-            <div className='w-32 h-32 md:w-40 md:h-40 bg-linear-to-br from-blue-100 to-blue-50 rounded-full flex items-center justify-center'>
-              <svg className='w-20 h-20 md:w-32 md:h-32 text-blue-400' fill='currentColor' viewBox='0 0 24 24'>
+            <div className='w-32 h-26 bg-linear-to-br from-blue-100 to-blue-50 rounded-full flex items-center justify-center'>
+              <svg className='w-20 h-20 text-blue-400' fill='currentColor' viewBox='0 0 24 24'>
                 <path d='M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z' />
               </svg>
             </div>

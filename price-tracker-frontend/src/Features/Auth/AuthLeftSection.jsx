@@ -2,11 +2,11 @@ import React from 'react'
 
 const AuthLeftSection = () => {
   return (
-    <div className='hidden md:min-h-200 gap-10 lg:flex flex-col justify-start w-80 md:w-120 2xl:w-[30vw] backdrop-blur-md bg-white/30 rounded-l-3xl p-8 shadow-xl border border-white/40'>
+    <div className='hidden gap-5 lg:flex flex-col justify-start w-80 md:w-120 2xl:w-[30vw] backdrop-blur-md bg-white/30 rounded-l-3xl p-8 shadow-xl border border-white/40'>
 
       {/* Left Section Content */}
       <div>
-        <h2 className='text-2xl font-extrabold tracking-tight text-gray-900 mb-2'>
+        <h2 className='text-xl font-extrabold tracking-tight text-gray-900 mb-2'>
           Unlock Your Savings Potential
         </h2>
         <p className='text-sm text-gray-500 leading-relaxed mb-8'>
@@ -16,7 +16,7 @@ const AuthLeftSection = () => {
 
       {/* Left Side Background Gradient */}
       <div className='relative mb-8 h-64 gap-10 flex items-center justify-center'>
-        <svg className='w-full h-full absolute  inset-0' viewBox='0 0 400 250' preserveAspectRatio='xMidYMid meet'>
+        <svg className='w-full h-full absolute inset-0' viewBox='0 0 400 250' preserveAspectRatio='xMidYMid meet'>
           <defs>
             <linearGradient id='grad1' x1='0%' y1='0%' x2='0%' y2='100%'>
               <stop offset='0%' style={{ stopColor: '#ff6b6b', stopOpacity: 0.5 }} />
@@ -62,29 +62,29 @@ const AuthLeftSection = () => {
         <div className='relative z-10 w-full'>
           <div className='flex justify-between items-center mb-6'>
             <div className='backdrop-blur-sm  bg-white/60 rounded-2xl p-4 flex flex-col items-center justify-center border border-white/40 hover:bg-white/80 transition'>
-              <span className='text-5xl mb-1'>🎧</span>
-              <span className='text-base font-semibold text-gray-900'>Headphones</span>
+              <span className='text-3xl mb-1'>🎧</span>
+              <span className='text-sm font-semibold text-gray-900'>Headphones</span>
             </div>
             <div className='flex gap-3'>
               <button className='backdrop-blur-sm bg-white/60 rounded-full p-3 shadow-lg hover:bg-white/80 transition border border-white/40'>
-                <span className='text-2xl'>🔗</span>
+                <span className='text-xl'>🔗</span>
               </button>
               <button className='backdrop-blur-sm bg-white/60 rounded-full p-3 shadow-lg hover:bg-white/80 transition border border-white/40'>
-                <span className='text-2xl'>🎯</span>
+                <span className='text-xl'>🎯</span>
               </button>
               <button className='backdrop-blur-sm bg-white/60 rounded-full p-3 shadow-lg hover:bg-white/80 transition border border-white/40'>
-                <span className='text-2xl'>🔔</span>
+                <span className='text-xl'>🔔</span>
               </button>
             </div>
           </div>
           <div className='flex gap-4'>
             <div className='backdrop-blur-sm bg-white/60 rounded-2xl p-4 flex flex-col items-center justify-center flex-1 border border-white/40 hover:bg-white/80 transition'>
-              <span className='text-5xl mb-1'>📷</span>
-              <span className='text-base font-semibold text-gray-900'>Camera</span>
+              <span className='text-3xl mb-1'>📷</span>
+              <span className='text-sm font-semibold text-gray-900'>Camera</span>
             </div>
             <div className='backdrop-blur-sm bg-white/60 rounded-2xl p-4 flex flex-col items-center justify-center flex-1 border border-white/40 hover:bg-white/80 transition'>
-              <span className='text-5xl mb-1'>📱</span>
-              <span className='text-base font-semibold text-gray-900'>Gadget</span>
+              <span className='text-3xl mb-1'>📱</span>
+              <span className='text-sm font-semibold text-gray-900'>Gadget</span>
             </div>
           </div>
         </div>
@@ -93,17 +93,17 @@ const AuthLeftSection = () => {
       {/* Left Side Lower Content */}
       <div className='flex gap-6'>
         <div className='flex flex-col items-center text-center flex-1'>
-          <div className='text-4xl mb-2'>🔗</div>
+          <div className='text-3xl mb-2'>🔗</div>
           <h4 className='text-base font-semibold text-gray-900'>Paste URL</h4>
           <p className='text-sm text-gray-500 leading-relaxed mt-0.5'>Paste your URL</p>
         </div>
         <div className='flex flex-col items-center text-center flex-1'>
-          <div className='text-4xl mb-2'>🎯</div>
+          <div className='text-3xl mb-2'>🎯</div>
           <h4 className='text-base font-semibold text-gray-900'>Set Target</h4>
           <p className='text-sm text-gray-500 leading-relaxed mt-0.5'>Set the price price.</p>
         </div>
         <div className='flex flex-col items-center text-center flex-1'>
-          <div className='text-4xl mb-2'>🔔</div>
+          <div className='text-3xl mb-2'>🔔</div>
           <h4 className='text-base font-semibold text-gray-900'>Get Alerted</h4>
           <p className='text-sm text-gray-500 leading-relaxed mt-0.5'>get more, inspired.</p>
         </div>

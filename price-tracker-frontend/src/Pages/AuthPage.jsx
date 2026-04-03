@@ -129,7 +129,7 @@ const AuthPage = () => {
   }
 
   return (
-    <div className='min-h-screen overflow-hidden bg-linear-to-br from-blue-200 via-blue-100 to-white px-6 py-10 flex flex-col items-center'>
+    <div className='min-h-screen overflow-hidden bg-linear-to-br from-blue-200 via-blue-100 to-white px-6 py-5 flex flex-col items-center'>
 
       {loading && <Loader />}
       {/* Logo */}

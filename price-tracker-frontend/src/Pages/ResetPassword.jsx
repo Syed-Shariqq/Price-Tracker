@@ -61,13 +61,13 @@ const ResetPassword = () => {
                 <form className='flex gap-10 flex-col items-center justify-center' onSubmit={handleResetPassword}>
                     {/* Header */}
                     <div className='flex gap-1 flex-col items-center justify-center'>
-                        <h1 className='font-bold 2xl:text-4xl text-2xl'>Reset Password</h1>
-                        <p className='text-gray-600 2xl:text-lg'>Enter your new password below</p>
+                        <h1 className='font-bold text-2xl'>Reset Password</h1>
+                        <p className='text-gray-600 '>Enter your new password below</p>
                     </div>
 
                     {/* Error Message */}
                     {error && (
-                        <div className='w-64 md:w-80 2xl:text-md text-red-700 px-4 rounded-lg text-sm text-center'>
+                        <div className='w-64 md:w-80 text-red-700 px-4 rounded-lg text-sm text-center'>
                             {error}
                         </div>
                     )}
@@ -76,11 +76,11 @@ const ResetPassword = () => {
                     <div className='flex items-center gap-2 pb-10 border-b-2 border-gray-200 flex-col'>
                         {/* New Password */}
                         <p className='2xl:text-xl font-bold self-start'>New Password</p>
-                        <div className='flex px-2 2xl:py-3 2xl:text-lg 2xl:px-6 py-1 border-2 border-gray-200 rounded-lg items-center justify-center gap-2 relative'>
+                        <div className='flex px-2 py-1 border-2 border-gray-200 rounded-lg items-center justify-center gap-2 relative'>
                             <Lock size={20} className='text-gray-600' />
                             <input
                                 onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
-                                className='text-md px-3 py-2 outline-none 2xl:text-lg'
+                                className='text-md px-3 py-2 outline-none '
                                 placeholder='Enter New Password'
                                 type={showNewPassword ? 'text' : 'password'}
                                 value={passwords.newPassword}
@@ -102,23 +102,27 @@ const ResetPassword = () => {
 
                         {/* Confirm Password */}
                         <p className='2xl:text-xl font-bold self-start mt-6'>Confirm Password</p>
-                        <div className='flex px-2 2xl:py-3 2xl:text-lg 2xl:px-6 py-1 border-2 border-gray-200 rounded-lg items-center justify-center gap-2 relative'>
+                        <div className='flex px-2 2xl:py-3 py-1 border-2 border-gray-200 rounded-lg items-center justify-center gap-2 relative'>
                             <Lock size={20} className='text-gray-600' />
                             <input
                                 onChange={(e) => setPasswords({ ...passwords, confirmPassword: e.target.value })}
-                                className='text-md px-3 py-2 outline-none 2xl:text-lg'
+                                className='text-md px-3 py-2 outline-none'
                                 placeholder='Confirm New Password'
                                 type={showConfirmPassword ? 'text' : 'password'}
                                 value={passwords.confirmPassword}
                             />
                             {showConfirmPassword ? (
                                 <Eye
+                                    height={20}
+                                    width={20}
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                     className='cursor-pointer text-gray-600 hover:text-gray-800'
                                     size={20}
                                 />
                             ) : (
                                 <EyeClosed
+                                    height={20}
+                                    width={20}
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                     className='cursor-pointer text-gray-600 hover:text-gray-800'
                                     size={20}
@@ -130,22 +134,22 @@ const ResetPassword = () => {
                         <button
                             type='submit'
                             disabled={loading}
-                            className={`px-4 cursor-pointer w-full mt-6 hover:bg-blue-600 transition-all duration-300 active:scale-95 py-2 2xl:text-lg 2xl:py-3 font-semibold ${loading ? 'opacity-50 cursor-not-allowed' : ''} bg-blue-500 text-white rounded-lg`}
+                            className={`px-4 cursor-pointer w-full mt-6 hover:bg-blue-600 transition-all duration-300 active:scale-95 py-2 font-semibold ${loading ? 'opacity-50 cursor-not-allowed' : ''} bg-blue-500 text-white rounded-lg`}
                         >
                             {loading ? 'Resetting...' : 'Reset Password'}
                         </button>
 
                         {/* Back to Login Link */}
-                        <p className='text-sm 2xl:text-lg text-gray-600 font-semibold text-center mt-4'>
+                        <p className='text-sm 2xl:md text-gray-600 font-semibold text-center mt-4'>
                             Remember your password?{' '}
-                            <Link className='2xl:text-md text-blue-600 hover:text-blue-700' to='/auth'>
+                            <Link className='text-blue-600 hover:text-blue-700' to='/auth'>
                                 Back to Login
                             </Link>
                         </p>
                     </div>
 
                     {/* Footer Message */}
-                    <div className='text-gray-600 2xl:text-lg text-sm text-center'>
+                    <div className='text-gray-600 text-sm text-center'>
                         <p>Your password will be updated securely</p>
                     </div>
                 </form>

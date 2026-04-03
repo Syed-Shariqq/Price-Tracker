@@ -47,8 +47,8 @@ const ForgotPassword = () => {
                 <form onSubmit={handleSubmit}
                     className='flex gap-10 flex-col items-center justify-center' action="">
                     <div className='flex gap-1 flex-col items-center justify-center'>
-                        <h1 className='font-bold 2xl:text-4xl text-2xl'>Forgot Password</h1>
-                        <p className='text-gray-600 2xl:text-lg'>Enter your email to reset your password</p>
+                        <h1 className='font-bold text-2xl'>Forgot Password</h1>
+                        <p className='text-gray-600 '>Enter your email to reset your password</p>
                     </div>
                     {error && (
                         <div className='w-64 md:w-80 2xl:text-md text-red-700 px-4 rounded-lg text-sm text-center'>
@@ -56,8 +56,8 @@ const ForgotPassword = () => {
                         </div>
                     )}
                     <div className='flex items-center gap-2 pb-10 border-b-2 border-gray-200 flex-col'>
-                        <p className='2xl:text-xl font-bold'>Email Address</p>
-                        <div className='flex px-2 2xl:py-3 2xl:text-lg 2xl:px-6 py-1 border-2 border-gray-200 rounded-lg items-center justify-center gap-2'>
+                        <p className='2xl:text-lg font-bold'>Email Address</p>
+                        <div className='flex px-2 py-1 border-2 border-gray-200 rounded-lg items-center justify-center gap-2'>
                             <Mail />
                             <input
                                 onChange={(e) => { setEmail(e.target.value) }}
@@ -68,10 +68,10 @@ const ForgotPassword = () => {
                                 name="email"
                             />
                         </div>
-                        <button className='px-4 cursor-pointer hover:bg-blue-600 transition-all duration-300 py-2 mt-2 w-full 2xl:text-lg bg-blue-500 text-white rounded-lg'>Send Reset Link</button>
-                        <p className='text-sm 2xl:text-lg text-gray-600 font-semibold'>Remember your Password? <Link className="2xl:text-md text-blue-600" to="/auth">Back to Login</Link></p>
+                        <button className='px-4 cursor-pointer hover:bg-blue-600 transition-all duration-300 py-2 mt-2 w-full bg-blue-500 text-white rounded-lg'>Send Reset Link</button>
+                        <p className='text-sm text-gray-600 font-semibold'>Remember your Password? <Link className="2xl:text-md text-blue-600" to="/auth">Back to Login</Link></p>
                     </div>
-                    <div className='text-gray-600 2xl:text-lg text-sm'>
+                    <div className='text-gray-600 text-sm'>
                         <p>We will send you a link to reset your password</p>
                     </div>
                 </form>
