@@ -63,33 +63,36 @@ const AlertsPage = () => {
       {alerts.length === 0 ? (
         <EmptyProductsState />
       ) : (
-        <div className='flex scrollbar md:max-h-screen overflow-y-auto flex-wrap md:flex-row flex-col items-center justify-start gap-5'>
+        <div className='flex scrollbar md:max-h-screen overflow-y-auto flex-wrap md:flex-row flex-col items-center justify-start gap-4'>
           {alerts.map((alert, idx) => (
-            <div key={idx} className='w-full lg:w-2/5 2xl:w-full hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 md:max-w-xl shadow-xl bg-white rounded-2xl p-4 mx-auto px-6 flex flex-col gap-4'>
-              <div className='flex-col gap-3 md:flex-row flex md:items-start md:justify-start items-center justify-center'>
-                <img className='h-40 bg-cover w-40' src={alert.imgUrl} alt={alert.productName} />
-                <div className='flex flex-col gap-2'>
-                  <h1 className='text-base font-semibold text-gray-900'>{alert.productName}</h1>
-                  <h1 className='text-sm text-gray-500 leading-relaxed'>Price dropped from <span className='text-emerald-600 font-bold'>₹{(alert.oldPrice * 92.16).toFixed(2)}</span> to <span className='text-emerald-600 font-bold'>₹{(alert.newPrice * 92.16).toFixed(2)}</span></h1>
+            <div key={idx} className='w-full sm:max-w-md 2xl:max-w-xl bg-white rounded-2xl shadow-md border border-gray-100 border-l-4 border-l-emerald-500 p-4 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col gap-3'>
+              
+              <div className='flex gap-4 items-start justify-start'>
+                <img className='h-16 w-16 object-cover rounded-lg shrink-0' src={alert.imgUrl} alt={alert.productName} />
+                <div className='flex flex-col gap-1'>
+                  <h1 className='text-sm mt-0.5 font-semibold text-gray-900 line-clamp-2 leading-tight'>{alert.productName}</h1>
+                  <p className='text-xs font-medium text-gray-400 uppercase tracking-wide'>{formatDate(alert.createdAt)}</p>
                 </div>
               </div>
-              <div className='w-full bg-green-100 flex gap-2 p-2 rounded-lg text-green-700 items-center'>
-                <ArrowUpWideNarrow className='w-4 h-4' />
+              
+              <div className='w-full bg-gray-50 flex gap-2 px-3 py-2 rounded-lg text-gray-700 items-center border border-gray-100'>
+                <ArrowUpWideNarrow className='w-4 h-4 text-emerald-600' />
                 <h1 className='text-xs font-bold uppercase tracking-wide'>{alert.alertType}</h1>
               </div>
-              <div className='flex items-center justify-start gap-4'>
-                <div className='flex gap-2 font-bold py-1 rounded-lg'>
-                  <h1 className='text-base line-through text-gray-400 font-medium'>₹{(alert.oldPrice * 92.16).toFixed(2)}</h1>
+
+              <div className='flex items-center justify-between mt-1'>
+                <div className='flex items-center gap-3'>
+                  <h1 className='text-sm line-through text-gray-400 font-medium'>₹{(alert.oldPrice * 92.16).toFixed(2)}</h1>
+                  <MoveRight className='w-4 h-4 text-gray-400' />
+                  <h1 className='text-lg font-extrabold tabular-nums text-emerald-600'>₹{(alert.newPrice * 92.16).toFixed(2)}</h1>
                 </div>
-                <MoveRight className='w-4 h-4 text-gray-400' />
-                <h1 className='text-xl font-extrabold tabular-nums text-gray-900'>₹{(alert.newPrice * 92.16).toFixed(2)}</h1>
+                <div>
+                   <span className='bg-emerald-100 text-emerald-700 rounded-full px-2 py-0.5 text-xs font-bold'>
+                      Saved ₹{((alert.oldPrice * 92.16) - (alert.newPrice * 92.16)).toFixed(2)}
+                   </span>
+                </div>
               </div>
-              <div>
-                <h1 className='text-sm text-gray-500 font-medium'> Saved : <span className='text-emerald-600 font-bold'>₹{((alert.oldPrice * 92.16) - (alert.newPrice * 92.16)).toFixed(2)}</span></h1>
-              </div>
-              <div>
-                <p className='text-xs font-medium text-gray-400 uppercase tracking-wide'>{formatDate(alert.createdAt)}</p>
-              </div>
+
             </div>
           ))}
         </div>
