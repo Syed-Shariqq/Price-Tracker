@@ -59,7 +59,7 @@ const CardsSection = () => {
 
       {/* Heading */}
       <div className='py-8 md:py-10 lg:py-12 px-4'>
-        <h1 className='text-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold'>A Central Hub for All Your <br className='hidden sm:block' /> Tracked Products</h1>
+        <h1 className='text-center text-xl font-bold text-gray-800'>A Central Hub for All Your <br className='hidden sm:block' /> Tracked Products</h1>
       </div>
 
       {/* Cards */}
@@ -68,7 +68,7 @@ const CardsSection = () => {
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
-      
+
     </div>
   )
 }

@@ -75,8 +75,8 @@ const ProductAnalytics = () => {
             {/* Header */}
             <div className='flex w-full items-center justify-between'>
                 <div>
-                    <h1 className='text-sm md:text-md 2xl:text-xl font-semibold text-gray-500'>Analytics / {product.productName}</h1>
-                    <h2 className='text-xl md:text-2xl 2xl:text-4xl font-bold text-gray-800'>{product.productName}</h2>
+                    <h1 className='text-xs font-medium text-gray-400 uppercase tracking-wide'>Analytics / {product.productName}</h1>
+                    <h2 className='text-2xl font-extrabold tracking-tight text-gray-900'>{product.productName}</h2>
                 </div>
                 <a href={product.productUrl}>
                     <div className='flex items-center md:px-4 md:py-2 2xl:px-6 2xl:py-3 2xl:text-lg active:scale-95 hover:bg-blue-700 transition-all duration-300 bg-blue-500 text-white rounded-lg px-3 py-1 justify-center gap-1'>
@@ -91,7 +91,7 @@ const ProductAnalytics = () => {
                 <Card avg={priceHistory.reduce((sum, p) => sum + Number(p.price), 0) / priceHistory.length} variant="analytics" showButton={false} product={product}>
                     <div className="w-full bg-white rounded-2xl shadow-xl p-3">
 
-                        <h2 className="text-xl font-semibold mb-4">
+                        <h2 className="text-xl font-bold text-gray-800 mb-4">
                             Price History
                         </h2>
 
@@ -160,29 +160,30 @@ const ProductAnalytics = () => {
                             </ResponsiveContainer>
                             {priceHistory.length > 0 &&
                                 priceHistory.every(p => p.price === priceHistory[0].price) && (
-                                    <p className="text-gray-400 md:text-md 2xl:text-lg my-2 text-sm mt-2 text-center">
+                                    <p className="text-sm text-gray-500 leading-relaxed text-center my-2">
                                         No price changes recorded yet
                                     </p>
                                 )}
-                            {priceHistory.length === 0 &&
-                                priceHistory.every(p => p.price === priceHistory[0].price) && (
-                                    <p className="text-gray-400 md:text-md 2xl:text-lg my-2 text-sm mt-2 text-center">
+                            {priceHistory.length === 0 && (
+                                    <p className="text-sm text-gray-500 leading-relaxed text-center my-2">
                                         No price changes recorded yet
                                     </p>
                                 )}
                         </div>
 
                         {/* Current and Target Price */}
-                        <div className='flex gap-7 mt-20'>
-                            <h2 className="text-md text-gray-500 md:text-xl 2xl:text-2xl font-semibold mb-4">
-                                Current:<span className='text-black text-lg md:text-2xl 2xl:text-3xl'>{(product.currentPrice * 92.16).toFixed(2)}</span>
+                        <div className='flex gap-7 mt-8'>
+                            <h2 className="text-xs font-medium text-gray-400 uppercase tracking-wide flex flex-col gap-1">
+                                Current
+                                <span className='text-xl font-extrabold tabular-nums text-gray-900'>{(product.currentPrice * 92.16).toFixed(2)}</span>
                             </h2>
-                            <h2 className="text-md text-gray-500 md:text-xl 2xl:text-2xl font-semibold mb-4">
-                                lowest:<span className='text-black text-lg md:text-2xl 2xl:text-3xl'> {(product.lowestPrice * 92.16).toFixed(2)}</span>
+                            <h2 className="text-xs font-medium text-gray-400 uppercase tracking-wide flex flex-col gap-1">
+                                lowest
+                                <span className='text-xl font-extrabold tabular-nums text-gray-900'> {(product.lowestPrice * 92.16).toFixed(2)}</span>
                             </h2>
                         </div>
-                        <div className='flex md:text-xl 2xl:text-2xl items-center text-md gap-2'>
-                            <h2 className='text-gray-500'>Product Status : <span className='text-green-500 font-bold'>{product.status}</span></h2>
+                        <div className='flex items-center text-sm font-medium text-gray-900 gap-2 mt-4'>
+                            <h2 className='text-sm text-gray-500 leading-relaxed'>Product Status : <span className='text-emerald-600 font-bold'>{product.status}</span></h2>
                         </div>
                     </div>
 

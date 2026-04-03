@@ -54,9 +54,9 @@ const AlertsPage = () => {
 
       {loading && (<Loader />)}
       {/* Header Section */}
-      <div className='flex items-center justify-center flex-col'>
-        <h1 className='text-3xl font-bold'>Alerts</h1>
-        <h2 className='text-lg text-gray-600'>View and manage Price Drops and increases</h2>
+      <div className='flex items-center justify-center flex-col gap-2'>
+        <h1 className='text-2xl font-extrabold tracking-tight text-gray-900'>Alerts</h1>
+        <h2 className='text-sm text-gray-500 leading-relaxed'>View and manage Price Drops and increases</h2>
       </div>
 
       {/* Cards Section */}
@@ -69,26 +69,26 @@ const AlertsPage = () => {
               <div className='flex-col gap-3 md:flex-row flex md:items-start md:justify-start items-center justify-center'>
                 <img className='h-40 bg-cover w-40' src={alert.imgUrl} alt={alert.productName} />
                 <div className='flex flex-col gap-2'>
-                  <h1 className='lg:text-3xl text-2xl font-bold'>{alert.productName}</h1>
-                  <h1 className='lg:text-lg line-clamp-4 text-md'>Price dropped from <span className='text-green-600 font-semibold'>₹{(alert.oldPrice * 92.16).toFixed(2)}</span> to <span className='text-green-600 font-semibold'>₹{(alert.newPrice * 92.16).toFixed(2)}</span></h1>
+                  <h1 className='text-base font-semibold text-gray-900'>{alert.productName}</h1>
+                  <h1 className='text-sm text-gray-500 leading-relaxed'>Price dropped from <span className='text-emerald-600 font-bold'>₹{(alert.oldPrice * 92.16).toFixed(2)}</span> to <span className='text-emerald-600 font-bold'>₹{(alert.newPrice * 92.16).toFixed(2)}</span></h1>
                 </div>
               </div>
-              <div className='w-full bg-green-100 flex gap-2 p-2 rounded-2xl text-green-700'>
-                <ArrowUpWideNarrow />
-                <h1>{alert.alertType}</h1>
+              <div className='w-full bg-green-100 flex gap-2 p-2 rounded-lg text-green-700 items-center'>
+                <ArrowUpWideNarrow className='w-4 h-4' />
+                <h1 className='text-xs font-bold uppercase tracking-wide'>{alert.alertType}</h1>
               </div>
-              <div className='flex items-center justify-start gap-7'>
-                <div className='flex gap-2 font-bold px-2 py-1 rounded-lg'>
-                  <h1 className='lg:text-xl line-through text-sm'>₹{(alert.oldPrice * 92.16).toFixed(2)}</h1>
+              <div className='flex items-center justify-start gap-4'>
+                <div className='flex gap-2 font-bold py-1 rounded-lg'>
+                  <h1 className='text-base line-through text-gray-400 font-medium'>₹{(alert.oldPrice * 92.16).toFixed(2)}</h1>
                 </div>
-                <MoveRight className='w-4 h-4' />
-                <h1 className='lg:text-2xl font-extrabold text-md'>₹{(alert.newPrice * 92.16).toFixed(2)}</h1>
+                <MoveRight className='w-4 h-4 text-gray-400' />
+                <h1 className='text-xl font-extrabold tabular-nums text-gray-900'>₹{(alert.newPrice * 92.16).toFixed(2)}</h1>
               </div>
               <div>
-                <h1 className='2xl:text-lg '> Saved : <span className='font-extrabold text-lg md:text-xl 2xl:text-2xl text-green-700'>₹{((alert.oldPrice * 92.16) - (alert.newPrice * 92.16)).toFixed(2)}</span></h1>
+                <h1 className='text-sm text-gray-500 font-medium'> Saved : <span className='text-emerald-600 font-bold'>₹{((alert.oldPrice * 92.16) - (alert.newPrice * 92.16)).toFixed(2)}</span></h1>
               </div>
               <div>
-                <p className='text-lg font-semibold'>{formatDate(alert.createdAt)}</p>
+                <p className='text-xs font-medium text-gray-400 uppercase tracking-wide'>{formatDate(alert.createdAt)}</p>
               </div>
             </div>
           ))}

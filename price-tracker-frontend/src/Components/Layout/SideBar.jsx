@@ -22,23 +22,23 @@ const SideBar = ({ onClose }) => {
   }
 
   return (
-    <>
-      <div className='py-4 px-4 w-full bg-linear-to-r from-blue-300 to-blue-200 flex items-center justify-between'>
+    <div className='flex flex-col h-full bg-blue-50'>
+      <div className='py-4 px-4 w-full border-b border-blue-100 flex items-center justify-between'>
 
         {/* Logo */}
         <NavLogo />
         {onClose && (
           <button
             onClick={onClose}
-            className='xl:hidden p-2 hover:bg-blue-300/50 rounded-lg transition-colors duration-200'
+            className='xl:hidden p-2 hover:bg-blue-100 rounded-lg transition-colors duration-200'
           >
-            <X className='w-6 h-6 text-gray-700' />
+            <X className='w-5 h-5 text-gray-700' />
           </button>
         )}
       </div>
 
       {/* Menu Items */}
-      <div className='my-8 px-2 grid text-gray-600 grid-rows-6 items-center justify-start gap-4'>
+      <div className='flex-1 flex flex-col py-6 px-4 text-gray-600 gap-2'>
         {menuItems.map((item, index) => (
           <div
             key={index}
@@ -46,20 +46,22 @@ const SideBar = ({ onClose }) => {
               navigate(item.path);
               if (onClose) onClose();
             }}
-            className='flex xl:text-2xl lg:text-base cursor-pointer hover:bg-blue-300/60 hover:text-blue-700 transition-all duration-200 rounded-lg py-3 px-4 items-center gap-4 font-semibold'
+            className='flex text-sm cursor-pointer hover:bg-blue-100 hover:text-blue-700 transition-all duration-200 rounded-md py-2.5 px-3 items-center gap-3 font-medium'
           >
-            <item.icon className='w-5 h-5 shrink-0' />
-            <h1>{item.label}</h1>
+            <item.icon className='w-4 h-4 shrink-0' />
+            <span>{item.label}</span>
           </div>
         ))}
       </div>
-     <button 
-     onClick={handleLogout}
-     className='text-md gap-2 hover:bg-red-600 2xl:px-6 2xl:py-3 font-semibold lg:text-xl px-4 py-2 border-2 border-red-500 ml-5 transition-colors duration-300 active:scale-95 rounded-2xl w-[80%] flex items-center justify-center text-white bg-red-400 cursor-pointer'>
-      <SquareArrowRightExit />
-      <h1>Logout</h1> 
-     </button>
-    </>
+     <div className='p-4 border-t border-blue-100 mt-auto'>
+       <button 
+       onClick={handleLogout}
+       className='text-sm gap-2 hover:bg-red-50 font-semibold px-4 py-2 border border-red-200 transition-colors duration-300 active:scale-95 rounded-md w-full flex items-center justify-center text-red-600 hover:text-red-700 bg-white cursor-pointer'>
+        <SquareArrowRightExit className='w-4 h-4' />
+        <span>Logout</span> 
+       </button>
+     </div>
+    </div>
   )
 }
 

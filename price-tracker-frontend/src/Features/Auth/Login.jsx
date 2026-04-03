@@ -63,8 +63,8 @@ const Login = ({ setActiveTab, loading, setLoading, activeTab, setLogInData, log
             className={`tab-item cursor-pointer px-4 py-2 ${activeTab === 'login' ? 'active' : 'inactive'}`}>Log In</h1>
         </div>
         <div className='flex flex-col  items-center justify-center'>
-          <h1 className='text-xl font-bold'>Log In Form</h1>
-          <p className='font-semibold text-gray-500 text-nowrap text-sm'>Track Prices, Never Overpay Again</p>
+          <h1 className='text-2xl font-extrabold tracking-tight text-gray-900'>Log In Form</h1>
+          <p className='text-sm text-gray-500 leading-relaxed text-nowrap'>Track Prices, Never Overpay Again</p>
         </div>
         {errorMessage && (
           <div className='w-64 md:w-80 2xl:text-lg text-red-700 px-4 rounded-lg text-sm text-center'>
@@ -75,7 +75,7 @@ const Login = ({ setActiveTab, loading, setLoading, activeTab, setLogInData, log
           <div className='flex items-center justify-center'>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-pen-icon lucide-user-pen"><path d="M11.5 15H7a4 4 0 0 0-4 4v2" /><path d="M21.378 16.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" /><circle cx="10" cy="7" r="4" /></svg>
             <input
-              onChange={(e) => { 
+              onChange={(e) => {
                 setLogInData({ ...logInData, emailOrUsername: e.target.value });
                 setErrorMessage('');
               }}
@@ -88,7 +88,7 @@ const Login = ({ setActiveTab, loading, setLoading, activeTab, setLogInData, log
           <div className='flex relative items-center justify-center'>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock-keyhole-icon lucide-lock-keyhole"><circle cx="12" cy="16" r="1" /><rect x="3" y="10" width="18" height="12" rx="2" /><path d="M7 10V7a5 5 0 0 1 10 0v3" /></svg>
             <input
-              onChange={(e) => { 
+              onChange={(e) => {
                 setLogInData({ ...logInData, password: e.target.value });
                 setErrorMessage('');
               }}

@@ -6,10 +6,10 @@ const AuthLeftSection = () => {
 
       {/* Left Section Content */}
       <div>
-        <h2 className='text-3xl font-bold text-gray-900 mb-2'>
+        <h2 className='text-2xl font-extrabold tracking-tight text-gray-900 mb-2'>
           Unlock Your Savings Potential
         </h2>
-        <p className='text-gray-700 font-medium mb-8'>
+        <p className='text-sm text-gray-500 leading-relaxed mb-8'>
           Get started in seconds with your free account.
         </p>
       </div>
@@ -63,7 +63,7 @@ const AuthLeftSection = () => {
           <div className='flex justify-between items-center mb-6'>
             <div className='backdrop-blur-sm  bg-white/60 rounded-2xl p-4 flex flex-col items-center justify-center border border-white/40 hover:bg-white/80 transition'>
               <span className='text-5xl mb-1'>🎧</span>
-              <span className='text-xl font-bold text-gray-700'>Headphones</span>
+              <span className='text-base font-semibold text-gray-900'>Headphones</span>
             </div>
             <div className='flex gap-3'>
               <button className='backdrop-blur-sm bg-white/60 rounded-full p-3 shadow-lg hover:bg-white/80 transition border border-white/40'>
@@ -80,11 +80,11 @@ const AuthLeftSection = () => {
           <div className='flex gap-4'>
             <div className='backdrop-blur-sm bg-white/60 rounded-2xl p-4 flex flex-col items-center justify-center flex-1 border border-white/40 hover:bg-white/80 transition'>
               <span className='text-5xl mb-1'>📷</span>
-              <span className='text-xl font-bold text-gray-700'>Camera</span>
+              <span className='text-base font-semibold text-gray-900'>Camera</span>
             </div>
             <div className='backdrop-blur-sm bg-white/60 rounded-2xl p-4 flex flex-col items-center justify-center flex-1 border border-white/40 hover:bg-white/80 transition'>
               <span className='text-5xl mb-1'>📱</span>
-              <span className='text-xl font-bold text-gray-700'>Gadget</span>
+              <span className='text-base font-semibold text-gray-900'>Gadget</span>
             </div>
           </div>
         </div>
@@ -94,26 +94,26 @@ const AuthLeftSection = () => {
       <div className='flex gap-6'>
         <div className='flex flex-col items-center text-center flex-1'>
           <div className='text-4xl mb-2'>🔗</div>
-          <h4 className='font-bold text-gray-900 text-xl'>Paste URL</h4>
-          <p className='text-lg text-gray-600 mt-0.5'>Paste your URL</p>
+          <h4 className='text-base font-semibold text-gray-900'>Paste URL</h4>
+          <p className='text-sm text-gray-500 leading-relaxed mt-0.5'>Paste your URL</p>
         </div>
         <div className='flex flex-col items-center text-center flex-1'>
           <div className='text-4xl mb-2'>🎯</div>
-          <h4 className='font-bold text-gray-900 text-xl'>Set Target</h4>
-          <p className='text-lg text-gray-600 mt-0.5'>Set the price price.</p>
+          <h4 className='text-base font-semibold text-gray-900'>Set Target</h4>
+          <p className='text-sm text-gray-500 leading-relaxed mt-0.5'>Set the price price.</p>
         </div>
         <div className='flex flex-col items-center text-center flex-1'>
           <div className='text-4xl mb-2'>🔔</div>
-          <h4 className='font-bold text-gray-900 text-xl'>Get Alerted</h4>
-          <p className='text-lg text-gray-600 mt-0.5'>get more, inspired.</p>
+          <h4 className='text-base font-semibold text-gray-900'>Get Alerted</h4>
+          <p className='text-sm text-gray-500 leading-relaxed mt-0.5'>get more, inspired.</p>
         </div>
       </div>
 
       {/* Bottom Content */}
-      <p className='text-center text-gray-700 font-semibold text-md mt-6'>
+      <p className='text-sm text-gray-500 leading-relaxed text-center mt-6'>
         Trusted by thousands of smart shoppers. Join the movement.
       </p>
-      
+
     </div>
   )
 }

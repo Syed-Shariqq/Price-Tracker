@@ -7,10 +7,10 @@ export default function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   return (
-    <div className='min-h-screen flex'>
+    <div className='min-h-dvh flex bg-gray-50 overflow-x-hidden w-full'>
 
       {/* Sidebar for larger screens */}
-      <div className="hidden xl:block w-80 bg-blue-200 sticky top-0 h-screen">
+      <div className="hidden xl:block w-52 sticky top-0 h-screen border-r border-gray-200">
         <SideBar />
       </div>
 
@@ -18,25 +18,25 @@ export default function Layout() {
       {/* Sidebar for smaller screens */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 xl:hidden"
+          className="fixed inset-0 bg-black/50 z-40 xl:hidden backdrop-blur-sm"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
       <div
         className={`
-                     fixed top-0 left-0 h-screen w-64 bg-blue-200 z-50 transform transition-transform 
-                     duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} xl:hidden`}>
+                     fixed top-0 left-0 h-screen w-64 bg-white z-50 transform transition-transform 
+                     duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} xl:hidden shadow-2xl`}>
         <SideBar onClose={() => setIsSidebarOpen(false)} />
       </div>
 
 
-      <div className='w-full bg-linear-to-br from-slate-100 to-blue-100 flex flex-col items-start gap-10'>
+      <div className='flex-1 flex flex-col min-h-screen w-full xl:w-[calc(100%-13rem)] bg-linear-to-br from-slate-50 to-blue-50'>
 
         {/* Dashboard NavBar */}
         <DashboardNav setIsSidebarOpen={setIsSidebarOpen} isSidebarOpen={isSidebarOpen} />
 
-        <main className="w-full px-6">
+        <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 flex-1">
           <Outlet />
         </main>
 

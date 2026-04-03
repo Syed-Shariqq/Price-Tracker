@@ -8,14 +8,14 @@ const HeroSection = () => {
       {/* Middle Section */}
       <div className='lg:px-8 xl:px-20 flex flex-col lg:h-auto gap-5 md:gap-7 lg:gap-10 xl:gap-20 lg:w-1/2 flex-1'>
 
-      {/* Heading */}
+        {/* Heading */}
         <div className='flex flex-col items-center lg:items-start justify-center'>
-          <h1 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center lg:text-left'>Stop Overpaying.</h1>
-          <h1 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold mt-2 text-center lg:text-left'>Start Tracking.</h1>
+          <h1 className='text-2xl font-extrabold tracking-tight text-gray-900 text-center lg:text-left'>Stop Overpaying.</h1>
+          <h1 className='text-2xl font-extrabold tracking-tight text-gray-900 mt-2 text-center lg:text-left'>Start Tracking.</h1>
         </div>
 
         {/* Paragraph */}
-        <div className='text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-gray-500 text-center lg:text-left'>
+        <div className='text-sm text-gray-500 leading-relaxed text-center lg:text-left'>
           <p>Monitor product prices and get notified instantly when price drops. Make informed purchasing decisions and never miss out on a great deal again!</p>
         </div>
 

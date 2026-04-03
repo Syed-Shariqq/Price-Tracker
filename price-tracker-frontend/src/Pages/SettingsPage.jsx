@@ -108,20 +108,20 @@ const SettingsPage = () => {
     reader.onerror = () => {
       toast.error("Failed to read file")
     }
-   
+
     reader.readAsDataURL(file)
   }
 
   return (
     <div className='w-full md:min-h-[200vh] min-h-[150vh] bg-gray-50 p-4 md:p-8 pb-20'>
       <div className='mb-8'>
-        <h1 className='text-3xl md:text-4xl font-bold text-gray-900'>Settings</h1>
+        <h1 className='text-2xl font-extrabold tracking-tight text-gray-900'>Settings</h1>
       </div>
 
       <div className='space-y-6 max-w-6xl'>
         {/* Profile Section */}
         <div className='bg-white rounded-2xl shadow-lg p-6 md:p-8'>
-          <h2 className='font-bold text-xl 2xl:text-4xl md:text-2xl mb-6 text-gray-900'>Profile</h2>
+          <h2 className='text-xl font-bold text-gray-800 mb-6'>Profile</h2>
 
           <div className='flex flex-col md:flex-row gap-6'>
             {/* Avatar */}
@@ -155,35 +155,35 @@ const SettingsPage = () => {
             {/* Profile Fields */}
             <div className='flex-1 space-y-4'>
               <div>
-                <label className='block text-sm md:text-lg 2xl:text-2xl font-semibold text-gray-700 mb-2'>Name</label>
+                <label className='text-xs font-medium text-gray-400 uppercase tracking-wide block mb-2'>Name</label>
                 <input
                   type='text'
                   value={isEditingProfile ? tempProfileData.name : profileData.name}
                   onChange={(e) => handleProfileChange('name', e.target.value)}
                   disabled={!isEditingProfile}
-                  className='w-full px-4 py-2 2xl:text-xl rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-600'
+                  className='text-sm w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-600'
                 />
               </div>
 
               <div>
-                <label className='block text-sm md:text-lg 2xl:text-2xl font-semibold text-gray-700 mb-2'>Email</label>
+                <label className='text-xs font-medium text-gray-400 uppercase tracking-wide block mb-2'>Email</label>
                 <input
                   type='email'
                   value={isEditingProfile ? tempProfileData.email : profileData.email}
                   onChange={(e) => handleProfileChange('email', e.target.value)}
                   disabled={!isEditingProfile}
-                  className='w-full px-4 py-2 2xl:text-xl rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-600'
+                  className='text-sm w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-600'
                 />
               </div>
 
               <div>
-                <label className='block md:text-lg 2xl:text-2xl text-sm font-semibold text-gray-700 mb-2'>Username</label>
+                <label className='text-xs font-medium text-gray-400 uppercase tracking-wide block mb-2'>Username</label>
                 <input
                   type='text'
                   value={isEditingProfile ? tempProfileData.username : profileData.username}
                   onChange={(e) => handleProfileChange('username', e.target.value)}
                   disabled={!isEditingProfile}
-                  className='w-full 2xl:text-xl px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-600'
+                  className='text-sm w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-600'
                 />
               </div>
 
@@ -219,13 +219,13 @@ const SettingsPage = () => {
 
         {/* Notifications Section */}
         <div className='bg-white rounded-2xl shadow-lg p-6 md:p-8'>
-          <h2 className='font-bold 2xl:text-4xl text-xl md:text-2xl mb-6 text-gray-900'>Notifications</h2>
+          <h2 className='text-xl font-bold text-gray-800 mb-6'>Notifications</h2>
 
           <div className='space-y-4'>
             {/* Toggle Options */}
             <div className='space-y-3'>
               <div className='flex items-center justify-between'>
-                <label className='text-gray-700 2xl:text-2xl font-semibold'>Notify when price drops</label>
+                <label className='text-xs font-medium text-gray-400 uppercase tracking-wide'>Notify when price drops</label>
                 <label className='relative inline-flex items-center cursor-pointer'>
                   <input
                     type='checkbox'
@@ -237,8 +237,8 @@ const SettingsPage = () => {
                 </label>
               </div>
 
-              <div className='flex items-center justify-between'>
-                <label className='text-gray-700 2xl:text-2xl font-semibold'>Notify when price increases</label>
+              <div className='flex items-center justify-between mt-4'>
+                <label className='text-xs font-medium text-gray-400 uppercase tracking-wide'>Notify when price increases</label>
                 <label className='relative inline-flex items-center cursor-pointer'>
                   <input
                     type='checkbox'
@@ -251,10 +251,9 @@ const SettingsPage = () => {
               </div>
             </div>
 
-            {/* Minimum Price Drop */}
             <div className='pt-4'>
               <div className='flex items-center justify-between mb-2'>
-                <label className='text-gray-700 2xl:text-xl font-semibold'>Minimum price drop percentage</label>
+                <label className='text-xs font-medium text-gray-400 uppercase tracking-wide'>Minimum price drop percentage</label>
                 <span className='bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-semibold'>{notifications.minDropPercentage}%</span>
               </div>
               <input
@@ -268,8 +267,8 @@ const SettingsPage = () => {
             </div>
 
             {/* Notification Method */}
-            <div className='pt-4 border-t border-gray-200'>
-              <label className='block 2xl:text-xl text-gray-700 font-semibold mb-3'>Notification Method</label>
+            <div className='pt-4 border-t border-gray-200 mt-4'>
+              <label className='text-xs font-medium text-gray-400 uppercase tracking-wide block mb-3'>Notification Method</label>
               <div className='flex gap-4'>
                 <label className='flex items-center gap-2 cursor-pointer'>
                   <input
@@ -300,11 +299,11 @@ const SettingsPage = () => {
 
         {/* Price Fetch Section */}
         <div className='bg-white rounded-2xl shadow-lg p-6 md:p-8'>
-          <h2 className='font-bold 2xl:text-4xl text-xl md:text-2xl mb-6 text-gray-900'>Price Fetch</h2>
+          <h2 className='text-xl font-bold text-gray-800 mb-6'>Price Fetch</h2>
 
           <div className='space-y-4'>
             <div className='flex items-center justify-between'>
-              <label className='text-gray-700 md:text-lg 2xl:text-2xl font-semibold'>Auto Fetch Price</label>
+              <label className='text-xs font-medium text-gray-400 uppercase tracking-wide'>Auto Fetch Price</label>
               <label className='relative inline-flex items-center cursor-pointer'>
                 <input
                   type='checkbox'
@@ -316,9 +315,9 @@ const SettingsPage = () => {
               </label>
             </div>
 
-            <div>
-              <label className='block text-sm font-semibold text-gray-700 mb-2'>Fetch Interval</label>
-              <select className='w-full md:w-32 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700'>
+            <div className='mt-4'>
+              <label className='text-xs font-medium text-gray-400 uppercase tracking-wide block mb-2'>Fetch Interval</label>
+              <select className='text-sm w-full md:w-32 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700'>
                 <option>6 hours</option>
                 <option>12 hours</option>
                 <option>24 hours</option>
@@ -327,8 +326,8 @@ const SettingsPage = () => {
               </select>
             </div>
 
-            <div className='pt-2'>
-              <p className='text-gray-600 text-sm mb-4'>Last Fetch: <span className='font-semibold text-gray-800'>{priceFetch.lastFetch}</span></p>
+            <div className='pt-4'>
+              <p className='text-sm text-gray-500 leading-relaxed mb-4'>Last Fetch: <span className='font-bold text-gray-900'>{priceFetch.lastFetch}</span></p>
               <button className='active:scale-95 bg-blue-500 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'>
                 Fetch Now
               </button>
@@ -340,13 +339,13 @@ const SettingsPage = () => {
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
           <div className='bg-white rounded-2xl shadow-lg p-6 md:p-8'>
             <div className='flex items-center gap-2 mb-6'>
-              <Lock size={24} className='text-blue-500' />
-              <h2 className='font-bold 2xl:text-4xl text-xl md:text-2xl text-gray-900'>Security</h2>
+              <Lock size={20} className='text-blue-500' />
+              <h2 className='text-xl font-bold text-gray-800'>Security</h2>
             </div>
 
             <div className='space-y-4'>
               <div>
-                <label className='block text-sm md:text-md 2xl:text-2xl font-semibold text-gray-700 mb-2'>Current Password</label>
+                <label className='text-xs font-medium text-gray-400 uppercase tracking-wide block mb-2'>Current Password</label>
                 <input
                   type='password'
                   disabled={isUpdatingPassword ? false : true}
@@ -358,8 +357,8 @@ const SettingsPage = () => {
                 />
               </div>
 
-              <div>
-                <label className='block text-sm md:text-md 2xl:text-2xl font-semibold text-gray-700 mb-2'>New Password</label>
+              <div className='mt-4'>
+                <label className='text-xs font-medium text-gray-400 uppercase tracking-wide block mb-2'>New Password</label>
                 <input
                   type='password'
                   placeholder='••••••••'
@@ -370,8 +369,8 @@ const SettingsPage = () => {
                 />
               </div>
 
-              <div>
-                <label className='block text-sm font-semibold md:text-md 2xl:text-2xl text-gray-700 mb-2'>Confirm Password</label>
+              <div className='mt-4'>
+                <label className='text-xs font-medium text-gray-400 uppercase tracking-wide block mb-2'>Confirm Password</label>
                 <input
                   type='password'
                   placeholder='••••••••'
@@ -409,12 +408,12 @@ const SettingsPage = () => {
           {/* Danger Zone */}
           <div className='bg-white mb-40 rounded-2xl shadow-lg p-6 md:p-8 border-2 border-red-200'>
             <div className='flex items-center gap-2 mb-6'>
-              <Trash2 size={24} className='text-red-500' />
-              <h2 className='font-bold 2xl:text-4xl text-xl md:text-2xl text-gray-900'>Danger Zone</h2>
+              <Trash2 size={20} className='text-red-500' />
+              <h2 className='text-xl font-bold text-red-600'>Danger Zone</h2>
             </div>
 
             <div className='bg-red-50 p-4 rounded-lg mb-4'>
-              <p className='text-gray-700 2xl:text-xl text-sm mb-4'>This action cannot be undone. Please ensure this is what you want to do.</p>
+              <p className='text-sm text-gray-500 leading-relaxed mb-4'>This action cannot be undone. Please ensure this is what you want to do.</p>
               <button className='w-full bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg transition font-semibold flex items-center justify-center gap-2'>
                 <Trash2 size={18} />
                 Delete Account

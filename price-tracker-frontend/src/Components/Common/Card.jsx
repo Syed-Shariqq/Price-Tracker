@@ -1,7 +1,7 @@
 import { ChartNoAxesCombined, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
-const Card = ({handleStopTracking, avg , product, showButton = true, variant, children, isProduct = false }) => {
+const Card = ({ handleStopTracking, avg, product, showButton = true, variant, children, isProduct = false }) => {
 
     const navigate = useNavigate();
 
@@ -10,7 +10,7 @@ const Card = ({handleStopTracking, avg , product, showButton = true, variant, ch
             ? ""
             : "md:max-w-xl"
 
-    const averagePrice = (((product.currentPrice + product.lowestPrice) / 2)*92.16).toFixed(2);
+    const averagePrice = (((product.currentPrice + product.lowestPrice) / 2) * 92.16).toFixed(2);
 
     return (
         <div className={`w-full ${variant === "analytics" ? "min-h-screen md:min-h-full 2xl:min-h-full" : "hover:-translate-y-1 "} ${sizeClasses} overflow-hidden hover:shadow-2xl transition-all duration-300 ${variant !== "analytics" && "md:max-w-xl"} shadow-xl bg-white rounded-2xl p-4 mx-auto px-6 flex flex-col gap-4`}>
@@ -35,32 +35,33 @@ const Card = ({handleStopTracking, avg , product, showButton = true, variant, ch
                 {/* Details */}
                 <div className={`flex ${variant === "analytics" ? "2xl:flex-row" : ""} flex-col justify-between flex-1`}>
                     <div>
-                        <h1 className={`text-sm ${variant === "analytics" ? "2xl:text-3xl md:text-xl" : ""} md:text-lg 2xl:text-2xl font-bold`}>
+                        <h1 className={`text-base font-semibold text-gray-900`}>
                             {product.productName}
                         </h1>
-                        <p className={`text-xs line-clamp-3 ${variant === "analytics" ? "2xl:text-xl md:text-md" : ""} md:text-sm 2xl:text-lg text-gray-500`}>
+                        <p className={`text-sm text-gray-500 leading-relaxed line-clamp-3`}>
                             {product.description}
                         </p>
                     </div>
 
-                    <div className={`mt-2 ${variant === "analytics" ? "2xl:flex items-center justify-center 2xl:flex-row 2xl:gap-30 " : ""} space-y-1`}>
-                        <p className={`text-sm ${variant === "analytics" ? "2xl:text-3xl text-gray-500 2xl:py-3 bg-gray-100 rounded-lg py-1 px-3 md:text-xl" : ""} md:text-base font-semibold`}>
-                            Current: <span className='text-black font-bold'>₹{(product.currentPrice * 92.16).toFixed(2)}</span>
-                        </p>
-                        {variant === "analytics" && (<p className={`text-sm md:text-xl 2xl:py-3 text-gray-500 bg-gray-100 rounded-lg py-1 px-3 2xl:text-3xl font-semibold`}>
-                            Average: <span className='text-black font-bold'>₹{avg.toFixed(2)}</span>
-                        </p>)}
-                        <p className={`text-sm md:text-base ${variant === "analytics" ? "2xl:text-3xl text-gray-500 2xl:py-3 bg-gray-100 rounded-lg py-1 px-3 md:text-xl" : ""} font-semibold`}>
-                            {variant === "analytics" ? "Lowest:" : "Target:"} <span className='text-black font-bold'>₹{variant === "analytics" ? (product.lowestPrice * 92.16).toFixed(2) : (product.targetPrice * 92.16).toFixed(2)}</span>
-                        </p>
+                    <div className={`mt-2 flex flex-col gap-2`}>
+                        <div className="flex items-center gap-2">
+                            <span className='text-xs font-medium text-gray-400 uppercase tracking-wide'>Current:</span>
+                            <span className='text-xl font-extrabold tabular-nums text-gray-900'>₹{(product.currentPrice * 92.16).toFixed(2)}</span>
+                        </div>
+                        {variant === "analytics" && (
+                        <div className="flex items-center gap-2">
+                            <span className='text-xs font-medium text-gray-400 uppercase tracking-wide'>Average:</span>
+                            <span className='text-xl font-extrabold tabular-nums text-gray-900'>₹{avg.toFixed(2)}</span>
+                        </div>
+                        )}
+                        <div className="flex items-center gap-2">
+                            <span className='text-xs font-medium text-gray-400 uppercase tracking-wide'>{variant === "analytics" ? "Lowest:" : "Target:"}</span>
+                            <span className='text-xl font-extrabold tabular-nums text-gray-900'>₹{variant === "analytics" ? (product.lowestPrice * 92.16).toFixed(2) : (product.targetPrice * 92.16).toFixed(2)}</span>
+                        </div>
 
-
-                        <span className={`inline-block ${variant === "analytics" ? "2xl:text-xl align-center 2xl:h-16" : ""} px-2 py-1 text-xs bg-green-100 md:text-sm rounded-lg text-green-600`}>
+                        <span className={`inline-block w-fit mt-1 px-2 py-1 text-xs bg-green-100 rounded-lg text-green-600 font-bold`}>
                             {product.status}
-
                         </span>
-
-
                     </div>
 
                 </div>
@@ -86,7 +87,7 @@ const Card = ({handleStopTracking, avg , product, showButton = true, variant, ch
                     </button>
                 </a>
                 <button
-                    onClick={() => { handleStopTracking(product.id)}}
+                    onClick={() => { handleStopTracking(product.id) }}
                     className='px-4 py-1 md:px-6 md:py-3 hover:bg-gray-500 transition-all duration-300 active:scale-95 bg-gray-400 text-white rounded-lg'>
                     Cancel Tracking
                 </button>

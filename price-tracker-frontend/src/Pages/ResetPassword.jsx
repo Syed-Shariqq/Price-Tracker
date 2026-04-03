@@ -39,12 +39,12 @@ const ResetPassword = () => {
         try {
             setLoading(true);
             // reset password API 
-             const res = await resetPassword({ token, newPassword: passwords.newPassword });
+            const res = await resetPassword({ token, newPassword: passwords.newPassword });
 
-            if(res.data.status === 200){
+            if (res.data.status === 200) {
                 toast.success(res.data.message);
                 navigate('/auth?tab=login');
-            }else{
+            } else {
                 setError(res.data.message || 'Failed to reset password');
             }
         } catch (err) {

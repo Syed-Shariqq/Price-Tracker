@@ -23,15 +23,15 @@ const SignUp = ({ setActiveTab, setLoading, handleResendOtp, loading, activeTab,
       await signup(signUpData);
       toast.success("Sign Up Successful!, Please verify your email");
       setIsOtpSent(true);
-      
+
 
     } catch (err) {
 
       console.log(err.response.data);
-      setErrorMessage(err.response?.data?.message + ', try to login or verify your email'  || 'Sign up failed. Please try again.');
+      setErrorMessage(err.response?.data?.message + ', try to login or verify your email' || 'Sign up failed. Please try again.');
       // Check if error is due to duplicate email (user already exists but not verified)
-      
-    }  finally {
+
+    } finally {
 
       setLoading(false);
 
@@ -59,8 +59,8 @@ const SignUp = ({ setActiveTab, setLoading, handleResendOtp, loading, activeTab,
             className={`tab-item cursor-pointer px-4 py-2 ${activeTab === 'login' ? 'active' : 'inactive'}`}>Log In</h1>
         </div>
         <div className='flex flex-col  items-center justify-center'>
-          <h1 className='text-xl font-bold'>Sign Up Form</h1>
-          <p className='font-semibold text-gray-500 text-nowrap text-sm'>Track Prices, Never Overpay Again</p>
+          <h1 className='text-2xl font-extrabold tracking-tight text-gray-900'>Sign Up Form</h1>
+          <p className='text-sm text-gray-500 leading-relaxed text-nowrap'>Track Prices, Never Overpay Again</p>
         </div>
         {(errorMessage || otpError) && (
           <div className='w-64 md:w-80 2xl:text-lg text-red-700 px-4 rounded-lg text-sm text-center'>
@@ -71,7 +71,7 @@ const SignUp = ({ setActiveTab, setLoading, handleResendOtp, loading, activeTab,
           <div className='flex items-center justify-center'>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-pen-icon lucide-user-pen"><path d="M11.5 15H7a4 4 0 0 0-4 4v2" /><path d="M21.378 16.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" /><circle cx="10" cy="7" r="4" /></svg>
             <input
-              onChange={(e) => { 
+              onChange={(e) => {
                 setSignUpData({ ...signUpData, username: e.target.value });
                 setErrorMessage('');
               }}
@@ -84,7 +84,7 @@ const SignUp = ({ setActiveTab, setLoading, handleResendOtp, loading, activeTab,
           <div className='flex items-center justify-center'>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail-icon lucide-mail"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" /><rect x="2" y="4" width="20" height="16" rx="2" /></svg>
             <input
-              onChange={(e) => { 
+              onChange={(e) => {
                 setSignUpData({ ...signUpData, email: e.target.value });
                 setErrorMessage('');
               }}
@@ -97,7 +97,7 @@ const SignUp = ({ setActiveTab, setLoading, handleResendOtp, loading, activeTab,
           <div className='relative flex items-center justify-center'>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-lock-icon lucide-user-lock"><path d="M19 16v-2a2 2 0 0 0-4 0v2" /><path d="M9.5 15H7a4 4 0 0 0-4 4v2" /><circle cx="10" cy="7" r="4" /><rect x="13" y="16" width="8" height="5" rx=".899" /></svg>
             <input
-              onChange={(e) => { 
+              onChange={(e) => {
                 setSignUpData({ ...signUpData, password: e.target.value });
                 setErrorMessage('');
               }}
@@ -118,7 +118,7 @@ const SignUp = ({ setActiveTab, setLoading, handleResendOtp, loading, activeTab,
           <div className='relative flex items-center justify-center'>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock-keyhole-icon lucide-lock-keyhole"><circle cx="12" cy="16" r="1" /><rect x="3" y="10" width="18" height="12" rx="2" /><path d="M7 10V7a5 5 0 0 1 10 0v3" /></svg>
             <input
-              onChange={(e) => { 
+              onChange={(e) => {
                 setSignUpData({ ...signUpData, confirmPassword: e.target.value });
                 setErrorMessage('');
               }}
@@ -137,9 +137,9 @@ const SignUp = ({ setActiveTab, setLoading, handleResendOtp, loading, activeTab,
             )}
           </div>
           <button
-          disabled={loading}
+            disabled={loading}
             className={`w-64 hover:bg-blue-700 ${loading ? "cursor-not-allowed opacity-50" : ""} hover:scale-105 transition-all duration-300 active:scale-95 2xl:w-100 2xl:text-2xl 2xl:h-16 md:h-12 md:text-xl cursor-pointer 
-            md:w-80 outline-none mt-5 h-10 rounded-full bg-blue-500 text-white font-semibold`}>{loading ? "Creating Account...":"Create My Account"}
+            md:w-80 outline-none mt-5 h-10 rounded-full bg-blue-500 text-white font-semibold`}>{loading ? "Creating Account..." : "Create My Account"}
           </button>
         </div>
       </form>
@@ -156,17 +156,17 @@ const SignUp = ({ setActiveTab, setLoading, handleResendOtp, loading, activeTab,
 
       <div className='flex mb-3 flex-col items-center justify-center gap-2'>
         <h1 className='text-sm md:text-md font-semibold text-gray-700'>Already created an account but page reloaded?</h1>
-        <button 
-        onClick={() => {
-          if (!signUpData.email) {
-            setErrorMessage('Please enter your email above');
-            return;
-          }
-          setErrorMessage('');
-          setOtpError('');
-          handleResendOtp();
-        }}
-        className='text-white bg-blue-500 hover:bg-blue-700 transition-all duration-300 px-4 py-2 rounded-lg font-semibold cursor-pointer'>
+        <button
+          onClick={() => {
+            if (!signUpData.email) {
+              setErrorMessage('Please enter your email above');
+              return;
+            }
+            setErrorMessage('');
+            setOtpError('');
+            handleResendOtp();
+          }}
+          className='text-white bg-blue-500 hover:bg-blue-700 transition-all duration-300 px-4 py-2 rounded-lg font-semibold cursor-pointer'>
           Verify Email via OTP
         </button>
       </div>

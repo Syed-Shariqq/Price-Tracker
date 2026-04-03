@@ -39,10 +39,10 @@ const AnalyticsPage = () => {
   return (
     <div className='w-full gap-9 flex flex-col items-center justify-center'>
 
-      {loading && ( <Loader />)}
+      {loading && (<Loader />)}
       {/* Header Section */}
       <div className='flex flex-col gap-4 items-center justify-center'>
-        <h1 className='2xl:text-5xl md:text-3xl text-xl font-bold'>Analytics </h1>
+        <h1 className='text-2xl font-extrabold tracking-tight text-gray-900'>Analytics</h1>
       </div>
 
       {/* Cards Section */}

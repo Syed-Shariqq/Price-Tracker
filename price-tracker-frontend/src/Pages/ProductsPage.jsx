@@ -44,11 +44,11 @@ const ProductsPage = () => {
       console.log("API response:", res);
 
       if (res.status === 200) {
-      toast.success(res.data.data);
-      setProducts(prev => prev.filter(p => p.id !== productId));
-    }else{
-      toast.error(res.data.data);
-    }
+        toast.success(res.data.data);
+        setProducts(prev => prev.filter(p => p.id !== productId));
+      } else {
+        toast.error(res.data.data);
+      }
 
 
     } catch (err) {
@@ -65,8 +65,8 @@ const ProductsPage = () => {
       {loading && <Loader />}
       {/* Header Section */}
       <div className='flex flex-col gap-4 items-center justify-center'>
-        <h1 className='2xl:text-6xl md:text-4xl text-2xl font-bold'>Tracked Products</h1>
-        <h2 className='text-gray-500 2xl:text-3xl md:text-2xl text-sm'>Manage and monitor your tracked products</h2>
+        <h1 className='text-2xl font-extrabold tracking-tight text-gray-900'>Tracked Products</h1>
+        <h2 className='text-sm text-gray-500 leading-relaxed'>Manage and monitor your tracked products</h2>
       </div>
 
       {/* Cards Section */}

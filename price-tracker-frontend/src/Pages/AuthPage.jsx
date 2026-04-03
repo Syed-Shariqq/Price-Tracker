@@ -69,7 +69,7 @@ const AuthPage = () => {
         setActiveTab('login');
         setIsOtpSent(false);
         setData({ email: '', otp: '' });
-        
+
       } else {
         setOtpError(res.data.data || 'Failed to verify OTP');
       }
@@ -84,7 +84,7 @@ const AuthPage = () => {
     } finally {
 
       setLoading(false);
-      
+
     }
   }
 

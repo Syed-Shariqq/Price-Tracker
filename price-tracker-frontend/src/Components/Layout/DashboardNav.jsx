@@ -8,38 +8,44 @@ const DashboardNav = ({ setIsSidebarOpen }) => {
   }
 
   return (
-    <div className='flex items-center justify-between w-full'>
+    <div className='flex items-center justify-between w-full h-16 px-4 md:px-8 border-b border-gray-200 bg-white sticky top-0 z-30'>
 
-      {/* Search Bar */}
-      <div className='relative flex items-center justify-center gap-2 md:w-[50vw] max-w-xl md:min-h-16 min-h-12 rounded-2xl py-2 px-4 '>
-        <input type="text" placeholder='Search Products..' className='text-sm md:text-lg 2xl:text-xl md:pr-10 bg-white md:min-h-16 md:w-[50vw] w-full outline-none border-2 border-gray-400/50 min-h-12 pr-8 pl-4 rounded-full' />
-        <Search className='absolute md:top-7 md:right-8 top-5 right-6' />
+      {/* Left section (Search Bar) */}
+      <div className='relative flex-1 max-w-md hidden sm:block'>
+        <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400' />
+        <input 
+          type="text" 
+          placeholder='Search tracking products...' 
+          className='w-full bg-gray-50 text-sm outline-none border border-gray-200 h-9 pl-9 pr-4 rounded-md focus:ring-2 focus:ring-blue-100 transition-shadow' 
+        />
       </div>
 
-      {/* Icons */}
-      <div className='flex md:gap-10 items-center p-3 justify-center gap-5'>
+      {/* Right section (Icons) */}
+      <div className='flex items-center gap-4 sm:gap-6 ml-auto'>
 
-        <div className='hidden xl:text-xl px-4 transition-all duration-300 py-2 rounded-full hover:bg-blue-400/40 xl:flex'>
-          <h1>Fetch Price</h1>
+        <button className='hidden md:block text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors'>
+          Fetch Price
+        </button>
+
+        <button className='relative p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors'>
+          <Bell className='w-5 h-5' />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+        </button>
+
+        <div className='flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 pr-2 rounded-full transition-colors'>
+          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-sm">
+            U
+          </div>
+          <span className="hidden md:block text-sm font-medium text-gray-700">User</span>
         </div>
 
-        <div className='px-4 transition-all duration-300 py-2 rounded-full hover:bg-blue-400/40'>
-          <Bell className='w-6 md:w-8 md:h-8 text-gray-500 h-6' />
-        </div>
-
-        <div className='text-sm md:text-xl text-gray-500'>
-          <h1>User</h1>
-        </div>
-
-        <div className='xl:hidden text-gray-500 cursor-pointer'>
+        <button className='xl:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-md transition-colors'>
           <Menu
             onClick={handleMenuClick}
-            className='h-6 md:w-10 md:h-10 w-6' />
-        </div>
+            className='w-5 h-5' />
+        </button>
 
       </div>
-
-      
     </div>
   )
 }
