@@ -192,7 +192,7 @@ const SettingsPage = () => {
                 {!isEditingProfile ? (
                   <button
                     onClick={handleEditProfile}
-                    className='active:scale-95 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'
+                    className='active:scale-95 bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md transition-all'
                   >
                     Update Profile
                   </button>
@@ -200,13 +200,13 @@ const SettingsPage = () => {
                   <>
                     <button
                       onClick={handleSaveProfile}
-                      className='bg-green-500 active:scale-95 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'
+                      className='active:scale-95 bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md transition-all'
                     >
                       Save Changes
                     </button>
                     <button
                       onClick={handleCancelProfile}
-                      className='active:scale-95 bg-gray-400 hover:bg-gray-500 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'
+                      className='active:scale-95 bg-gray-100 border border-gray-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 rounded-xl px-4 py-2 text-sm font-semibold transition-all'
                     >
                       Cancel
                     </button>
@@ -328,7 +328,7 @@ const SettingsPage = () => {
 
             <div className='pt-4'>
               <p className='text-sm text-gray-500 leading-relaxed mb-4'>Last Fetch: <span className='font-bold text-gray-900'>{priceFetch.lastFetch}</span></p>
-              <button className='active:scale-95 bg-blue-500 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'>
+              <button className='active:scale-95 bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md transition-all'>
                 Fetch Now
               </button>
             </div>
@@ -382,22 +382,22 @@ const SettingsPage = () => {
               </div>
 
               {isUpdatingPassword ? (
-                <div className='flex items-center justify-between'>
+                <div className='flex items-center gap-3 mt-6'>
                   <button
                     onClick={handleUpdatePassword}
-                    className='active:scale-95 mt-6 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'>
+                    className='active:scale-95 bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md transition-all'>
                     Save Changes
                   </button>
                   <button
                     onClick={() => setIsUpdatingPassword(prev => !prev)}
-                    className='active:scale-95 mt-6 bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold'>
+                    className='active:scale-95 bg-gray-100 border border-gray-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 rounded-xl px-4 py-2 text-sm font-semibold transition-all'>
                     Cancel
                   </button>
                 </div>
               ) : (
                 <button
                   onClick={() => setIsUpdatingPassword(prev => !prev)}
-                  className='w-full active:scale-95 2xl:px-8 2xl:py-3 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold mt-6'
+                  className='active:scale-95 mt-6 bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md transition-all'
                 >
                   Update Password
                 </button>

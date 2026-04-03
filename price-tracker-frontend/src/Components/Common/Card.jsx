@@ -75,7 +75,7 @@ const Card = ({ handleStopTracking, avg, product, showButton = true, variant, ch
             {/* Button */}
             {showButton && (<button
                 onClick={() => { navigate(`/analytics/${product.id}`) }}
-                className="w-full flex items-center justify-center gap-2 active:scale-95 transition-all duration-300 hover:bg-blue-700 md:w-auto md:self-end px-3 py-1.5 bg-blue-600 text-white text-sm rounded-md font-medium">
+                className="w-full flex items-center justify-center gap-2 active:scale-95 bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md transition-all md:w-auto md:self-end">
                 View Analytics
                 <ChartNoAxesCombined className="w-4 h-4" />
             </button>)}
@@ -84,13 +84,13 @@ const Card = ({ handleStopTracking, avg, product, showButton = true, variant, ch
             {isProduct && (<div className='flex items-center justify-between gap-2 pt-2 border-t border-gray-100/60'>
                 <a href={product.productUrl} className='flex-1'>
                     <button
-                        className='w-full px-3 py-1.5 hover:bg-blue-700 transition-all duration-300 active:scale-95 bg-blue-600 font-medium text-sm text-white rounded-md'>
+                        className='w-full active:scale-95 bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md transition-all'>
                         Buy
                     </button>
                 </a>
                 <button
                     onClick={() => { handleStopTracking(product.id) }}
-                    className='px-3 py-1.5 bg-gray-100 hover:bg-gray-200 transition-all duration-300 active:scale-95 font-medium text-sm text-gray-700 rounded-md border border-gray-200'>
+                    className='active:scale-95 bg-gray-100 border border-gray-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 rounded-xl px-4 py-2 text-sm font-semibold transition-all'>
                     Cancel Tracking
                 </button>
             </div>)}
