@@ -10,7 +10,7 @@ export default function Layout() {
     <div className='min-h-dvh flex bg-gray-50 overflow-x-hidden w-full'>
 
       {/* Sidebar for larger screens */}
-      <div className="hidden xl:block w-52 sticky top-0 h-screen border-r border-gray-200">
+      <div className="hidden xl:block w-42 sticky top-0 h-screen border-r border-gray-200">
         <SideBar />
       </div>
 

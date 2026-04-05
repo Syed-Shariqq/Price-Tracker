@@ -347,7 +347,7 @@ const SettingsPage = () => {
                     }
                     className="w-4 h-4"
                   />
-                  <span className="2xl:text-xl md:text-lg text-gray-700">
+                  <span className="md:text-lg text-gray-700">
                     Email
                   </span>
                 </label>
@@ -362,7 +362,7 @@ const SettingsPage = () => {
                     }
                     className="w-4 h-4"
                   />
-                  <span className="2xl:text-xl md:text-lgtext-gray-700">
+                  <span className="md:text-lg text-gray-700">
                     Push
                   </span>
                 </label>

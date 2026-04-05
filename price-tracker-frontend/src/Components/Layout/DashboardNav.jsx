@@ -8,7 +8,7 @@ const DashboardNav = ({ setIsSidebarOpen }) => {
   }
 
   return (
-    <div className='flex items-center justify-between w-full h-16 px-4 md:px-8 border-b border-gray-100 bg-white/95 backdrop-blur-sm sticky top-0 z-30'>
+    <div className='flex shadow-lg items-center justify-between w-full h-16 px-4 md:px-8 border-b border-gray-100 bg-white/95 backdrop-blur-sm sticky top-0 z-30'>
 
       {/* Left section (Search Bar) */}
       <div className='relative flex-1 max-w-md hidden sm:block'>

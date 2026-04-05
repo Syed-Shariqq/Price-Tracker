@@ -22,8 +22,8 @@ const SideBar = ({ onClose }) => {
   }
 
   return (
-    <div className='flex flex-col h-full bg-blue-100'>
-      <div className='py-4 px-4 w-full border-b border-blue-200 flex items-center justify-between'>
+    <div className='flex xl:fixed flex-col h-full bg-blue-100'>
+      <div className='py-4 shadow-lg px-4 w-full border-b border-blue-200 flex items-center justify-between'>
 
         {/* Logo */}
         <NavLogo />
