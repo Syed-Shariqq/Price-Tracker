@@ -1,6 +1,5 @@
 package com.priceTracker.DTOs;
 
-import com.priceTracker.Entities.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

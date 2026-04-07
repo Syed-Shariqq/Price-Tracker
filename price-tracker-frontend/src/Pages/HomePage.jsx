@@ -22,7 +22,7 @@ const HomePage = () => {
     <div className='min-h-screen flex'>
 
       {/* Sidebar for larger screens */}
-      <div className="hidden xl:block w-60  bg-blue-200 sticky top-0 h-screen">
+      <div className="hidden xl:block w-48  bg-blue-200 sticky top-0 h-screen">
         <SideBar />
       </div>
 

@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Lock, Trash2, Upload } from "lucide-react";
 import { toast } from "react-toastify";
-import { changePassword } from "../Api/settings";
+import { changePassword, getProfile, updateProfile } from "../Api/settings";
 
 const SettingsPage = () => {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
   const [profileData, setProfileData] = useState({
-    name: "Syed Shariq",
-    email: "shariq@email.com",
-    username: "shariq_dev",
+    name: "",
+    email: "",
+    username: "",
   });
   const [tempProfileData, setTempProfileData] = useState(profileData);
   const [profileImage, setProfileImage] = useState(null);
@@ -42,14 +42,54 @@ const SettingsPage = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await getProfile();
+        const data = res.data.data;
+
+        setProfileData({
+          name: data.name || "",
+          email: data.email || "",
+          username: data.username || "",
+        });
+
+        setTempProfileData({
+          name: data.name || "",
+          email: data.email || "",
+          username: data.username || "",
+        });
+      } catch (err) {
+        toast.error("Failed to fetch profile");
+        console.error("Failed to fetch profile", err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   const handleEditProfile = () => {
     setIsEditingProfile(true);
     setTempProfileData(profileData);
   };
 
-  const handleSaveProfile = () => {
-    setProfileData(tempProfileData);
-    setIsEditingProfile(false);
+  const handleSaveProfile = async () => {
+    try {
+      const res = await updateProfile({
+        name: tempProfileData.name,
+        username: tempProfileData.username,
+      });
+
+      if (res.status === 200) {
+        toast.success("Profile updated successfully");
+
+        setProfileData(tempProfileData); // update UI
+        setIsEditingProfile(false);
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message);
+      console.error("Failed to update profile", err);
+    }
   };
 
   const handleCancelProfile = () => {
@@ -57,7 +97,10 @@ const SettingsPage = () => {
   };
 
   const handleProfileChange = (field, value) => {
-    setTempProfileData({ ...tempProfileData, [field]: value });
+    setTempProfileData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
   const handleNotificationChange = (field, value) => {
@@ -201,11 +244,11 @@ const SettingsPage = () => {
                 </label>
                 <input
                   type="email"
+                  disabled={true}
                   value={
                     isEditingProfile ? tempProfileData.email : profileData.email
                   }
                   onChange={(e) => handleProfileChange("email", e.target.value)}
-                  disabled={!isEditingProfile}
                   className="text-sm w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-600"
                 />
               </div>
@@ -347,9 +390,7 @@ const SettingsPage = () => {
                     }
                     className="w-4 h-4"
                   />
-                  <span className="md:text-lg text-gray-700">
-                    Email
-                  </span>
+                  <span className="md:text-lg text-gray-700">Email</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -362,9 +403,7 @@ const SettingsPage = () => {
                     }
                     className="w-4 h-4"
                   />
-                  <span className="md:text-lg text-gray-700">
-                    Push
-                  </span>
+                  <span className="md:text-lg text-gray-700">Push</span>
                 </label>
               </div>
             </div>

@@ -5,14 +5,13 @@ import com.priceTracker.Entities.User;
 import com.priceTracker.Exceptions.InvalidCredentialsException;
 import com.priceTracker.Exceptions.UserNotFoundException;
 import com.priceTracker.Repositories.UserRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.priceTracker.DTOs.UpdateProfileDto;
 
 @Service
 public class UserServiceImpl implements UserDetailsService {
@@ -48,5 +47,22 @@ public class UserServiceImpl implements UserDetailsService {
         userRepository.save(user);
 
         return "Password successfully updated";
+    }
+
+    public User updateProfile(Long userId, UpdateProfileDto req) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        if (req.getName() != null && !req.getName().trim().isEmpty()) {
+            user.setName(req.getName());
+        }
+        if (req.getUsername() != null && !req.getUsername().trim().isEmpty()) {
+            user.setUsername(req.getUsername());
+        }
+        return userRepository.save(user);
+    }
+
+    public User getUserProfile(Long userId){
+
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 }

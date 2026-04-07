@@ -38,6 +38,9 @@ public class User implements UserDetails {
     @Column(name = "is_Acc_Non_Locked")
     private boolean isAccountNonLocked = true;
 
+    @Column(name = "name")
+    private String name;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
