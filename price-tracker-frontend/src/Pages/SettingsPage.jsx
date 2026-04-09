@@ -3,11 +3,13 @@ import { Lock, Trash2, Upload } from "lucide-react";
 import { toast } from "react-toastify";
 import {
   changePassword,
+  fetchPriceNow,
   getProfile,
   getSettings,
   updateProfile,
   updateSettings,
 } from "../Api/settings";
+import Loader from "@/Components/Common/Loader";
 
 const SettingsPage = () => {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -18,7 +20,7 @@ const SettingsPage = () => {
     username: "",
   });
   const [tempProfileData, setTempProfileData] = useState(profileData);
-  const [profileImage, setProfileImage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
 
   const [notifications, setNotifications] = useState({
@@ -91,7 +93,9 @@ const SettingsPage = () => {
         setPriceFetch({
           autoFetch: data.autoFetch ?? true,
           fetchInterval: data.fetchInterval ?? "6h",
-          lastFetch: data.lastFetch ?? "",
+          lastFetch: data.lastFetch
+            ? new Date(data.lastFetch).toLocaleString()
+            : "Never",
         });
       } catch (err) {
         toast.error("Failed to fetch settings");
@@ -111,6 +115,7 @@ const SettingsPage = () => {
         notificationMethod: updatedNotifications.method.toUpperCase(),
         autoFetch: updatedPriceFetch.autoFetch,
         fetchInterval: updatedPriceFetch.fetchInterval,
+        lastFetch: updatedPriceFetch.lastFetch,
       });
       toast.success("Settings saved");
     } catch (err) {
@@ -167,12 +172,32 @@ const SettingsPage = () => {
         notificationMethod: updated.method.toUpperCase(),
         autoFetch: priceFetch.autoFetch,
         fetchInterval: priceFetch.fetchInterval,
+        lastFetch: priceFetch.lastFetch,
       });
       toast.success("Settings saved");
     } catch (err) {
       setNotifications(previous); // revert on failure
       toast.error("Failed to save settings");
       console.error("Failed to save settings", err);
+    }
+  };
+
+  const handleFetchPrices = async () => {
+    try {
+      setLoading(true);
+      const res = await fetchPriceNow();
+      if (res.status === 200) {
+        toast.success("Prices fetched successfully");
+        setPriceFetch((prev) => ({
+          ...prev,
+          lastFetch: new Date().toLocaleString(),
+        }));
+      }
+    } catch (err) {
+      toast.error("Failed to fetch prices");
+      console.error("Failed to fetch prices", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -248,6 +273,7 @@ const SettingsPage = () => {
 
   return (
     <div className="w-full md:min-h-[200vh] min-h-[150vh] bg-gray-50 p-4 md:p-8 pb-20">
+      {loading && <Loader />}
       <div className="mb-8">
         <h1 className="text-2xl font-extrabold tracking-tight text-gray-900">
           Settings
@@ -569,7 +595,10 @@ const SettingsPage = () => {
                   {priceFetch.lastFetch}
                 </span>
               </p>
-              <button className="active:scale-95 bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md transition-all">
+              <button
+                onClick={handleFetchPrices}
+                className="active:scale-95 cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md transition-all"
+              >
                 Fetch Now
               </button>
             </div>

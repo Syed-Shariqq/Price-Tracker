@@ -2,6 +2,7 @@ package com.priceTracker.Services;
 
 import com.priceTracker.Entities.Product;
 import com.priceTracker.Repositories.ProductRepository;
+import com.priceTracker.Repositories.UserTrackedProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -27,9 +29,10 @@ public class CheckPriceService {
     @Autowired
     private final ProductProcessingService productProcessingService;
 
+    @Autowired
+    private final UserTrackedProductRepository trackedProductRepository;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(8);
-
 
     @Scheduled(fixedDelay = 360000)
     public void checkPrices() {
@@ -42,28 +45,39 @@ public class CheckPriceService {
             Pageable pageable = PageRequest.of(page, size);
             productPage = productRepository.findAll(pageable);
 
-            List<Product> products = productPage.getContent();
+            List<Long> productIds = productPage.getContent()
+                    .stream()
+                    .map(Product::getId)
+                    .toList();
 
-            List<Future<?>> futures = new ArrayList<>();
-
-            // Submit tasks for this page
-            for (Product product : products) {
-                futures.add(
-                        executor.submit(() -> productProcessingService.processProduct(product.getId()))
-                );
-            }
-
-            for (Future<?> future : futures) {
-                try {
-                    future.get();
-                } catch (Exception e) {
-                    log.error("Thread error", e);
-                }
-            }
-
+            processProductIds(productIds);
             page++;
 
         } while (productPage.hasNext());
     }
 
+    public void fetchPricesForUser(Long userId) {
+        List<Long> productIds = trackedProductRepository.findDistinctProductIdsByUserId(userId);
+        processProductIds(productIds);
+    }
+
+    private void processProductIds(List<Long> productIds) {
+        if (productIds == null || productIds.isEmpty()) {
+            return;
+        }
+
+        List<Future<?>> futures = new ArrayList<>();
+
+        for (Long productId : productIds) {
+            futures.add(executor.submit(() -> productProcessingService.processProduct(productId)));
+        }
+
+        for (Future<?> future : futures) {
+            try {
+                future.get();
+            } catch (Exception e) {
+                log.error("Thread error", e);
+            }
+        }
+    }
 }

@@ -30,4 +30,11 @@ public interface UserTrackedProductRepository extends JpaRepository<UserTrackedP
     )
 """)
     List<UserTrackedProduct> findActiveByProductId(@Param("productId") Long productId);
+
+    @Query("""
+        SELECT DISTINCT utp.product.id
+        FROM UserTrackedProduct utp
+        WHERE utp.user.id = :userId
+    """)
+    List<Long> findDistinctProductIdsByUserId(@Param("userId") Long userId);
 }

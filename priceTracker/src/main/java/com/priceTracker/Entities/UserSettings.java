@@ -30,4 +30,5 @@ public class UserSettings {
 
     private boolean autoFetch;
     private String fetchInterval;
+    private String lastFetch;
 }

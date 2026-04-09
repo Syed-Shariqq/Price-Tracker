@@ -10,4 +10,5 @@ public class UserSettingsDTO {
     private String notificationMethod;
     private boolean autoFetch;
     private String fetchInterval;
+    private String lastFetch;
 }

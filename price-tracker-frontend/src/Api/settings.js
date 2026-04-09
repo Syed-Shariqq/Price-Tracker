@@ -19,3 +19,7 @@ export const getSettings = async () => {
 export const updateSettings = async (data) => {
     return api.put(`/settings`,data);
 }
+
+export const fetchPriceNow = async () => {
+    return api.post(`/settings/fetch-now`);
+}

@@ -9,6 +9,8 @@ import com.priceTracker.Repositories.UserSettingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class UserSettingsService {
 
@@ -18,6 +20,9 @@ public class UserSettingsService {
     @Autowired
     private UserRepository userRepo;
 
+    @Autowired
+    private CheckPriceService checkPriceService;
+
     private UserSettingsDTO toDTO(UserSettings s) {
         UserSettingsDTO dto = new UserSettingsDTO();
         dto.setNotifyOnDrop(s.isNotifyOnDrop());
@@ -26,6 +31,7 @@ public class UserSettingsService {
         dto.setNotificationMethod(s.getNotificationMethod());
         dto.setAutoFetch(s.isAutoFetch());
         dto.setFetchInterval(s.getFetchInterval());
+        dto.setLastFetch(s.getLastFetch());
         return dto;
     }
 
@@ -52,9 +58,19 @@ public class UserSettingsService {
         existing.setNotificationMethod(newSettings.getNotificationMethod());
         existing.setAutoFetch(newSettings.isAutoFetch());
         existing.setFetchInterval(newSettings.getFetchInterval());
+        existing.setLastFetch(newSettings.getLastFetch());
 
         return repo.save(existing);
     }
 
+    public void fetchNow(Long userId) {
 
+        UserSettings settings = repo.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Settings not found"));
+
+        settings.setLastFetch(String.valueOf(LocalDateTime.now()));
+        repo.save(settings);
+
+        checkPriceService.fetchPricesForUser(userId);
+    }
 }
