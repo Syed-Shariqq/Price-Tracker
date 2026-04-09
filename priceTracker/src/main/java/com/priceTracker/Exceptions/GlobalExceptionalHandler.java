@@ -91,6 +91,13 @@ public class GlobalExceptionalHandler {
         return buildResponse(ex, HttpStatus.BAD_REQUEST, request);
     }
 
+    @ExceptionHandler(UserSettingsNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponseDto handleUserSettingsNotFound(UserSettingsNotFoundException ex, HttpServletRequest request){
+
+        return buildResponse(ex, HttpStatus.NOT_FOUND, request);
+    }
+
     @ExceptionHandler(ProductAlreadyTrackingException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDto handleProductAlreadyTracking(ProductAlreadyTrackingException ex,
