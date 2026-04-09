@@ -8,4 +8,6 @@ import java.util.List;
 public interface ProductHistoryRepository extends JpaRepository<ProductPriceHistory, Long> {
 
     List<ProductPriceHistory> findByProductIdOrderByCheckedAtAsc(Long productId);
+
+    void deleteByProductIdIn(List<Long> productIds);
 }

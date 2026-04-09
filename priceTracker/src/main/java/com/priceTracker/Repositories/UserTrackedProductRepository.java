@@ -37,4 +37,8 @@ public interface UserTrackedProductRepository extends JpaRepository<UserTrackedP
         WHERE utp.user.id = :userId
     """)
     List<Long> findDistinctProductIdsByUserId(@Param("userId") Long userId);
+
+    long countByProductId(Long productId);
+
+    void deleteByUserId(Long userId);
 }

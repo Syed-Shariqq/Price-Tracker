@@ -8,4 +8,5 @@ public interface AlertRepository extends JpaRepository<Alert, Long> {
 
     List<Alert> findByUserIdOrderByCreatedAtDesc(Long userId);
 
+    void deleteByUserId(Long userId);
 }

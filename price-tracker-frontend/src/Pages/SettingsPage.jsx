@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Lock, Trash2, Upload } from "lucide-react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import {
   changePassword,
+  deleteAccount,
   fetchPriceNow,
   getProfile,
   getSettings,
@@ -12,8 +14,10 @@ import {
 import Loader from "@/Components/Common/Loader";
 
 const SettingsPage = () => {
+  const navigate = useNavigate();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [profileData, setProfileData] = useState({
     name: "",
     email: "",
@@ -268,6 +272,30 @@ const SettingsPage = () => {
         newPassword: "",
         confirmPassword: "",
       });
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete your account? This cannot be undone.",
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setIsDeletingAccount(true);
+      setLoading(true);
+      await deleteAccount();
+      toast.success("Account deleted successfully");
+      localStorage.removeItem("token");
+      localStorage.removeItem("profileImage");
+      navigate("/auth");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to delete account");
+      console.error("Failed to delete account", err);
+    } finally {
+      setIsDeletingAccount(false);
+      setLoading(false);
     }
   };
 
@@ -666,13 +694,13 @@ const SettingsPage = () => {
                 <div className="flex items-center gap-3 mt-6">
                   <button
                     onClick={handlePasswordUpdate}
-                    className="active:scale-95 bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md transition-all"
+                    className="active:scale-95 cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md transition-all"
                   >
                     Save Changes
                   </button>
                   <button
                     onClick={() => setIsUpdatingPassword((prev) => !prev)}
-                    className="active:scale-95 bg-gray-100 border border-gray-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 rounded-xl px-4 py-2 text-sm font-semibold transition-all"
+                    className="active:scale-95 cursor-pointer bg-gray-100 border border-gray-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 rounded-xl px-4 py-2 text-sm font-semibold transition-all"
                   >
                     Cancel
                   </button>
@@ -680,7 +708,7 @@ const SettingsPage = () => {
               ) : (
                 <button
                   onClick={() => setIsUpdatingPassword((prev) => !prev)}
-                  className="active:scale-95 mt-6 bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md transition-all"
+                  className="active:scale-95 cursor-pointer mt-6 bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-sm hover:shadow-md transition-all"
                 >
                   Update Password
                 </button>
@@ -700,9 +728,13 @@ const SettingsPage = () => {
                 This action cannot be undone. Please ensure this is what you
                 want to do.
               </p>
-              <button className="w-full bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg transition font-semibold flex items-center justify-center gap-2">
+              <button
+                onClick={handleDeleteAccount}
+                disabled={isDeletingAccount}
+                className="w-full cursor-pointer bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white px-6 py-3 rounded-lg transition font-semibold flex items-center justify-center gap-2"
+              >
                 <Trash2 size={18} />
-                Delete Account
+                {isDeletingAccount ? "Deleting..." : "Delete Account"}
               </button>
             </div>
           </div>

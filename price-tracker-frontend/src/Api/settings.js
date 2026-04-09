@@ -23,3 +23,7 @@ export const updateSettings = async (data) => {
 export const fetchPriceNow = async () => {
     return api.post(`/settings/fetch-now`);
 }
+
+export const deleteAccount = async () => {
+    return api.delete(`/settings/account`);
+}

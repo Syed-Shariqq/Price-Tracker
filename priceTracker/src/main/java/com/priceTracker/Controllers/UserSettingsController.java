@@ -48,4 +48,10 @@ public class UserSettingsController {
         service.fetchNow(user.getId());
         return successResponse("Price fetch triggered", "User product prices fetched successfully", HttpStatus.OK);
     }
+
+    @DeleteMapping("/account")
+    public ApiResponse<String> deleteAccount(@AuthenticationPrincipal User user) {
+        service.deleteAccount(user.getId());
+        return successResponse("Account deleted", "User account and related data deleted successfully", HttpStatus.OK);
+    }
 }
