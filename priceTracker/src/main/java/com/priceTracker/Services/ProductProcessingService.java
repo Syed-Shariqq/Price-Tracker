@@ -4,12 +4,14 @@ import com.priceTracker.DTOs.ScrapeResponseDTO;
 import com.priceTracker.Entities.Alert;
 import com.priceTracker.Entities.Product;
 import com.priceTracker.Entities.ProductPriceHistory;
+import com.priceTracker.Entities.UserSettings;
 import com.priceTracker.Entities.UserTrackedProduct;
 import com.priceTracker.Exceptions.InvalidUrlException;
 import com.priceTracker.Exceptions.ProductNotFoundException;
 import com.priceTracker.Repositories.AlertRepository;
 import com.priceTracker.Repositories.ProductHistoryRepository;
 import com.priceTracker.Repositories.ProductRepository;
+import com.priceTracker.Repositories.UserSettingsRepository;
 import com.priceTracker.Repositories.UserTrackedProductRepository;
 import com.priceTracker.events.PriceDropEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +37,6 @@ public class ProductProcessingService {
     @Autowired
     private UserTrackedProductRepository trackedProductRepository;
 
-
     @Autowired
     private ProductRepository productRepository;
 
@@ -49,6 +50,9 @@ public class ProductProcessingService {
     private AlertRepository alertRepository;
 
     @Autowired
+    private UserSettingsRepository userSettingsRepository;
+
+    @Autowired
     private ApplicationEventPublisher eventPublisher;
 
     @Transactional
@@ -60,7 +64,8 @@ public class ProductProcessingService {
         BigDecimal oldPrice = product.getCurrentPrice();
         ScrapeResponseDTO response = fetchPrice(product.getProductUrl());
 
-        if (response == null || response.getPrice() == null) return;
+        if (response == null || response.getPrice() == null)
+            return;
 
         BigDecimal newPrice = response.getPrice();
 
@@ -77,7 +82,7 @@ public class ProductProcessingService {
 
         BigDecimal changePercent = (oldPrice != null && oldPrice.compareTo(BigDecimal.ZERO) != 0)
                 ? changeAmount.divide(oldPrice, 4, RoundingMode.HALF_UP)
-                .multiply(BigDecimal.valueOf(100))
+                        .multiply(BigDecimal.valueOf(100))
                 : BigDecimal.ZERO;
 
         product.setCurrentPrice(newPrice);
@@ -94,22 +99,26 @@ public class ProductProcessingService {
 
         historyRepository.save(history);
 
-        List<UserTrackedProduct> trackedProducts =
-                trackedProductRepository.findActiveByProductId(product.getId());
+        List<UserTrackedProduct> trackedProducts = trackedProductRepository.findActiveByProductId(product.getId());
 
         for (UserTrackedProduct mapping : trackedProducts) {
 
             Long userId = mapping.getUser().getId();
+            UserSettings settings = userSettingsRepository.findByUserId(userId).orElse(null);
+            boolean notifyOnDrop = settings != null && settings.isNotifyOnDrop();
+            boolean notifyOnIncrease = settings != null && settings.isNotifyOnIncrease();
 
             cacheManager.getCache("userTrackedProducts").evict(userId);
 
             BigDecimal targetPrice = mapping.getTargetPrice();
 
-            boolean isSignificantDrop =
-                    changePercent.compareTo(BigDecimal.valueOf(-1)) <= 0;
+            boolean isPriceDrop = oldPrice != null && newPrice.compareTo(oldPrice) < 0;
+            boolean isPriceIncrease = oldPrice != null && newPrice.compareTo(oldPrice) > 0;
 
-            boolean shouldTrigger =
-                    targetPrice.compareTo(newPrice) >= 0 && isSignificantDrop;
+            boolean isSignificantDrop = changePercent.abs().compareTo(BigDecimal.valueOf(1)) >= 0;
+
+            boolean shouldTrigger = isPriceDrop && targetPrice.compareTo(newPrice) >= 0 && isSignificantDrop
+                    && notifyOnDrop;
 
             if (shouldTrigger && !Boolean.TRUE.equals(mapping.getAlertSent())) {
 
@@ -132,11 +141,25 @@ public class ProductProcessingService {
                                 product.getProductName(),
                                 mapping.getUser().getEmail(),
                                 targetPrice,
-                                newPrice
-                        )
-                );
+                                newPrice));
 
                 mapping.setAlertSent(true);
+            }
+
+            if (isPriceIncrease && notifyOnIncrease) {
+                Alert increaseAlert = Alert.builder()
+                        .userId(userId)
+                        .productId(product.getId())
+                        .productName(product.getProductName())
+                        .oldPrice(oldPrice)
+                        .newPrice(newPrice)
+                        .imgUrl(product.getImgUrl())
+                        .alertType("PRICE_INCREASE")
+                        .description(product.getDescription())
+                        .createdAt(LocalDateTime.now())
+                        .build();
+
+                alertRepository.save(increaseAlert);
             }
 
             if (targetPrice.compareTo(newPrice) < 0 &&
@@ -147,12 +170,11 @@ public class ProductProcessingService {
         }
     }
 
-
-    public ScrapeResponseDTO fetchPrice(String productUrl){
+    public ScrapeResponseDTO fetchPrice(String productUrl) {
 
         validateUrl(productUrl);
 
-        try{
+        try {
 
             Document document = Jsoup.connect(productUrl)
                     .userAgent("Mozilla/5.0")
@@ -166,11 +188,12 @@ public class ProductProcessingService {
 
             Element priceElement = document.select(".price_color").first();
 
-            if(priceElement == null) return null;
+            if (priceElement == null)
+                return null;
 
             String priceText = priceElement.text();
 
-            String cleaned = priceText.replaceAll("[^0-9.]","");
+            String cleaned = priceText.replaceAll("[^0-9.]", "");
             BigDecimal price = new BigDecimal(cleaned);
             System.out.println(price);
             System.out.println(imgUrl);
@@ -179,25 +202,24 @@ public class ProductProcessingService {
             System.out.println(website);
 
             return new ScrapeResponseDTO(
-                 price,
-                 imgUrl,
-                 description,
-                 title,
-                 website
-            );
+                    price,
+                    imgUrl,
+                    description,
+                    title,
+                    website);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new InvalidUrlException("Unable to connect to the website. Please try again later.");
         }
     }
 
-    private void validateUrl(String url){
+    private void validateUrl(String url) {
 
         URI uri;
 
         try {
             uri = new URI(url.trim());
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("URI parsing failed: {}", url, e);
             throw new InvalidUrlException("Invalid URL format.");
         }
