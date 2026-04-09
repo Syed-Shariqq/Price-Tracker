@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Lock, Trash2, Upload } from "lucide-react";
 import { toast } from "react-toastify";
-import { changePassword, getProfile, updateProfile } from "../Api/settings";
+import {
+  changePassword,
+  getProfile,
+  getSettings,
+  updateProfile,
+  updateSettings,
+} from "../Api/settings";
 
 const SettingsPage = () => {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -19,13 +25,13 @@ const SettingsPage = () => {
     priceDrops: true,
     priceIncreases: true,
     minDropPercentage: 10,
-    method: "email",
+    method: "",
   });
 
   const [priceFetch, setPriceFetch] = useState({
     autoFetch: true,
-    fetchInterval: "6 hours",
-    lastFetch: "Apr 20 • 10:46 AM",
+    fetchInterval: "",
+    lastFetch: "",
   });
 
   const [security, setSecurity] = useState({
@@ -68,6 +74,51 @@ const SettingsPage = () => {
     fetchProfile();
   }, []);
 
+  useEffect(() => {
+    const handleSettings = async () => {
+      try {
+        const res = await getSettings();
+        const data = res.data.data;
+        console.log("Fetched settings", data);
+
+        setNotifications({
+          priceDrops: data.notifyOnDrop ?? true,
+          priceIncreases: data.notifyOnIncrease ?? true,
+          minDropPercentage: data.minDropPercentage ?? 10,
+          method: data.notificationMethod?.toLowerCase() ?? "email",
+        });
+
+        setPriceFetch({
+          autoFetch: data.autoFetch ?? true,
+          fetchInterval: data.fetchInterval ?? "6h",
+          lastFetch: data.lastFetch ?? "",
+        });
+      } catch (err) {
+        toast.error("Failed to fetch settings");
+        console.error("Failed to fetch settings", err);
+      }
+    };
+
+    handleSettings();
+  }, []);
+
+  const saveSettings = async (updatedNotifications, updatedPriceFetch) => {
+    try {
+      await updateSettings({
+        notifyOnDrop: updatedNotifications.priceDrops,
+        notifyOnIncrease: updatedNotifications.priceIncreases,
+        minDropPercentage: updatedNotifications.minDropPercentage,
+        notificationMethod: updatedNotifications.method.toUpperCase(),
+        autoFetch: updatedPriceFetch.autoFetch,
+        fetchInterval: updatedPriceFetch.fetchInterval,
+      });
+      toast.success("Settings saved");
+    } catch (err) {
+      toast.error("Failed to save settings");
+      console.error("Failed to save settings", err);
+    }
+  };
+
   const handleEditProfile = () => {
     setIsEditingProfile(true);
     setTempProfileData(profileData);
@@ -103,8 +154,26 @@ const SettingsPage = () => {
     }));
   };
 
-  const handleNotificationChange = (field, value) => {
-    setNotifications({ ...notifications, [field]: value });
+  const handleNotificationChange = async (field, value) => {
+    const previous = { ...notifications };
+    const updated = { ...notifications, [field]: value };
+
+    setNotifications(updated);
+    try {
+      await updateSettings({
+        notifyOnDrop: updated.priceDrops,
+        notifyOnIncrease: updated.priceIncreases,
+        minDropPercentage: updated.minDropPercentage,
+        notificationMethod: updated.method.toUpperCase(),
+        autoFetch: priceFetch.autoFetch,
+        fetchInterval: priceFetch.fetchInterval,
+      });
+      toast.success("Settings saved");
+    } catch (err) {
+      setNotifications(previous); // revert on failure
+      toast.error("Failed to save settings");
+      console.error("Failed to save settings", err);
+    }
   };
 
   const handleSecurityChange = (field, value) => {
@@ -423,12 +492,30 @@ const SettingsPage = () => {
                 <input
                   type="checkbox"
                   checked={priceFetch.autoFetch}
-                  onChange={(e) =>
-                    setPriceFetch({
+                  onChange={async (e) => {
+                    const previous = { ...priceFetch };
+                    const updated = {
                       ...priceFetch,
                       autoFetch: e.target.checked,
-                    })
-                  }
+                    };
+
+                    setPriceFetch(updated);
+
+                    try {
+                      await updateSettings({
+                        notifyOnDrop: notifications.priceDrops,
+                        notifyOnIncrease: notifications.priceIncreases,
+                        minDropPercentage: notifications.minDropPercentage,
+                        notificationMethod: notifications.method.toUpperCase(),
+                        autoFetch: updated.autoFetch,
+                        fetchInterval: updated.fetchInterval,
+                      });
+                      toast.success("Settings saved");
+                    } catch (err) {
+                      setPriceFetch(previous); // revert on failure
+                      toast.error("Failed to save settings");
+                    }
+                  }}
                   className="sr-only peer"
                 />
                 <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
@@ -439,12 +526,39 @@ const SettingsPage = () => {
               <label className="text-xs font-medium text-gray-400 uppercase tracking-wide block mb-2">
                 Fetch Interval
               </label>
-              <select className="text-sm w-full md:w-32 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700">
-                <option>6 hours</option>
-                <option>12 hours</option>
-                <option>24 hours</option>
-                <option>3 days</option>
-                <option>1 week</option>
+              <select
+                value={priceFetch.fetchInterval}
+                onChange={async (e) => {
+                  const previous = { ...priceFetch };
+                  const updated = {
+                    ...priceFetch,
+                    fetchInterval: e.target.value,
+                  };
+
+                  setPriceFetch(updated);
+
+                  try {
+                    await updateSettings({
+                      notifyOnDrop: notifications.priceDrops,
+                      notifyOnIncrease: notifications.priceIncreases,
+                      minDropPercentage: notifications.minDropPercentage,
+                      notificationMethod: notifications.method.toUpperCase(),
+                      autoFetch: updated.autoFetch,
+                      fetchInterval: updated.fetchInterval,
+                    });
+                    toast.success("Settings saved");
+                  } catch (err) {
+                    setPriceFetch(previous); // revert on failure
+                    toast.error("Failed to save settings");
+                  }
+                }}
+                className="text-sm w-full md:w-32 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
+              >
+                <option value="6h">6 hours</option>
+                <option value="12h">12 hours</option>
+                <option value="24h">24 hours</option>
+                <option value="3d">3 days</option>
+                <option value="1w">1 week</option>
               </select>
             </div>
 
