@@ -1,7 +1,10 @@
 import React from 'react'
 import { Bell, Menu, Search } from 'lucide-react';
+import { useSearch } from '@/Context/SearchContext';
 
 const DashboardNav = ({ setIsSidebarOpen }) => {
+  const { searchQuery, setSearchQuery } = useSearch();
+
   const handleMenuClick = () => {
     console.log('Menu clicked', setIsSidebarOpen)
     setIsSidebarOpen(prev => !prev)
@@ -16,6 +19,8 @@ const DashboardNav = ({ setIsSidebarOpen }) => {
         <input 
           type="text" 
           placeholder='Search tracking products...' 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
           className='w-full bg-gray-50 text-sm outline-none border border-gray-200 h-9 pl-9 pr-4 rounded-md focus:ring-2 focus:ring-blue-100 transition-shadow' 
         />
       </div>

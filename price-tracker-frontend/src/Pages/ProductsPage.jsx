@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Card from '@/Components/Common/Card'
 import EmptyProductsState from '@/Components/Layout/EmptyProductsState';
 import { getTrackedProductsOfUser } from '../Api/productApi';
 import Loader from '@/Components/Common/Loader';
 import { deleteUserTrackingProduct } from '@/Api/productApi';
 import { toast } from 'react-toastify';
+import { useSearch } from '@/Context/SearchContext';
 
 const ProductsPage = () => {
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false)
+  const { searchQuery } = useSearch();
 
   useEffect(() => {
     fetchProducts();
@@ -59,6 +61,16 @@ const ProductsPage = () => {
     }
   };
 
+  const filteredProducts = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
+    if (!normalizedQuery) return products;
+
+    return products.filter((product) =>
+      (product.productName || '').toLowerCase().includes(normalizedQuery)
+    );
+  }, [products, searchQuery]);
+
   return (
     <div className='animate-fade-in w-full gap-5 flex flex-col items-center justify-center'>
 
@@ -70,8 +82,8 @@ const ProductsPage = () => {
       </div>
 
       {/* Cards Section */}
-      {products.length === 0 ? <EmptyProductsState /> : (<div className='flex scrollbar md:max-h-screen overflow-y-auto flex-wrap md:flex-row flex-col items-center justify-start gap-5'>
-        {products.map((product, index) => (
+      {filteredProducts.length === 0 ? <EmptyProductsState /> : (<div className='flex scrollbar md:max-h-screen overflow-y-auto flex-wrap md:flex-row flex-col items-center justify-start gap-5'>
+        {filteredProducts.map((product, index) => (
 
           <Card handleStopTracking={handleStopTracking} isProduct={true} showButton={false} key={index} product={product} />
 

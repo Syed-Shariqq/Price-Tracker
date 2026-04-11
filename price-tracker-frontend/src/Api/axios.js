@@ -3,9 +3,11 @@ import { toast } from "react-toastify";
 
 
 const api = axios.create({
-    baseURL: "http://localhost:8080",
+    baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080",
     timeout: 7000,
 });
+
+console.log("ENV:", import.meta.env);
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");

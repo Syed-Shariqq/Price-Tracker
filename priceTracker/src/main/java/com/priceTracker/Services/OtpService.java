@@ -63,34 +63,39 @@ public class OtpService {
 
     public ApiResponse<String> sendOtp(String email){
 
-        String otpKey = "OTP:" + email;
-        String coolDownKey = "OTP:cooldown:" + email;
-        String attemptKey = "OTP:attemptKey:" + email;
+        try{
+            String otpKey = "OTP:" + email;
+            String coolDownKey = "OTP:cooldown:" + email;
+            String attemptKey = "OTP:attemptKey:" + email;
 
-       User user = userRepository.findByEmail(email)
-               .orElseThrow(() -> new UserNotFoundException("User not found"));
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-       if(user.isEmailVerified()){
+            if(user.isEmailVerified()){
 
-           return successResponse("User already Verified","Warning", HttpStatus.BAD_REQUEST);
-       }
+                return successResponse("User already Verified","Warning", HttpStatus.BAD_REQUEST);
+            }
 
-       Boolean cooldown = redisTemplate.hasKey(coolDownKey);
+            Boolean cooldown = redisTemplate.hasKey(coolDownKey);
 
-       if(Boolean.TRUE.equals(cooldown)){
+            if(Boolean.TRUE.equals(cooldown)){
 
-           return successResponse("Please wait before requesting for another otp","Warning", HttpStatus.TOO_EARLY);
-       }
+                return successResponse("Please wait before requesting for another otp","Warning", HttpStatus.TOO_EARLY);
+            }
 
-        String rawOtp = String.valueOf(100000 + random.nextInt(900000));
+            String rawOtp = String.valueOf(100000 + random.nextInt(900000));
 
-       redisTemplate.opsForValue().set(otpKey , rawOtp , Duration.ofMinutes(5));
-       redisTemplate.opsForValue().set(coolDownKey , "true" , Duration.ofMinutes(1));
-       redisTemplate.opsForValue().set(attemptKey , "0" , Duration.ofMinutes(5));
+            redisTemplate.opsForValue().set(otpKey , rawOtp , Duration.ofMinutes(5));
+            redisTemplate.opsForValue().set(coolDownKey , "true" , Duration.ofMinutes(1));
+            redisTemplate.opsForValue().set(attemptKey , "0" , Duration.ofMinutes(5));
 
-       emailService.sendOtpToUser(email , rawOtp);
+            emailService.sendOtpToUser(email , rawOtp);
 
-       return successResponse("Success."," Otp sent successfully", HttpStatus.OK);
+            return successResponse("Success."," Otp sent successfully", HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     public ApiResponse<String> verifyOtp(String email , String userOtp){
