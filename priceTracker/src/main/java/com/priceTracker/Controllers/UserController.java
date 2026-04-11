@@ -50,14 +50,14 @@ public class UserController {
     @PutMapping("/profile")
     public ApiResponse<String> updateProfile(@AuthenticationPrincipal User user, @RequestBody UpdateProfileDto req) {
         
-        User updatedUser = userService.updateProfile(user.getId(), req);
+        userService.updateProfile(user.getId(), req);
         return successResponse("Success", "Profile updated successfully", HttpStatus.OK);
     }
 
     @GetMapping("/profile")
     public ApiResponse<UserProfileResponse> getProfileDetails(@AuthenticationPrincipal User user){
 
-        User userDetails = userService.getUserProfile(user.getId());
+        userService.getUserProfile(user.getId());
 
         UserProfileResponse res = new UserProfileResponse();
         res.setName(user.getName());
