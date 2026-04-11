@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import graph from "../../assets/graph.jpeg";
 
 const HeroSection = () => {
   return (
@@ -37,8 +38,8 @@ const HeroSection = () => {
 
       {/* Graph */}
       <div className='my-8 md:my-10 lg:my-0 overflow-hidden shadow-lg shadow-gray-300 w-full lg:w-1/2 max-h-96 md:max-h-full'>
-        <img src="../src/assets/graph.jpeg" alt="Graph showing price trends" className='w-full h-full object-cover' />
-      </div>
+          <img src={graph} alt="Graph showing price trends" className='w-full h-full object-cover' />
+        </div>
 
     </div>
   )
