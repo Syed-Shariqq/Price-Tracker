@@ -26,6 +26,4 @@ buildNumber.properties
 Thumbs.db
 
 # Secrets & config
-application.properties
-application.yml
 .env
