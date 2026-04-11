@@ -374,17 +374,20 @@ docker-compose up --build
 | Service   | Image                     | Port       | Notes                                              |
 |-----------|---------------------------|------------|----------------------------------------------------|
 | `backend` | Built from `./priceTracker/Dockerfile` | `8080:8080` | Depends on `db` and `redis`. Runs the fat JAR via Eclipse Temurin JDK 21. |
-| `db`      | `postgres:15`             | `5432:5432` | Database name: `pricetracker`. Username: `postgres`. |
+| `db`      | `postgres:15`             | `5432:5432` | Credentials sourced from `.env`. |
 | `redis`   | `redis:7`                 | `6379:6379` | No persistence configured. Acts as cache and operational key store. |
 
-The `backend` service receives database and Redis connection details as environment variables, overriding `application.properties` at runtime:
+Docker Compose injects all sensitive values at runtime from a `.env` file placed at the project root. The `backend` service receives database credentials, Redis connection details, JWT secret, and SMTP credentials as environment variables, which Spring Boot automatically maps to the corresponding `application.properties` keys:
 
 ```yaml
-SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/pricetracker
-SPRING_DATASOURCE_USERNAME: postgres
-SPRING_DATASOURCE_PASSWORD: password
+SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
 SPRING_DATA_REDIS_HOST: redis
 SPRING_DATA_REDIS_PORT: 6379
+JWT_SECRET: ${JWT_SECRET}
+SPRING_MAIL_USERNAME: ${MAIL_USERNAME}
+SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD}
 ```
 
 The frontend is not containerized in the current `docker-compose.yml`. Run it locally with `npm run dev` pointing `VITE_API_URL` at `http://localhost:8080`.
@@ -393,23 +396,47 @@ The frontend is not containerized in the current `docker-compose.yml`. Run it lo
 
 ## Environment Variables
 
-### Backend (via `application.properties` or Docker environment overrides)
+All sensitive configuration values — including database credentials, the JWT secret, and SMTP credentials — are supplied exclusively via environment variables. No secrets are hardcoded in the source code or committed to version control.
 
-| Variable                                          | Description                                     | Example                              |
-|---------------------------------------------------|-------------------------------------------------|--------------------------------------|
-| `spring.datasource.url`                           | JDBC connection URL                             | `jdbc:postgresql://localhost:5432/pricetracker` |
-| `spring.datasource.username`                      | PostgreSQL username                             | `postgres`                           |
-| `spring.datasource.password`                      | PostgreSQL password                             | `password`                           |
-| `spring.data.redis.host`                          | Redis hostname                                  | `localhost`                          |
-| `spring.data.redis.port`                          | Redis port                                      | `6379`                               |
-| `spring.mail.host`                                | SMTP host                                       | `smtp.gmail.com`                     |
-| `spring.mail.port`                                | SMTP port                                       | `587`                                |
-| `spring.mail.username`                            | Sender Gmail address                            | `you@gmail.com`                      |
-| `spring.mail.password`                            | Gmail App Password (not account password)       | 16-character App Password            |
-| `spring.mail.properties.mail.smtp.auth`           | Enable SMTP authentication                      | `true`                               |
-| `spring.mail.properties.mail.smtp.starttls.enable`| Enable STARTTLS                                 | `true`                               |
+### `.env` File (Project Root)
 
-> The JWT secret is currently hardcoded in `JwtUtil.java` (`SECRET` field). For any non-development deployment, this must be externalized via an environment variable or a secrets manager.
+Create a `.env` file at the project root before starting the stack. Docker Compose reads this file automatically and injects the values into the relevant service containers. Spring Boot maps them to the corresponding `application.properties` keys at runtime.
+
+```env
+# PostgreSQL
+POSTGRES_DB=pricetracker
+POSTGRES_USER=your_db_user
+POSTGRES_PASSWORD=your_db_password
+
+# JWT
+JWT_SECRET=your_jwt_secret_key
+
+# SMTP (Gmail App Password)
+MAIL_USERNAME=your_email@gmail.com
+MAIL_PASSWORD=your_app_password
+```
+
+> [!WARNING]
+> **Never commit real credentials to version control.** The `.env` file is listed in `.gitignore` and must never be pushed to a repository. Use the placeholder values above as a reference template only. For production deployments, source secrets from a dedicated secrets manager (e.g., AWS Secrets Manager, HashiCorp Vault) rather than a plain `.env` file.
+
+### Backend Environment Variables
+
+The following variables are read by the backend at startup, either directly from the environment or via Spring Boot's property binding. Docker Compose injects all values from the `.env` file at runtime.
+
+| Variable                                          | Description                                     | Source        |
+|---------------------------------------------------|-------------------------------------------------|---------------|
+| `POSTGRES_DB`                                     | PostgreSQL database name                        | `.env`        |
+| `POSTGRES_USER`                                   | PostgreSQL username                             | `.env`        |
+| `POSTGRES_PASSWORD`                               | PostgreSQL password                             | `.env`        |
+| `JWT_SECRET`                                      | HS256 signing secret for JWT generation/validation | `.env`     |
+| `MAIL_USERNAME`                                   | Sender Gmail address for SMTP                   | `.env`        |
+| `MAIL_PASSWORD`                                   | Gmail App Password (not the account password)   | `.env`        |
+| `spring.data.redis.host`                          | Redis hostname                                  | `docker-compose.yml` |
+| `spring.data.redis.port`                          | Redis port                                      | `docker-compose.yml` |
+| `spring.mail.host`                                | SMTP host                                       | `application.properties` |
+| `spring.mail.port`                                | SMTP port                                       | `application.properties` |
+| `spring.mail.properties.mail.smtp.auth`           | Enable SMTP authentication                      | `application.properties` |
+| `spring.mail.properties.mail.smtp.starttls.enable`| Enable STARTTLS                                 | `application.properties` |
 
 ### Frontend
 
@@ -437,7 +464,6 @@ The frontend is not containerized in the current `docker-compose.yml`. Run it lo
 
 ## Future Improvements
 
-- **Externalize JWT secret** — load from environment variable or a vault; rotate on a schedule.
 - **Multi-site scraping support** — introduce a `ScraperStrategy` interface with per-domain implementations; use a headless browser (Playwright/Puppeteer via subprocess) for JavaScript-heavy sites.
 - **Dockerfile for frontend** — add an Nginx-based Docker image for the React build to make the full stack runnable with a single `docker-compose up`.
 - **Persistent Redis volumes** — mount a Docker volume for Redis to survive container restarts without losing OTP state mid-flow.
