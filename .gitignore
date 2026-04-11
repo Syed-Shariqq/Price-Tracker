@@ -1,0 +1,11 @@
+# Environment variables
+.env
+
+# IDE / system
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
