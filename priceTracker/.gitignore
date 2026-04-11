@@ -1,7 +1,7 @@
-# Compiled class files
+# Compiled files
 *.class
 
-# Log files
+# Logs
 *.log
 
 # Maven
@@ -14,27 +14,18 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 
-# IDE files
+# IDE
 .idea/
 *.iml
 *.ipr
 *.iws
-
-# VS Code
 .vscode/
 
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 
-# Application config (IMPORTANT – don’t expose secrets)
+# Secrets & config
 application.properties
 application.yml
-
-# Env files
 .env
-
-# Temporary files
-*.swp
-*.tmp
-
