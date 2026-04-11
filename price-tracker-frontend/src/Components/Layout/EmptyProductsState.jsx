@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import emptyCardboard from '../../assets/emptyState.png';
 
 const EmptyProductsState = () => {
 
@@ -13,7 +14,7 @@ const EmptyProductsState = () => {
             {/* Note: Replace the src with the actual path to your illustration asset */}
             <div className="mb-6 w-48 h-48 md:w-56 md:h-56 relative">
                 <img
-                    src="../src/assets/emptyState.png"
+                    src={emptyCardboard}
                     alt="Empty cardboard box illustration"
                     className="object-contain w-full h-full"
                 />
