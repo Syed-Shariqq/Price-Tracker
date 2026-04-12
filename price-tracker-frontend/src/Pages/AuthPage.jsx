@@ -7,6 +7,7 @@ import Loader from '../Components/Common/Loader';
 import { useSearchParams } from 'react-router-dom';
 import { ArrowBigLeft } from 'lucide-react';
 import { toast } from 'react-toastify';
+import icon from '../assets/Icon.png';
 
 const AuthPage = () => {
 
@@ -134,7 +135,7 @@ const AuthPage = () => {
       {loading && <Loader />}
       {/* Logo */}
       <div className='flex items-center justify-center mb-8'>
-        <img src="../src/assets/Icon.png" alt="" className='w-12 h-12 rounded-full' />
+        <img src={icon} alt="" className='w-12 h-12 rounded-full' />
         <h1 className='text-2xl font-bold ml-3'>CostTrack</h1>
       </div>
 

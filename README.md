@@ -35,8 +35,8 @@ The system is designed around a shared-product model: if two users track the sam
 
 | Layer       | Technology                                              |
 |-------------|----------------------------------------------------------|
-| Frontend    | React 19, Vite, Tailwind CSS 4, React Router DOM 7, Recharts, Axios, react-toastify |
-| Backend     | Spring Boot 4, Spring Security, Spring Data JPA, Spring Data Redis, Spring Mail, Spring MVC |
+| Frontend    | React 19.2.0, Vite, Tailwind CSS 4.2.1, React Router DOM 7.13.1, Recharts, Axios, react-toastify |
+| Backend     | Spring Boot 4.0.2, Spring Security, Spring Data JPA, Spring Data Redis, SendGrid API, Spring MVC |
 | Scraping    | Jsoup 1.18.3                                             |
 | Auth        | JJWT 0.11.5 (HS256), BCrypt                             |
 | Database    | PostgreSQL 15                                           |
@@ -79,7 +79,7 @@ The system is designed around a shared-product model: if two users track the sam
 │    ├─ ProductServiceImpl  (@Cacheable, @CacheEvict)             │
 │    ├─ UserSettingsService  (settings CRUD, account deletion)    │
 │    ├─ AlertService  (alert retrieval)                           │
-│    └─ EmailService  (JavaMailSender — OTP, reset, price alert)  │
+│    └─ EmailService  (SendGrid HTTP API — OTP, reset, alerts)    │
 │                                                                 │
 │  Events                                                         │
 │    └─ PriceDropEvent → PriceDropListener (@Async @EventListener)│
@@ -115,7 +115,7 @@ The system is designed around a shared-product model: if two users track the sam
 
 ### Event-Driven Email Dispatch
 
-When a price drop alert is triggered, `ApplicationEventPublisher.publishEvent(new PriceDropEvent(...))` fires. `PriceDropListener.handleEventListener()` is annotated with both `@EventListener` and `@Async`, so email dispatch happens on a separate thread managed by Spring's async executor — it does not block the scraping thread.
+When a price drop alert is triggered, `ApplicationEventPublisher.publishEvent(new PriceDropEvent(...))` fires. `PriceDropListener.handleEventListener()` is annotated with both `@EventListener` and `@Async`, so email dispatch happens on a separate thread managed by Spring's async executor — it does not block the scraping thread. The project uses SendGrid (transactional email API) for reliable delivery of OTP and alert emails. Emails are sent via SendGrid's HTTP API instead of SMTP.
 
 ### Redis Usage
 
@@ -288,6 +288,18 @@ All authenticated endpoints require `Authorization: Bearer <token>` header. Publ
 
 ---
 
+## Deployment
+
+The application is fully deployed and live. Scheduled jobs, price tracking, and email alerts are running in the deployed environment.
+
+- **Frontend**: Deployed on Vercel
+  Live URL: [https://price-tracker-sooty-xi.vercel.app/](https://price-tracker-sooty-xi.vercel.app/)
+- **Backend**: Deployed on Railway
+  Backend URL: [https://price-tracker-production-2312.up.railway.app](https://price-tracker-production-2312.up.railway.app)
+  *(Includes the backend server, PostgreSQL database, and Redis cache)*
+
+---
+
 ## Setup Instructions (Local Development)
 
 ### Prerequisites
@@ -316,8 +328,8 @@ All authenticated endpoints require `Authorization: Bearer <token>` header. Publ
    spring.data.redis.host=localhost
    spring.data.redis.port=6379
 
-   spring.mail.username=<your_gmail>
-   spring.mail.password=<your_app_password>
+   sendgrid.api-key=<your_sendgrid_api_key>
+   sendgrid.from-email=<your_verified_sender_email>
    ```
 
 4. Build and run:
@@ -377,7 +389,7 @@ docker-compose up --build
 | `db`      | `postgres:15`             | `5432:5432` | Credentials sourced from `.env`. |
 | `redis`   | `redis:7`                 | `6379:6379` | No persistence configured. Acts as cache and operational key store. |
 
-Docker Compose injects all sensitive values at runtime from a `.env` file placed at the project root. The `backend` service receives database credentials, Redis connection details, JWT secret, and SMTP credentials as environment variables, which Spring Boot automatically maps to the corresponding `application.properties` keys:
+Docker Compose injects all sensitive values at runtime from a `.env` file placed at the project root. The `backend` service receives database credentials, Redis connection details, JWT secret, and SendGrid API credentials as environment variables, which Spring Boot automatically maps to the corresponding `application.properties` keys:
 
 ```yaml
 SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
@@ -386,8 +398,8 @@ SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
 SPRING_DATA_REDIS_HOST: redis
 SPRING_DATA_REDIS_PORT: 6379
 JWT_SECRET: ${JWT_SECRET}
-SPRING_MAIL_USERNAME: ${MAIL_USERNAME}
-SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD}
+SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+SENDGRID_FROM_EMAIL: ${SENDGRID_FROM_EMAIL}
 ```
 
 The frontend is not containerized in the current `docker-compose.yml`. Run it locally with `npm run dev` pointing `VITE_API_URL` at `http://localhost:8080`.
@@ -396,7 +408,7 @@ The frontend is not containerized in the current `docker-compose.yml`. Run it lo
 
 ## Environment Variables
 
-All sensitive configuration values — including database credentials, the JWT secret, and SMTP credentials — are supplied exclusively via environment variables. No secrets are hardcoded in the source code or committed to version control.
+All sensitive configuration values — including database credentials, the JWT secret, and SendGrid API credentials — are supplied exclusively via environment variables. No secrets are hardcoded in the source code or committed to version control.
 
 ### `.env` File (Project Root)
 
@@ -411,9 +423,9 @@ POSTGRES_PASSWORD=your_db_password
 # JWT
 JWT_SECRET=your_jwt_secret_key
 
-# SMTP (Gmail App Password)
-MAIL_USERNAME=your_email@gmail.com
-MAIL_PASSWORD=your_app_password
+# SendGrid API
+SENDGRID_API_KEY=your_sendgrid_api_key
+SENDGRID_FROM_EMAIL=your_verified_sender_email
 ```
 
 > [!WARNING]
@@ -429,14 +441,10 @@ The following variables are read by the backend at startup, either directly from
 | `POSTGRES_USER`                                   | PostgreSQL username                             | `.env`        |
 | `POSTGRES_PASSWORD`                               | PostgreSQL password                             | `.env`        |
 | `JWT_SECRET`                                      | HS256 signing secret for JWT generation/validation | `.env`     |
-| `MAIL_USERNAME`                                   | Sender Gmail address for SMTP                   | `.env`        |
-| `MAIL_PASSWORD`                                   | Gmail App Password (not the account password)   | `.env`        |
+| `SENDGRID_API_KEY`                                | SendGrid API key for sending emails             | `.env`        |
+| `SENDGRID_FROM_EMAIL`                             | Verified sender email address in SendGrid       | `.env`        |
 | `spring.data.redis.host`                          | Redis hostname                                  | `docker-compose.yml` |
 | `spring.data.redis.port`                          | Redis port                                      | `docker-compose.yml` |
-| `spring.mail.host`                                | SMTP host                                       | `application.properties` |
-| `spring.mail.port`                                | SMTP port                                       | `application.properties` |
-| `spring.mail.properties.mail.smtp.auth`           | Enable SMTP authentication                      | `application.properties` |
-| `spring.mail.properties.mail.smtp.starttls.enable`| Enable STARTTLS                                 | `application.properties` |
 
 ### Frontend
 
